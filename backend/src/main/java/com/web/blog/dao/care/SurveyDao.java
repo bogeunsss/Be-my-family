@@ -6,11 +6,11 @@ import java.util.List;
 import com.web.blog.model.care.Careboard;
 import com.web.blog.model.care.Survey;
 
-import org.hibernate.annotations.OrderBy;
+import org.hibernate.annotations.OrderBy; 
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SurveyDao extends JpaRepository<Survey, String> { 
 
-    Survey findByUid(String uid);
+    Optional<Survey> findByUid(String uid);
 
 }

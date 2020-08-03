@@ -50,12 +50,39 @@ public class SurveyController {
             result.status = true;
             result.data = "success";
             response = new ResponseEntity<>(result, HttpStatus.OK);
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             result.data = "fail";
             response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
         }
-        
+
+        return response;
+    }
+
+    @GetMapping("/care/survey")
+    @ApiOperation(value = "설문조사 조회")
+    public Object survey(@RequestParam(required = true) final String uid) {
+
+        ResponseEntity response = null;
+        final BasicResponse result = new BasicResponse();
+
+        try {
+            Optional<Survey> mySurvey = surveyDao.findByUid(uid);
+            if(mySurvey.isPresent()) {
+                result.status = true;
+                result.data = "success";
+                result.object = mySurvey;
+            } else {
+                result.status = true;
+                result.data = "uid not exist";
+            }
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+            result.status = false;
+            result.data = "fail";
+            response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+        }
         return response;
     }
 
