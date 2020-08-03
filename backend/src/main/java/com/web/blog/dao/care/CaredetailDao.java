@@ -10,9 +10,6 @@ import org.hibernate.annotations.OrderBy;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CaredetailDao extends JpaRepository<Careboard, String>{
-    // Careboard getCareboardByDesertionNo(String desertionNo);
-    //deleteByUidAndDesertionno()
-    
     Optional<Careboard> findByDesertionno(String desertionNo);
 
 }
