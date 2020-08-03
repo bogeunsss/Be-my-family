@@ -46,7 +46,6 @@ public class InterestController {
         ResponseEntity response = null;
         List<Interest> interestlist = null;
         //findByUid 로 수정
-        interestlist = interestDao.findByUidAndDesertionno(uid, desertionNo);
 
         final BasicResponse result = new BasicResponse();
 
@@ -66,14 +65,5 @@ public class InterestController {
         return response;
     }
 
-
-    // @PostMapping("/care/interest")
-    // @ApiOperation(value = "관심목록")
-    // public Object interest(@RequestBody  entity) {
-    //     //TODO: process POST request
-        
-    //     return entity;
-    // }
     
-
 }
