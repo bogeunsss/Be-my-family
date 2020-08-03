@@ -3,6 +3,9 @@ package com.web.blog.model.care;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -18,10 +21,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class Survey {
     
     @Id
-    private int surveyno;
-
-    @JsonIgnore
 	private String uid;
+
 	private String name;
 	private String email;
 	private String phone;

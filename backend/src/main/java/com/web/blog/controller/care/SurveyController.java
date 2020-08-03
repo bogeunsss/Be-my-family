@@ -3,10 +3,9 @@ package com.web.blog.controller.care;
 import java.util.List;
 import java.util.Optional;
 
-import com.web.blog.dao.care.CareDao;
+import com.web.blog.dao.care.SurveyDao;
 import com.web.blog.model.BasicResponse;
-import com.web.blog.model.care.Care;
-import com.web.blog.model.care.Careboard;
+import com.web.blog.model.care.Survey;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,5 +31,32 @@ import io.swagger.annotations.ApiResponses;
 @CrossOrigin(origins = { "http://localhost:3000" })
 @RestController
 
-public SurveyController CareController {
+public class SurveyController {
+
+    @Autowired
+    SurveyDao surveyDao;
+
+    @PostMapping("/care/surveyAdd")
+    @ApiOperation(value = "설문 조사 등록/수정")
+    public Object surveyAdd(@RequestBody Survey request, @RequestParam(required = true) final String uid) {
+
+        ResponseEntity response = null;
+        final BasicResponse result = new BasicResponse();
+
+        try {
+            Survey survey = request;
+            survey.setUid(uid);
+            surveyDao.save(survey);
+            result.status = true;
+            result.data = "success";
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+            result.data = "fail";
+            response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+        }
+        
+        return response;
+    }
+
 }
