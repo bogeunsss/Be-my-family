@@ -1,22 +1,8 @@
 <template>
-  <v-app-bar v-if="isHeader"
-      absolute
-      color="#6A76AB"
-      dark
-      shrink-on-scroll
-      prominent
-      src="https://picsum.photos/1920/1080?random"
-      fade-img-on-scroll
-      scroll-target="#scrolling-techniques-3"
-    >
-      <!-- <template v-slot:img="{ props }">
-        <v-img
-          v-bind="props"
-          gradient="to top right, rgba(100,115,201,.7), rgba(25,32,72,.7)"
-        ></v-img>
-      </template> -->
-      <v-sheet>
-      <v-btn  style="transform: translateX(-50px) translateY(-50px);" class="hambuger" color="cyan" dark @click.stop="drawer = !drawer">
+  <div v-if="isHeader">
+    <div class="mb-5">
+    <v-sheet>
+      <v-btn class="hambuger" color="cyan" dark @click.stop="drawer = !drawer">
         <i class="lg fas fa-bars" style="font-size:30px"></i>
       </v-btn>
 
@@ -129,34 +115,17 @@
         </v-list>
       </v-navigation-drawer>
     </v-sheet>
-
-      <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
-
-      <v-toolbar-title>Dog! Dog!</v-toolbar-title>
-
-      <v-spacer></v-spacer>
-
-      <v-btn icon>
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
-
-      <v-btn icon>
-        <v-icon>mdi-heart</v-icon>
-      </v-btn>
-
-      <v-btn icon>
-        <v-icon>mdi-dots-vertical</v-icon>
-      </v-btn>
-
-      <!-- <template v-slot:extension>
-        <v-tabs align-with-title>
-          <v-tab>main</v-tab>
-          <v-tab>List</v-tab>
-          <v-tab>실종/보호/목격</v-tab>
-          <v-tab>입양후기</v-tab>
-        </v-tabs>
-      </template> -->
-    </v-app-bar>
+    <router-link class="text-decoration-none" v-bind:to="{name:constants.URL_TYPE.MAIN}">
+      <h1 class="text-center cyan--text text--lighten-2" >Dog Dog!</h1>
+    </router-link>
+    </div>
+    <div class="container mb-5">
+      <v-btn outlined @click="goList">List</v-btn>
+      <v-btn outlined>실종/보호/목격</v-btn>
+      <v-btn outlined>입양후기</v-btn>
+    </div>
+  
+  </div>
 </template>
 
 <script>

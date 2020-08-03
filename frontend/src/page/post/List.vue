@@ -1,9 +1,7 @@
 <template>
     <v-container fluid>
         <h1 v-if="isSearched">검색 결과가 없습니다.</h1>
-
         <div class="container">
-
         <form>
             <v-row class="d-flex align-center mx-auto">
                 <v-col cols="2" sm="2" md="2">
@@ -32,7 +30,7 @@
                 </v-col>
             </v-row>
         </form>
-
+        
         <v-row>
             <v-col cols="12">
                 <v-row>
@@ -72,7 +70,6 @@
             </v-col>
         </v-row>
         </div>
-
     </v-container>
 
 </template>

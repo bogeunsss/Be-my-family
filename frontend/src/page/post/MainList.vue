@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-container  style="height:1000px;">
+    <v-container>
           <v-row>
             <v-col v-for="(n,i) in 200" :key="n" md="3" sm="4">
               <v-card v-if="i<`${scrolled}`">

@@ -1,6 +1,5 @@
 <template>
 <div class="container" style="width:40%;">
-
   <v-card
     class="mx-auto"
     width="95%"
@@ -14,7 +13,7 @@
       <v-toolbar-title>상세게시판</v-toolbar-title>
     </v-toolbar>
     <v-card-text>
-      <img :src="dogData.popfile" alt="dog images" width="100%" height="500px">
+      <img :src="dogData.popfile" alt="dog images" width="100%" height="400px">
 
       <!-- <v-text-field filled label="Title" value="My new post"></v-text-field> -->
       <v-row>
@@ -67,9 +66,7 @@
       </v-btn>
     </v-card-actions>
   </v-card>
-
   </div>
-
 </template>
 
 <script>

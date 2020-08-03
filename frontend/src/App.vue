@@ -1,7 +1,7 @@
 <template>
   <v-app >
     <Header :isHeader="isHeader"/>
-    <router-view/>
+    <router-view />
   </v-app>
 </template>
 
@@ -61,5 +61,7 @@ export default {
 </script>
 
 <style>
-
+.v-application--wrap{
+  overflow: hidden!important;
+}
 </style>

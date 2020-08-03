@@ -6,10 +6,12 @@ import store from './store'
 import VueCookies from 'vue-cookies'
 import vuetify from './plugins/vuetify'
 import Vuex from 'vuex'
+import InfiniteLoading from 'vue-infinite-loading'
 
 Vue.use(vuetify)
 Vue.use(VueCookies)
 Vue.use(Vuex)
+Vue.use(InfiniteLoading)
 
 Vue.config.productionTip = false
 
