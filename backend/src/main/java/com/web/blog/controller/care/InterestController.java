@@ -3,6 +3,8 @@ package com.web.blog.controller.care;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import com.web.blog.dao.care.CareDao;
 import com.web.blog.dao.care.InterestDao;
 import com.web.blog.model.BasicResponse;
@@ -38,32 +40,81 @@ public class InterestController {
     @Autowired
     InterestDao interestDao;
 
-    @GetMapping("/care/interest")//"/interest 가 맞나.."
+
+    @GetMapping("/care/interestList")//"/interest 가 맞나.."
     @ApiOperation(value = "관심 목록")
-    public Object interestList(@RequestParam(required = true) final String uid,
-        @RequestParam(required = true) final String desertionNo) {
+    public Object interestList(@RequestParam(required = true) final String uid) {
 
         ResponseEntity response = null;
         List<Interest> interestlist = null;
         //findByUid 로 수정
 
         final BasicResponse result = new BasicResponse();
-
+        interestlist = interestDao.findByUid(uid);
+        
 
         //관심목록이 없다면 관심 fail이 아니라 없음을 해야하는데..
         if(interestlist!=null) {
             result.status = true;
             result.data = "success";
             result.object = interestlist;
+            result.interest = true;
             response = new ResponseEntity<>(result, HttpStatus.OK);
         } else {
-            result.data = "success";
+            result.data = "no search";
             result.object = null;
+            result.interest = false;
             response = new ResponseEntity<>(result, HttpStatus.OK);
         }
         
         return response;
     }
+
+    @PostMapping("/care/interestAdd")
+    @ApiOperation(value = "관심 목록 추가")
+    public Object interestAdd(@Valid @RequestBody Interest request) {
+
+
+        ResponseEntity response = null;
+
+        String uid = request.getUid();
+        String desertionno = request.getDesertionno();
+
+        final BasicResponse result = new BasicResponse();
+
+        Interest interest = new Interest();
+        interest.setUid(uid);
+        interest.setDesertionno(desertionno);
+        interestDao.save(interest);
+
+        result.status = true;
+        result.data = "success";
+        result.interest = true;
+        response = new ResponseEntity<>(result, HttpStatus.OK);
+
+        return response;
+    }
+
+    @DeleteMapping("/care/interestDelete")
+    @ApiOperation(value = "관심 목록 삭제")
+    public Object interestDelete(String uid, String desertionNo) {
+
+
+        ResponseEntity response = null;
+        //findByUid 로 수정
+
+        interestDao.deleteByUidAndDesertionno(uid, desertionNo);
+
+        final BasicResponse result = new BasicResponse();
+
+        result.status = true;
+        result.data = "success";
+        result.interest = true;
+        response = new ResponseEntity<>(result, HttpStatus.OK);
+
+        return response;
+    }
+
 
     
 }
