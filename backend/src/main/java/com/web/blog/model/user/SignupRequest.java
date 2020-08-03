@@ -34,10 +34,10 @@ public class SignupRequest {
     String job;
     @ApiModelProperty(required = true)
     @NotNull
-    boolean marriaged;
+    int marriaged;
     @ApiModelProperty(required = true)
     @NotNull
-    boolean sex;
+    int sex;
     @ApiModelProperty(required = true)
     @NotNull
     String birthdate;
@@ -90,21 +90,6 @@ public class SignupRequest {
         this.job = job;
     }
 
-    public boolean isMarriaged() {
-        return marriaged;
-    }
-
-    public void setMarriaged(boolean marriaged) {
-        this.marriaged = marriaged;
-    }
-
-    public boolean isSex() {
-        return sex;
-    }
-
-    public void setSex(boolean sex) {
-        this.sex = sex;
-    }
 
     public String getBirthdate() {
         return birthdate;
@@ -112,5 +97,21 @@ public class SignupRequest {
 
     public void setBirthdate(String birthdate) {
         this.birthdate = birthdate;
+    }
+
+    public int getMarriaged() {
+        return marriaged;
+    }
+
+    public void setMarriaged(int marriaged) {
+        this.marriaged = marriaged;
+    }
+
+    public int getSex() {
+        return sex;
+    }
+
+    public void setSex(int sex) {
+        this.sex = sex;
     }
 }

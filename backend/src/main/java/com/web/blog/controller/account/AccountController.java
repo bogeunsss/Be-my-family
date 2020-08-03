@@ -92,8 +92,8 @@ public class AccountController {
         String name = request.getName();
         String phone = request.getPhone();
         String job = request.getJob();
-        boolean marriaged = request.isMarriaged();
-        boolean sex = request.isSex();
+        int marriaged = request.getMarriaged();
+        int sex = request.getSex();
         String birthdate = request.getBirthdate();
 
         User emailCheck = userDao.getUserByEmail(email);

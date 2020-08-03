@@ -30,8 +30,8 @@ public class User {
     private String email;
     private String phone;
     private String job;
-    private boolean marriaged;  //true = 기혼, false = 미혼
-    private boolean sex;    //true = 남자, false = 여자
+    private int marriaged;  //1 = 기혼, 0 = 미혼
+    private int sex;    //1 = 남자, 0 = 여자
     private String birthdate;
 
     @Column(insertable = false, updatable = false)
