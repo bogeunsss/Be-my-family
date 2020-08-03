@@ -1,13 +1,27 @@
 <template>
-  <div v-if="isHeader">
-    <div>
-    <v-sheet>
-      <v-btn color="cyan  " dark @click.stop="drawer = !drawer">
+  <v-app-bar v-if="isHeader"
+      absolute
+      color="#6A76AB"
+      dark
+      shrink-on-scroll
+      prominent
+      src="https://picsum.photos/1920/1080?random"
+      fade-img-on-scroll
+      scroll-target="#scrolling-techniques-3"
+    >
+      <!-- <template v-slot:img="{ props }">
+        <v-img
+          v-bind="props"
+          gradient="to top right, rgba(100,115,201,.7), rgba(25,32,72,.7)"
+        ></v-img>
+      </template> -->
+      <v-sheet>
+      <v-btn  style="transform: translateX(-50px) translateY(-50px);" class="hambuger" color="cyan" dark @click.stop="drawer = !drawer">
         <i class="lg fas fa-bars" style="font-size:30px"></i>
       </v-btn>
 
       <v-navigation-drawer v-model="drawer" absolute temporary height="400">
-        <v-list-item>
+        <v-list-item class="pl-0">
           <v-list-item-avatar v-if="isLoggedIn">
             <v-img src="https://picsum.photos/78.jpg"></v-img>
           </v-list-item-avatar>
@@ -16,41 +30,40 @@
           <!-- <v-list-item-content> -->
           <v-dialog v-if="!isLoggedIn" v-model="$store.state.dialog" persistent max-width="600">
             <template v-slot:activator="{ on, attrs }" v-if="!isLoggedIn">
-              <v-btn color="primary" dark v-bind="attrs" v-on="on" class="loginBtn">로그인</v-btn>
+              <v-btn style="transform: translateX(120px) translateY(-50px);" dark v-bind="attrs" v-on="on" class="loginBtn">로그인</v-btn>
             </template>
             <!-- 수정 필요! 로그인 버튼 내려감 -->
-            <v-card>
+            <v-card style="height:50vh;">
               <v-card-title>
                 <span class="headline">User Login</span>
               </v-card-title>
               <v-card-text>
-                <v-container>
-                  <v-row>
-                    <v-col cols="12">
+                  <!-- <v-row>
+                    <v-col cols="12"> -->
                       <v-text-field v-model="loginData.email" label="Email*" required></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
+                    <!-- </v-col>
+                    <v-col cols="12"> -->
                       <v-text-field
                         v-model="loginData.password"
                         label="Password*"
                         type="password"
                         required
                       ></v-text-field>
-                    </v-col>
-                  </v-row>
-                </v-container>
-                <p>*아직 회원이 아니신가요?</p>
+                    <!-- </v-col>
+                  </v-row> -->
+                <p >* 아직 회원이 아니신가요?</p>
                 <router-link v-bind:to="{name:constants.URL_TYPE.USER.JOIN}" class="btn--text">회원가입</router-link>
               </v-card-text>
-              <v-card-actions>
-                <v-spacer></v-spacer>
+              <div class="d-flex float-right mr-3">
                 <v-btn color="blue darken-1" text @click="setDialog">Close</v-btn>
                 <v-btn color="blue darken-1" text @click="Login">Login</v-btn>
-              </v-card-actions>
+
+              </div>
             </v-card>
           </v-dialog>
         <!-- </v-list-item-content> -->
-          <p v-if="isLoggedIn">{{ profileData.nickName }}</p>
+          <p class="mb-0" v-if="isLoggedIn">{{ $store.state.profileData.nickName }}</p>
+          <!-- {{$store.state.profileData}} -->
           <!-- </v-list-item-content> -->
         </v-list-item>
 
@@ -59,8 +72,7 @@
         <v-list dense>
           <div class="ml-5 d-flex inline">
             <v-list-item-icon>
-              <router-link v-bind:to="{name:constants.URL_TYPE.POST.MAIN}">
-
+              <router-link v-bind:to="{name:constants.URL_TYPE.MAIN}">
                 <i class="fas fa-home black--text" style="font-size:30px"></i>
               </router-link>
             </v-list-item-icon>
@@ -117,16 +129,34 @@
         </v-list>
       </v-navigation-drawer>
     </v-sheet>
-    <router-link class="text-decoration-none" v-bind:to="{name:constants.URL_TYPE.MAIN}">
-      <h1 class="text-center cyan--text text--lighten-2" >Dog Dog!</h1>
-    </router-link>
-    </div>
-    <div class="container mb-5">
-      <v-btn outlined @click="goList">List</v-btn>
-      <v-btn outlined>실종/보호/목격</v-btn>
-      <v-btn outlined>입양후기</v-btn>
-    </div>
-  </div>
+
+      <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
+
+      <v-toolbar-title>Dog! Dog!</v-toolbar-title>
+
+      <v-spacer></v-spacer>
+
+      <v-btn icon>
+        <v-icon>mdi-magnify</v-icon>
+      </v-btn>
+
+      <v-btn icon>
+        <v-icon>mdi-heart</v-icon>
+      </v-btn>
+
+      <v-btn icon>
+        <v-icon>mdi-dots-vertical</v-icon>
+      </v-btn>
+
+      <!-- <template v-slot:extension>
+        <v-tabs align-with-title>
+          <v-tab>main</v-tab>
+          <v-tab>List</v-tab>
+          <v-tab>실종/보호/목격</v-tab>
+          <v-tab>입양후기</v-tab>
+        </v-tabs>
+      </template> -->
+    </v-app-bar>
 </template>
 
 <script>
@@ -228,9 +258,6 @@ export default {
 .loginBtn {
   position: relative;
   top: 50px;
-}
-.v-dialog {
-  height: 700px;
 }
 .v-list-item-icon {
   display: flex;
