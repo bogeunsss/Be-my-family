@@ -23,6 +23,24 @@ public class SignupRequest {
     @ApiModelProperty(required = true)
     @NotNull
     String uid;
+    @ApiModelProperty(required = true)
+    @NotNull
+    String name;
+    @ApiModelProperty(required = true)
+    @NotNull
+    String phone;
+    @ApiModelProperty(required = true)
+    @NotNull
+    String job;
+    @ApiModelProperty(required = true)
+    @NotNull
+    boolean marriaged;
+    @ApiModelProperty(required = true)
+    @NotNull
+    boolean sex;
+    @ApiModelProperty(required = true)
+    @NotNull
+    String birthdate;
 
     public String getEmail() {
         return email;
@@ -46,5 +64,53 @@ public class SignupRequest {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getJob() {
+        return job;
+    }
+
+    public void setJob(String job) {
+        this.job = job;
+    }
+
+    public boolean isMarriaged() {
+        return marriaged;
+    }
+
+    public void setMarriaged(boolean marriaged) {
+        this.marriaged = marriaged;
+    }
+
+    public boolean isSex() {
+        return sex;
+    }
+
+    public void setSex(boolean sex) {
+        this.sex = sex;
+    }
+
+    public String getBirthdate() {
+        return birthdate;
+    }
+
+    public void setBirthdate(String birthdate) {
+        this.birthdate = birthdate;
     }
 }
