@@ -35,13 +35,7 @@ export default new Vuex.Store({
       nickName: null,
       password: null
     },
-    dogData: {
-      careaddr : '',
-      carenm: '',
-      kindcd: '',
-      popfile: '',
-      desertionNo: ''
-    },
+    dogData: []
   },
   getters: {
   },
@@ -78,6 +72,9 @@ export default new Vuex.Store({
     profileNickName(state, nickName){
       state.profileData.nickName = nickName
     },
+    setSearchDogs(state, newDogData){
+      state.dogData = newDogData
+    }
 
     // isLoggedInChanged(state){
     //   if(cookies.isKey('auth-token')) return state.isLoggedIn = true
@@ -222,12 +219,17 @@ export default new Vuex.Store({
       axios
         .get("http://localhost:8080/care/list")
         .then((res) =>{
-            state.dogData = res.data.object[0]
+            state.dogData = res.data.object
+            // state.dogData = res.data.object
+            // console.log(state.dogData)
         })
         .catch((err) =>{
             console.log(err)
         })
     },
+    setSearchDogs({commit}, payload){
+      commit('setSearchDogs', payload)
+    }
   },
 
   modules: {

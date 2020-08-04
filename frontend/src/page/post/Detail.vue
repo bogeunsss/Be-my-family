@@ -18,33 +18,33 @@
       <!-- <v-text-field filled label="Title" value="My new post"></v-text-field> -->
       <v-row>
           <v-col col="12" class="font-weight-black">구조일</v-col>
-          {{ this.dogData.noticesdt }}
+          {{ dogData.noticesdt }}
       </v-row>
       <v-row>
           <v-col col="12" class="font-weight-black">구조장소</v-col>
-          {{ this.dogData.happenplace }}
+          {{ dogData.happenplace }}
       </v-row>
       <v-row>
           <v-col col="6" class="font-weight-black">견종</v-col>
-          {{ this.dogData.kindcd }}
+          {{ dogData.kindcd }}
           <v-col col="6" class="font-weight-black">성별</v-col>
-          {{ this.dogData.sexcd}}
+          {{ dogData.sexcd}}
       </v-row>
       <v-row>
           <v-col col="6" class="font-weight-black">연령</v-col>
-          {{ this.dogData.age }}
+          {{ dogData.age }}
           <v-col col="6" class="font-weight-black">모색</v-col>
-          {{ this.dogData.colorcd }}
+          {{ dogData.colorcd }}
       </v-row>
       <v-row>
           <v-col col="6" class="font-weight-black">중성화 여부</v-col>
-          {{ this.dogData.neuteryn }}
+          {{ dogData.neuteryn }}
           <v-col col="6" class="font-weight-black">체중</v-col>
-          {{ this.dogData.weight }}
+          {{ dogData.weight }}
       </v-row>
       <v-row>
           <v-col col=12 class="font-weight-black">특징</v-col>
-          {{ this.dogData.specialmark }}
+          {{ dogData.specialmark }}
       </v-row>
 
       <v-divider class="my-2"></v-divider>
@@ -66,6 +66,7 @@
       >
         입양신청
       </v-btn>
+      <!-- total 보내야 할 데이터 : email, 상담날짜, 상담시간, 강아지id, url: /account/adoptionList -->
       <v-dialog
         v-model="dialog"
         max-width="500px"
@@ -75,68 +76,78 @@
             입양신청서
           </v-card-title>
           <v-card-text>
-            <v-btn
+            <!-- 개인 정보 template -->
+            <v-text-field
               color="primary"
-              dark
               @click="dialog2 = !dialog2"
+              v-model="date"
+              label="상담 날짜를 선택해주세요"
+              readonly
             >
-              Open Dialog 3
-            </v-btn>
+            </v-text-field>
+            <!-- 상담 시간 template -->
+            <v-text-field
+              color="primary"
+              @click="dialog3 = !dialog3"
+              v-model="selectedTime"
+              label="상담 시간을 선택해주세요"
+              readonly
+            ></v-text-field>
+            
           </v-card-text>
           <v-card-actions>
+            <!-- @click 에다가 신청서 보내는 비동기 요청 함수 달기. -->
+            <v-btn
+              color="primary"
+              text
+              @click="requestComplete"
+            >
+              신청완료
+            </v-btn>
             <v-btn
               color="primary"
               text
               @click="dialog = false"
             >
-              Close
+              취소
             </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
+      <!-- 날짜 입력 v-date-picker -->
       <v-dialog
+        ref="dialog"
         v-model="dialog2"
-        max-width="500px"
+        :return-value.sync="date"
+        persistent
+        width="290px"
       >
-        <v-card>
-          <v-card-title>
-            <span>Dialog 3</span>
-            <v-spacer></v-spacer>
-            <v-menu
-              bottom
-              left
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  icon
-                  v-bind="attrs"
-                  v-on="on"
-                >
-                  <v-icon>mdi-dots-vertical</v-icon>
-                </v-btn>
-              </template>
-              <v-list>
-                <v-list-item
-                  v-for="(item, i) in items"
-                  :key="i"
-                  @click="() => {}"
-                >
-                  <v-list-item-title>{{ item.title }}</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-          </v-card-title>
-          <v-card-actions>
-            <v-btn
-              color="primary"
-              text
-              @click="dialog2 = false"
-            >
-              Close
-            </v-btn>
-          </v-card-actions>
-        </v-card>
+        <v-date-picker v-model="date" scrollable>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" @click="dialog2 = false">취소</v-btn>
+          <v-btn color="primary" @click="$refs.dialog.save(date)">확인</v-btn>
+        </v-date-picker>
       </v-dialog>
+      <!-- 시간 입력 -->
+      <v-dialog
+        ref="dialog2"
+        v-model="dialog3"
+        :return-value.sync="selectedTime"
+        persistent
+        width="290px"
+      >
+        <v-list>
+          <v-list-item-group>
+            <v-list-item
+              v-for="time in times"
+              :key="time"
+            >
+              <v-list-item-content @click="$refs.dialog2.save(time+'시')">{{ time }}시</v-list-item-content>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+      </v-dialog>
+
     </v-card-actions>
 
   </v-card>
@@ -152,68 +163,31 @@ export default {
     data(){
         return {
           dogData: {
-            age: '',
-            careaddr:'',
-            carenm: '',
-            caretel: '',
-            chargenm: '',
-            colorcd: '',
-            desertionno: '',
-            filename: '',
-            happendt: '',
-            happenplace: '',
-            kindcd: '',
-            neuteryn: '',
-            noticecomment: '',
-            noticeno: '',
-            noticesdt: '',
-            numofrows: '',
-            officetel: '',
-            orgnm: '',
-            pageno: '',
             popfile: '',
-            processstate: '',
-            resultcode: '',
-            resultmsg: '',
-            sexcd: '',
-            specialmark: '',
-            totalcount: '',
-            weight: '',
           },
           dialog: false,
           dialog2: false,
-          items: [
-            {
-              title: 'Click Me',
-            },
-            {
-              title: 'Click Me',
-            },
-            {
-              title: 'Click Me',
-            },
-            {
-              title: 'Click Me 2',
-            },
+          dialog3: false,
+          menu: false,
+          date: null,
+          selectedTime: null,
+          times: [
+            '9','10','11','12','13','14','15','16','17','18'
           ],
-          select: [
-            { text: 'State 1' },
-            { text: 'State 2' },
-            { text: 'State 3' },
-            { text: 'State 4' },
-            { text: 'State 5' },
-            { text: 'State 6' },
-            { text: 'State 7' },
-          ],
+          email: ''
         }
     },
     computed:{
       ...mapState(['profileData'])
     },
     created(){
-      var token = this.$cookies.get('auth-token')
-      this.find(token.email)
-      axios.get(`http://localhost:8080/care/detail?desertionNo=${this.$route.params.desertionno}`)
+      if(this.$cookies.isKey("auth-token")){
+        var token = this.$cookies.get('auth-token')
+        this.email = token.email
+        this.find(this.email)
+      }
+      console.log(this.$cookies.get('desertionno').desertionno)
+      axios.get(`http://localhost:8080/care/detail?desertionNo=${this.$cookies.get('desertionno').desertionno}`)
           .then( response => {
               // this.dogs = response.data.message
               console.log(response)
@@ -224,7 +198,28 @@ export default {
           })
     },
     methods:{
-      ...mapActions(['find'])
+      ...mapActions(['find']),
+      requestComplete(){
+        let st = ""
+        if(this.selectedTime.length > 2){
+          st = this.selectedTime.slice(0,2)
+        }else{
+          st = this.selectedTime.slice(0,1)
+        }
+        // console.log(this.date + " " + st + " " + this.dogData.desertionno + " " + this.email)
+
+        axios.get(`http://localhost:8080/account/adoptionList?`)
+          .then(response => {
+
+          })
+          .catch(error => {
+              console.log(error)
+          })
+        this.dialog = false
+      }
+    },
+    destroyed(){
+      this.$cookies.remove('desertionno')
     }
 }
 </script>

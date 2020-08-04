@@ -162,8 +162,10 @@ export default {
   watch: {},
   created() {
     this.isLoggedIn = this.$cookies.isKey("auth-token");
-    var token = this.$cookies.get('auth-token')
-    this.find(token.email)
+    if(this.isLoggedIn){
+      var token = this.$cookies.get('auth-token')
+      this.find(token.email)
+    }
   },
   methods: {
     ...mapActions(["login", "logout", "find"]),

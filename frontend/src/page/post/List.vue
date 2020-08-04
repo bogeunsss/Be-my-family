@@ -30,26 +30,26 @@
                 </v-col>
             </v-row>
         </form>
-        
+
         <v-row>
             <v-col cols="12">
                 <v-row>
-                    <v-col col="6" md="3">
-                        <v-card @click="goDetail">
+                    <v-col col="6" md="3" v-for="(dog, i) in dogData" :key="i">
+                        <v-card @click="goDetail(i)">
 
                             <v-img
                                 class="white--text align-end"
                                 height="200px"
-                                :src="dogData.popfile"
+                                :src="dog.popfile"
                             >
-                            <v-card-title>{{ this.dogData.carenm }}</v-card-title>
+                            <v-card-title>{{ dog.carenm }}</v-card-title>
                             </v-img>
 
-                            <v-card-subtitle class="pb-0">{{ this.dogData.kindcd }}</v-card-subtitle>
+                            <v-card-subtitle class="pb-0">{{ dog.kindcd }}</v-card-subtitle>
 
                             <v-card-text class="text--primary">
 
-                            <div>{{ this.dogData.careaddr }}</div>
+                            <div>{{ dog.careaddr }}</div>
                             <br>
                             <span class="date">2020-06-19ㆍ</span>  
                             <span class="comment">댓글 0개</span>
@@ -95,20 +95,22 @@ export default {
         console.log(this.dogData)
     },
     methods: {
-        ...mapActions(['mainList']),
-        goDetail(){
-            this.$router.push({name:constants.URL_TYPE.POST.DETAIL, params: {desertionno:this.dogData.desertionno}})
+        ...mapActions(['mainList', 'setSearchDogs']),
+        goDetail(index){
+            // this.$router.push({name:constants.URL_TYPE.POST.DETAIL, params: {desertionno:this.dogData.desertionno}})
+            this.$cookies.set('desertionno', {desertionno:this.dogData[index].desertionno})
+            this.$router.push({name:constants.URL_TYPE.POST.DETAIL})
         },
         search(){
             console.log(this.category)
             console.log(this.searchText)
             if(this.searchText === ""){
-                    alert("검색어를 입력하세요.")
+                    this.mainList()
             }else{
                 axios.get(`http://localhost:8080/care/search?category=${this.category}&searchText=${this.searchText}`)
                 .then((response) =>{
-                    this.contacts = response.data.object
-                    if(!this.contacts[0]){this.isSearched=true}
+                    this.setSearchDogs(response.data.object)
+                    if(!this.dogData){this.isSearched=true}
                     else{this.isSearched=false}
                     this.searchText = ""
                     console.log(response)
@@ -129,7 +131,7 @@ export default {
             ],
             category: {},
             searchText: '',
-            contacts: {},
+            contacts: [],
             isSearched: false,
         }
     }
