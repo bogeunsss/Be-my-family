@@ -492,13 +492,14 @@ export default {
         submit(){
           if(this.checkbox) {
             console.log('된다')
-            // axios
-            //   .post(`${URL}`)
-            //   .then((response) =>{
-            //     console.log(response.data);
-            //   }).catch((error) =>{
-            //     console.log(error)
-            //   })
+            this.survey.uid = this.profileData.nickName
+            axios
+              .post("http://localhost:8080/care/surveyAdd", this.survey)
+              .then((response) =>{
+                console.log(response.data);
+              }).catch((error) =>{
+                console.log(error)
+              })
           }else{
             alert('동의해주세요!')
             console.log('자자')
@@ -533,6 +534,7 @@ export default {
             caremoney:"",
             reason:"",
             think:"", 
+            uid:"",
           },
           sido: [],
           gugun: [],
