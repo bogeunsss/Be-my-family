@@ -11,5 +11,6 @@ public class BasicResponse {
     public Object object;
 	public String email;
 	public String uid;
-	public String password;
+    public String password;
+    public boolean interest;
 }
