@@ -13,4 +13,5 @@ public class BasicResponse {
 	public String uid;
     public String password;
     public boolean interest;
+    public String name;
 }
