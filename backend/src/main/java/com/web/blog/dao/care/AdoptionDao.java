@@ -13,5 +13,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface AdoptionDao extends JpaRepository<Adoption, String>{
     // Optional<Adoption> findByUid(String uid);
     Optional<Adoption> findByDesertionno(String desertionNo);
-    List<Adoption> findByUid(String uid);
+    List<Adoption> findByEmail(String uid);
 }
