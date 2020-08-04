@@ -39,7 +39,7 @@ export default {
 
           let array = [
               constants.URL_TYPE.USER.LOGIN,
-              constants.URL_TYPE.USER.JOIN,
+              // constants.URL_TYPE.USER.JOIN,
           ];
 
           let isHeader = true;

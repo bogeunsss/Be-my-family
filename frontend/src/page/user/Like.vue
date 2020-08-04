@@ -2,14 +2,16 @@
 <div class="container">
   <v-container fluid class="mx-5 mt-5 pt-5">
     <h1>내 관심 강아지</h1>
+    {{ interestData }}
     <v-row>
-      <v-col v-for="n in 3" :key="n" class="my-5 pt-5">
+      <v-col v-for="interest in interestData" :key="interest.id" class="my-5 pt-5">
+        {{ dogData }}
         <v-card class="d-inline-block mx-auto">
           <v-container>
             <v-row justify="space-between">
               <v-col cols="auto">
               <v-hover v-slot:default="{ hover }">
-                <v-img height="300" width="300" src="https://picsum.photos/200/300/" >
+                <v-img height="300" width="300" :src="interest.desertionno" >
                   <!-- <v-expand-transition> -->
                     <div
                       v-if="hover"
@@ -57,11 +59,52 @@
 <script>
 import constants from "@/lib/constants";
 import SERVER from "@/lib/constants";
+import { mapState } from 'vuex'
 import axios from "axios";
 
 export default {
   name: "like",
-  methods: {},
+  computed:{
+      ...mapState(['profileData']),
+    },
+  created() {
+    this.getInterest()
+  },
+  methods: {
+    getInterest() {
+      axios.get(`http://localhost:8080/care/interestList` , { params:{
+        uid : this.$store.state.profileData.nickName,
+      }
+     })
+     .then(response => {
+       console.log(response.data.object)
+        this.interestData = response.data.object
+        this.getInformation()
+     })
+     .catch(err=>console.log(err))
+    },
+    getInformation(){
+      axios.get(`http://localhost:8080/care/detail`, { 
+        params : {
+          desertionNo: this.interestData.desertionno,
+          uid: this.$store.state.profileData.nickName
+        }
+      })
+      .then(response => {
+          console.log(response.data.object)
+          this.dogData = response.data.object
+      })
+      .catch( error => {
+          console.log(error)
+      })
+    },
+  },
+  data() {
+    return {
+      interestData: {},
+      dogData:{},
+    }
+  }
 };
 </script>
 

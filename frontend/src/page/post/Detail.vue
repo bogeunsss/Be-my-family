@@ -70,6 +70,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import axios from 'axios'
 
 export default {
@@ -108,20 +109,26 @@ export default {
         }
     },
     computed:{
-
+      ...mapState(['profileData']),
     },
     created(){
-      console.log(this.$route.params)
-      axios.get(`http://localhost:8080/care/detail?desertionNo=${this.$route.params.desertionno}`)
-          .then( response => {
+      console.log(this.$route.params.desertionno)
+      // console.log(this.$store.state.profileData)
+      axios.get(`http://localhost:8080/care/detail`, { 
+        params : {
+          desertionNo: this.$route.params.desertionno,
+          uid: this.$store.state.profileData.nickName
+        }
+      })
+          .then(response => {
               // this.dogs = response.data.message
-              console.log(response)
+              console.log(response.data.object)
               this.dogData = response.data.object
           })
           .catch( error => {
               console.log(error)
           })
-    }
+    },
 }
 </script>
 

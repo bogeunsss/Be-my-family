@@ -63,7 +63,7 @@
               </router-link>
             </v-list-item-icon>
             <!-- 홈 글자 눌렀을때 메인으로 이동하는거 고치기 -->
-            <v-list-item-title style="cursor: pointer;">Home</v-list-item-title>
+            <v-list-item-title @click="goHome" style="cursor: pointer;">Home</v-list-item-title>
           </div>
           <div class="ml-5 d-flex inline">
             <v-list-item-icon style="cursor: pointer;">
@@ -170,6 +170,7 @@ export default {
     ...mapMutations(["setDialog"]),
     Login() {
       this.login(this.$store.state.loginData);
+      this.$router.push({ name: constants.URL_TYPE.MAIN });
     },
     Logout() {
       this.logout();
@@ -182,6 +183,10 @@ export default {
         .catch((err) => {
           err;
         });
+    },
+    goHome() {
+      this.$router.push({ name: constants.URL_TYPE.MAIN });
+      this.$router.go()
     },
     userLike() {
       this.$router
