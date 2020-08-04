@@ -166,6 +166,7 @@ public class AccountController {
         result.status = true;
         result.data = "success";
         result.object = newUser;
+        result.name = newUser.getName();
         response = new ResponseEntity<>(result, HttpStatus.OK);
 
         return response;
