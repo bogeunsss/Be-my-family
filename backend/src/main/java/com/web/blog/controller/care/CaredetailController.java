@@ -6,9 +6,11 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import com.web.blog.dao.care.CaredetailDao;
+import com.web.blog.dao.care.InterestDao;
 import com.web.blog.dao.user.UserDao;
 import com.web.blog.model.BasicResponse;
 import com.web.blog.model.care.Careboard;
+import com.web.blog.model.care.Interest;
 import com.web.blog.model.user.SignupRequest;
 import com.web.blog.model.user.User;
 import com.web.blog.security.JwtAuthenticationResult;
@@ -42,14 +44,18 @@ public class CaredetailController {
     @Autowired
     CaredetailDao caredetailDao;
 
+    
+    @Autowired
+    InterestDao interestDao;
 
     @GetMapping("/care/detail")
     @ApiOperation(value = "유기견 상세 검색")
-    public Object careboarddetail(@RequestParam(required = true) final String desertionNo) {
+    public Object careboarddetail(@RequestParam(required = true) final String desertionNo, 
+            @RequestParam(required = true) final String uid) {
 
         ResponseEntity response = null;
         Optional<Careboard> caredetailOpt = caredetailDao.findByDesertionno(desertionNo);
-
+        Optional<Interest> careinterestOpt = interestDao.findByUidAndDesertionno(uid, desertionNo);
         final BasicResponse result = new BasicResponse();
 
         if(caredetailOpt!=null) {
@@ -58,6 +64,11 @@ public class CaredetailController {
             result.object = caredetailOpt.get();
             System.out.println(caredetailOpt.get());
             Careboard careboard = new Careboard();
+            if(careinterestOpt != null) {
+                result.interest = false;
+            } else {
+                result.interest = true;
+            }
             response = new ResponseEntity<>(result, HttpStatus.OK);
         } else {
             result.data = "fail";

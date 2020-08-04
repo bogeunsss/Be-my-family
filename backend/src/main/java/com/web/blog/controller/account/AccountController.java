@@ -89,6 +89,12 @@ public class AccountController {
         String nickName = request.getUid();
         String email = request.getEmail();
         String password = request.getPassword();
+        String name = request.getName();
+        String phone = request.getPhone();
+        String job = request.getJob();
+        int marriaged = request.getMarriaged();
+        int sex = request.getSex();
+        String birthdate = request.getBirthdate();
 
         User emailCheck = userDao.getUserByEmail(email);
         User nickNameCheck = userDao.getUserByUid(nickName);
@@ -108,6 +114,12 @@ public class AccountController {
             user.setUid(nickName);
             user.setEmail(email);
             user.setPassword(password);
+            user.setName(name);
+            user.setPhone(phone);
+            user.setJob(job);
+            user.setMarriaged(marriaged);
+            user.setSex(sex);
+            user.setBirthdate(birthdate);
             userDao.save(user);
 
             if (mailService.mailSend(user)) {
@@ -154,6 +166,7 @@ public class AccountController {
         result.status = true;
         result.data = "success";
         result.object = newUser;
+        result.name = newUser.getName();
         response = new ResponseEntity<>(result, HttpStatus.OK);
 
         return response;

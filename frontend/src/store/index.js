@@ -20,10 +20,17 @@ export default new Vuex.Store({
     signupData:{
       email: null,
       nickName: null,
+      name:null,
       password: null,
       passwordConfirm: null, 
       passwordType: 'password',
       passwordConfirmType: 'password',
+      // join 수정
+      phone: null,
+      job: null,
+      marriaged: null,
+      sex: null,
+      birthdate: null,
     },
     loginData: {
       token:'',
@@ -54,11 +61,29 @@ export default new Vuex.Store({
     setEmail(state, email){
       state.signupData.email = email
     },
+    setName(state, name){
+      state.signupData.name = name
+    },
     setPassword(state, password){
       state.signupData.password = password
     },
     setPasswordConfirm(state, passwordConfirm){
       state.signupData.passwordConfirm = passwordConfirm
+    },
+    setPhone(state, phone){
+      state.signupData.phone = phone
+    },
+    setJob(state, job){
+      state.signupData.job = job
+    },
+    setMarriaged(state, marriaged){
+      state.signupData.marriaged = marriaged
+    },
+    setSex(state, sex){
+      state.signupData.sex = sex
+    },
+    setBirthDate(state, birthdate){
+      state.signupData.birthdate = birthdate
     },
     loginEmail(state, email){
       state.loginData.email = email
@@ -116,8 +141,15 @@ export default new Vuex.Store({
       }else{
         axios.post(SERVER.SERVER_URL + '/account/signup', {
           email: info.data.email,
+          name: info.data.name,
           password: info.data.password,
-          uid: info.data.nickName
+          uid: info.data.nickName,
+          phone: info.data.phone,
+          job: info.data.job,
+          marriaged: info.data.marriaged,
+          sex: info.data.sex,
+          birthdate: info.data.birthdate,
+
         })
         .then(res=>{
           if(res.data.data === 'emailexist'){
