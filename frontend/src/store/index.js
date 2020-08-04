@@ -39,7 +39,13 @@ export default new Vuex.Store({
     profileData: {
       email: null,
       nickName: null,
-      password: null
+      password: null,
+      name:null,
+      phone:null,
+      job:null,
+      marriaged:null,
+      sex:null,
+      birthdate:null,
     },
     dogData: {
       careaddr : '',
@@ -195,6 +201,12 @@ export default new Vuex.Store({
       axios.get(SERVER.SERVER_URL + '/account/find?email=' + email)
       .then(response=>{
         state.profileData.email = response.data.object.email
+        state.profileData.name = response.data.object.name
+        state.profileData.job = response.data.object.job
+        state.profileData.phone = response.data.object.phone
+        state.profileData.marriaged = response.data.object.marriaged
+        state.profileData.sex = response.data.object.sex
+        state.profileData.birthdate = response.data.object.birthdate
         state.profileData.nickName = response.data.object.uid
         state.profileData.password = response.data.object.password
         // console.log(response)
