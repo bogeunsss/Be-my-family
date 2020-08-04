@@ -79,6 +79,9 @@ export default {
      .then(response => {
        console.log(response.data.object)
         this.interestData = response.data.object
+        for (var i=0;i<this.interestData.length;i++){
+          this.interestData[i].desertionno == this.interestData.desertionno
+        }
         this.getInformation()
      })
      .catch(err=>console.log(err))
