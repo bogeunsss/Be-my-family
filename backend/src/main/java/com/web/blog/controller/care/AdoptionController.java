@@ -52,10 +52,14 @@ public class AdoptionController {
     public Object userAdoptionList(@RequestParam(required = true) final String email) { //uid ==> email
 
         ResponseEntity response = null;
+        
+        Optional<User> userOpt = userDao.findUserByEmail(email);
+        String checkid = userOpt.get().getUid();
+
         List<Adoption> AdoptionList = null;
 
         final BasicResponse result = new BasicResponse();
-        AdoptionList = adoptionDao.findByEmail(email);
+        AdoptionList = adoptionDao.findByUid(checkid);
 
         if(AdoptionList!=null) {
                 result.status = true;
@@ -70,5 +74,7 @@ public class AdoptionController {
 
         return response;
     }
+
+    
 
 }
