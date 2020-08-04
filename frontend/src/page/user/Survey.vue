@@ -453,7 +453,6 @@
     <v-checkbox
       v-model="checkbox"
       label="Do you agree?"
-      value="1"
     ></v-checkbox>
     {{checkbox}}
 
@@ -480,6 +479,10 @@ export default {
     created(){
       var token = this.$cookies.get('auth-token')
       this.find(token.email)
+      axios.get("http://localhost:8080/care/survey?uid="+this.profileData.nickName)
+      .then((response) =>{
+        console.log(response)
+      })
     },
     computed: {
           ...mapState(['profileData', 'loginData']),
@@ -487,8 +490,7 @@ export default {
     methods: {
         ...mapActions(['find']),
         submit(){
-          // var flag = 0;
-          if(this.checkbox === "1") {
+          if(this.checkbox) {
             console.log('된다')
             // axios
             //   .post(`${URL}`)
