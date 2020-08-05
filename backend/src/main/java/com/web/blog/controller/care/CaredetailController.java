@@ -44,7 +44,6 @@ public class CaredetailController {
     @Autowired
     CaredetailDao caredetailDao;
 
-    
     @Autowired
     InterestDao interestDao;
 
@@ -58,16 +57,10 @@ public class CaredetailController {
         if(uid!=null) {
             Optional<Interest> careinterestOpt = interestDao.findByUidAndDesertionno(uid, desertionno);
             final BasicResponse result = new BasicResponse();
-            System.out.println("=======");
-            System.out.println(uid);
-            System.out.println(desertionno);
-            System.out.println(careinterestOpt);
-            System.out.println("=========");
             if(!caredetailOpt.isEmpty()) {
                 result.status = true;
                 result.data = "success";
                 result.object = caredetailOpt.get();
-
                 if(!careinterestOpt.isEmpty()) {
                     result.interest = true;
                     System.out.println("true");
@@ -75,12 +68,10 @@ public class CaredetailController {
                     result.interest = false;
                     System.out.println("false");
                 }
-
                 response = new ResponseEntity<>(result, HttpStatus.OK);
             } else {
                 result.data = "fail";
                 response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
-                
             }
         } else {
             final BasicResponse result = new BasicResponse();
@@ -93,7 +84,6 @@ public class CaredetailController {
             } else {
                 result.data = "fail";
                 response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
-     
             }
         }
         return response;
