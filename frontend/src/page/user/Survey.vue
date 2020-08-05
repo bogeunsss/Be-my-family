@@ -481,6 +481,7 @@ export default {
       this.find(token.email)
       axios.get("http://localhost:8080/care/survey?uid="+this.profileData.nickName)
       .then((response) =>{
+        this.survey = response.data.object
         console.log(response)
       })
     },
