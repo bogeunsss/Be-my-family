@@ -23,6 +23,8 @@ public class Adoption {
     private String uid;
     private String mid;
     private String desertionno;
+    private String fixdate;
+    private String fixtime;
     // 시간, 날짜, 이메일
 
 

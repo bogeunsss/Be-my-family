@@ -45,18 +45,21 @@ public class AdoptionController {
         @Autowired
         AdoptionDao adoptionDao;
 
-
         //상담 시간, 상담 날짜 테이블 추가, 객체로 받기
         //uid 말고 이메일로 받기
     @GetMapping("/account/adoptionList")
     @ApiOperation(value = "사용자 입양 목록 리스트")
-    public Object userAdoptionList(@RequestParam(required = true) final String uid) { //uid ==> email
+    public Object userAdoptionList(@RequestParam(required = true) final String email) { //uid ==> email
 
         ResponseEntity response = null;
+        
+        Optional<User> userOpt = userDao.findUserByEmail(email);
+        String checkid = userOpt.get().getUid();
+
         List<Adoption> AdoptionList = null;
 
         final BasicResponse result = new BasicResponse();
-        AdoptionList = adoptionDao.findByUid(uid);
+        AdoptionList = adoptionDao.findByUid(checkid);
 
         if(AdoptionList!=null) {
                 result.status = true;
@@ -71,5 +74,7 @@ public class AdoptionController {
 
         return response;
     }
+
+    
 
 }
