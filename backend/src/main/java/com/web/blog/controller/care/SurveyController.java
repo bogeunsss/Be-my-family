@@ -38,13 +38,14 @@ public class SurveyController {
 
     @PostMapping("/care/surveyAdd")
     @ApiOperation(value = "설문 조사 등록/수정")
-    public Object surveyAdd(@RequestBody Survey request, @RequestParam(required = true) final String uid) {
+    public Object surveyAdd(@RequestBody Survey request) {
 
         ResponseEntity response = null;
         final BasicResponse result = new BasicResponse();
 
         try {
             Survey survey = request;
+            String uid = request.getUid();
             survey.setUid(uid);
             surveyDao.save(survey);
             result.status = true;
