@@ -175,8 +175,14 @@ export default {
         this.email = token.email
         this.find(this.email)
       }
-      console.log(this.$cookies.get('desertionno').desertionno)
-      axios.get(`http://localhost:8080/care/detail?desertionNo=${this.$cookies.get('desertionno').desertionno}&uid=${this.$store.state.profileData.nickName}`)
+      console.log(this.$cookies.isKey("auth-token"))
+      console.log(this.profileData.nickName)
+      axios.get('http://localhost:8080/care/detail', {
+        params: {
+          desertionNo: this.$cookies.get('desertionno').desertionno,
+          uid: this.profileData.nickName
+        }
+      })
           .then( response => {
               // this.dogs = response.data.message
               console.log(response)
