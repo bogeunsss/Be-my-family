@@ -101,7 +101,13 @@
 			<version>${jjwt.version}</version>
 		</dependency>
 
-	</dependencies>
+		<!-- 자동 재시작 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+		 </dependency>
+			
+		</dependencies>
 
 	<build>
 		<plugins>
