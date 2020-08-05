@@ -5,12 +5,18 @@
       <v-row>
         <v-col v-for="interest in interestData" :key="interest.id" class="my-5 pt-5">
           <!-- {{ dogData }} -->
-          <v-card class="d-inline-block mx-auto">
+          <v-card v-if="interest.desertionno" class="d-inline-block mx-auto">
+            <v-btn @click="deleteLike(interest)"></v-btn>
             <v-container>
               <v-row justify="space-between">
                 <v-col cols="auto">
                   <v-hover v-slot:default="{ hover }">
-                    <v-img height="300" width="300" :src="dogData.popfile">
+                    <v-img
+                      height="300"
+                      width="300"
+                      :src="dogData.popfile"
+                      @click="goDetail(interest)"
+                    >
                       <!-- <v-expand-transition> -->
                       <div
                         v-if="hover"
@@ -57,7 +63,7 @@
 <script>
 import constants from "@/lib/constants";
 import SERVER from "@/lib/constants";
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import axios from "axios";
 
 export default {
@@ -99,11 +105,42 @@ export default {
           console.log(error);
         });
     },
+    goDetail(index) {
+      console.log(this.$store.state.profileData.nickName);
+      this.$cookies.set("desertionno", {
+        desertionno: index.desertionno,
+      });
+      this.$router.push({ name: constants.URL_TYPE.POST.DETAIL });
+    },
+    deleteLike(index) {
+      // let formData = new FormData();
+      console.log(this.$store.state.profileData.nickName);
+      // formData.append('uid', this.$store.state.profileData.nickName)
+      // formData.append('desertionno', index.desertionno)
+      // console.log(index.desertionno)
+      // console.log(formData)
+      const uidd = this.$store.state.profileData.nickName
+      axios
+        .delete(`http://localhost:8080/care/interestDelete`, { params:{
+          uid: uidd,
+          desertionno: index.desertionno,
+        }})
+        .then((response) => {
+          console.log(response);
+          console.log("성공");
+          index.desertionno = null;
+          // console.log(index.desertionno)
+        })
+        .catch((error) => {
+          console.log("실패");
+        });
+    },
   },
   data() {
     return {
       interestData: {},
       dogData: {},
+      isLiked: true,
     };
   },
 };

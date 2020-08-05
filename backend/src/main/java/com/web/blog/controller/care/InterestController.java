@@ -84,7 +84,7 @@ public class InterestController {
 
     @DeleteMapping("/care/interestDelete")
     @ApiOperation(value = "관심 목록 삭제")
-    public Object interestDelete(String uid, String desertionno) {
+    public Object interestDelete(@RequestParam String uid, @RequestParam String desertionno) {
         ResponseEntity response = null;
 
         try{
