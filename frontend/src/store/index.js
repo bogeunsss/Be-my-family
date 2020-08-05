@@ -24,6 +24,12 @@ export default new Vuex.Store({
       passwordConfirm: null, 
       passwordType: 'password',
       passwordConfirmType: 'password',
+      // join 수정
+      phone: null,
+      job: null,
+      marriaged: null,
+      sex: null,
+      birthdate: null,
     },
     loginData: {
       token:'',
