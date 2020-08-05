@@ -63,7 +63,7 @@
               </router-link>
             </v-list-item-icon>
             <!-- 홈 글자 눌렀을때 메인으로 이동하는거 고치기 -->
-            <v-list-item-title style="cursor: pointer;">Home</v-list-item-title>
+            <v-list-item-title @click="goHome" style="cursor: pointer;">Home</v-list-item-title>
           </div>
           <div class="ml-5 d-flex inline">
             <v-list-item-icon style="cursor: pointer;">
@@ -162,14 +162,17 @@ export default {
   watch: {},
   created() {
     this.isLoggedIn = this.$cookies.isKey("auth-token");
-    var token = this.$cookies.get('auth-token')
-    this.find(token.email)
+    if(this.isLoggedIn){
+      var token = this.$cookies.get('auth-token')
+      this.find(token.email)
+    }
   },
   methods: {
     ...mapActions(["login", "logout", "find"]),
     ...mapMutations(["setDialog"]),
     Login() {
       this.login(this.$store.state.loginData);
+      this.$router.push({ name: constants.URL_TYPE.MAIN });
     },
     Logout() {
       this.logout();
@@ -182,6 +185,10 @@ export default {
         .catch((err) => {
           err;
         });
+    },
+    goHome() {
+      this.$router.push({ name: constants.URL_TYPE.MAIN });
+      this.$router.go()
     },
     userLike() {
       this.$router

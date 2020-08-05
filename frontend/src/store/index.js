@@ -20,6 +20,7 @@ export default new Vuex.Store({
     signupData:{
       email: null,
       nickName: null,
+      name:null,
       password: null,
       passwordConfirm: null, 
       passwordType: 'password',
@@ -39,15 +40,15 @@ export default new Vuex.Store({
     profileData: {
       email: null,
       nickName: null,
-      password: null
+      password: null,
+      name:null,
+      phone:null,
+      job:null,
+      marriaged:null,
+      sex:null,
+      birthdate:null,
     },
-    dogData: {
-      careaddr : '',
-      carenm: '',
-      kindcd: '',
-      popfile: '',
-      desertionNo: ''
-    },
+    dogData: []
   },
   getters: {
   },
@@ -66,11 +67,29 @@ export default new Vuex.Store({
     setEmail(state, email){
       state.signupData.email = email
     },
+    setName(state, name){
+      state.signupData.name = name
+    },
     setPassword(state, password){
       state.signupData.password = password
     },
     setPasswordConfirm(state, passwordConfirm){
       state.signupData.passwordConfirm = passwordConfirm
+    },
+    setPhone(state, phone){
+      state.signupData.phone = phone
+    },
+    setJob(state, job){
+      state.signupData.job = job
+    },
+    setMarriaged(state, marriaged){
+      state.signupData.marriaged = marriaged
+    },
+    setSex(state, sex){
+      state.signupData.sex = sex
+    },
+    setBirthDate(state, birthdate){
+      state.signupData.birthdate = birthdate
     },
     loginEmail(state, email){
       state.loginData.email = email
@@ -84,6 +103,9 @@ export default new Vuex.Store({
     profileNickName(state, nickName){
       state.profileData.nickName = nickName
     },
+    setSearchDogs(state, newDogData){
+      state.dogData = newDogData
+    }
 
     // isLoggedInChanged(state){
     //   if(cookies.isKey('auth-token')) return state.isLoggedIn = true
@@ -125,8 +147,15 @@ export default new Vuex.Store({
       }else{
         axios.post(SERVER.SERVER_URL + '/account/signup', {
           email: info.data.email,
+          name: info.data.name,
           password: info.data.password,
-          uid: info.data.nickName
+          uid: info.data.nickName,
+          phone: info.data.phone,
+          job: info.data.job,
+          marriaged: info.data.marriaged,
+          sex: info.data.sex,
+          birthdate: info.data.birthdate,
+
         })
         .then(res=>{
           if(res.data.data === 'emailexist'){
@@ -195,6 +224,30 @@ export default new Vuex.Store({
       axios.get(SERVER.SERVER_URL + '/account/find?email=' + email)
       .then(response=>{
         state.profileData.email = response.data.object.email
+        state.profileData.name = response.data.object.name
+        state.profileData.job = response.data.object.job
+        state.profileData.phone = response.data.object.phone
+        if(response.data.object.marriaged){
+          state.profileData.marriaged = "기혼"
+        }else{
+          state.profileData.marriaged = "미혼"
+        }
+        
+        if(response.data.object.sex){
+          state.profileData.sex = "여자"
+        }else{
+          state.profileData.sex = "남자"
+        }
+        // state.profileData.sex = response.data.object.sex
+        // state.profileData.birthdate = response.data.object.birthdate
+        
+        var data = new Date();
+        var year = data.getFullYear();
+        var count = new Date(response.data.object.birthdate);
+        var year2 = count.getFullYear();
+        var result = year - year2 + 1
+        state.profileData.birthdate = result.toString()
+        
         state.profileData.nickName = response.data.object.uid
         state.profileData.password = response.data.object.password
         // console.log(response)
@@ -228,12 +281,17 @@ export default new Vuex.Store({
       axios
         .get("http://localhost:8080/care/list")
         .then((res) =>{
-            state.dogData = res.data.object[0]
+            state.dogData = res.data.object
+            // state.dogData = res.data.object
+            // console.log(state.dogData)
         })
         .catch((err) =>{
             console.log(err)
         })
     },
+    setSearchDogs({commit}, payload){
+      commit('setSearchDogs', payload)
+    }
   },
 
   modules: {
