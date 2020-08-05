@@ -48,34 +48,54 @@ public class CaredetailController {
     @Autowired
     InterestDao interestDao;
 
-    @GetMapping("/care/detail")
+    @GetMapping("/care/detailUser")
     @ApiOperation(value = "유기견 상세 검색")
-    public Object careboarddetail(@RequestParam(required = true) final String desertionNo, 
-            @RequestParam(required = true) final String uid) {
+    public Object careboarddetailUser(@RequestParam(required = true) final String desertionno, 
+            @RequestParam(required = false) final String uid) {
 
         ResponseEntity response = null;
-        Optional<Careboard> caredetailOpt = caredetailDao.findByDesertionno(desertionNo);
-        Optional<Interest> careinterestOpt = interestDao.findByUidAndDesertionno(uid, desertionNo);
-        final BasicResponse result = new BasicResponse();
+        Optional<Careboard> caredetailOpt = caredetailDao.findByDesertionno(desertionno);
+        if(uid!=null) {
+            Optional<Interest> careinterestOpt = interestDao.findByUidAndDesertionno(uid, desertionno);
+            final BasicResponse result = new BasicResponse();
+            System.out.println("=======");
+            System.out.println(uid);
+            System.out.println(desertionno);
+            System.out.println(careinterestOpt);
+            System.out.println("=========");
+            if(!caredetailOpt.isEmpty()) {
+                result.status = true;
+                result.data = "success";
+                result.object = caredetailOpt.get();
 
-        if(caredetailOpt!=null) {
-            result.status = true;
-            result.data = "success";
-            result.object = caredetailOpt.get();
-            System.out.println(caredetailOpt.get());
-            Careboard careboard = new Careboard();
-            if(careinterestOpt != null) {
-                result.interest = false;
+                if(!careinterestOpt.isEmpty()) {
+                    result.interest = true;
+                    System.out.println("true");
+                } else {
+                    result.interest = false;
+                    System.out.println("false");
+                }
+
+                response = new ResponseEntity<>(result, HttpStatus.OK);
             } else {
-                result.interest = true;
+                result.data = "fail";
+                response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+                
             }
-            response = new ResponseEntity<>(result, HttpStatus.OK);
         } else {
-            result.data = "fail";
-            response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
-            
-        }
+            final BasicResponse result = new BasicResponse();
+            if(!caredetailOpt.isEmpty()) {
+                result.status = true;
+                result.data = "success";
+                result.object = caredetailOpt.get();
+                response = new ResponseEntity<>(result, HttpStatus.OK);
 
+            } else {
+                result.data = "fail";
+                response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+     
+            }
+        }
         return response;
-    }
+    } 
 }
