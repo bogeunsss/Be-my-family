@@ -22,14 +22,14 @@ import lombok.NoArgsConstructor;
 public class Lost {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int lostno;
 
     private String losttype;
     private String lostbreed;
     private String lostsex;
     private String lostage;
-    private Date lostdate;
+    private String lostdate;
     private String lostsido;
     private String lostgugun;
     private String lostplace;
