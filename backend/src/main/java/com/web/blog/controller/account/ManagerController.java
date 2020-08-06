@@ -85,7 +85,7 @@ public class ManagerController {
 
     @PostMapping("/manager/signup")
     @ApiOperation(value = "관리자 가입하기")
-    public Object signup(@Valid @RequestBody ManagerSignupRequest request) {
+    public Object managerSignup(@Valid @RequestBody ManagerSignupRequest request) {
         // 이메일, 닉네임 중복처리 필수
         // 회원가입단을 생성해 보세요.
 
@@ -94,7 +94,7 @@ public class ManagerController {
         String password = request.getPassword();
         String name = request.getName();
         String phone = request.getPhone();
-        String job = request.getCareNM();
+        String carenm = request.getCareNM();
 
         Manager emailCheck = managerDao.getManagerByEmail(email);
         Manager midcheck = managerDao.getManagerByMid(mid);
@@ -116,6 +116,7 @@ public class ManagerController {
             manager.setPassword(password);
             manager.setName(name);
             manager.setPhone(phone);
+            manager.setCareNM(carenm);
             managerDao.save(manager);
 
             if (managerMailService.managerMailSend(manager)) {
@@ -127,6 +128,42 @@ public class ManagerController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @PutMapping("/manager/update")
+    @ApiOperation(value = "관리자 수정하기")
+    public Object managerModify(@Valid @RequestBody ManagerSignupRequest request) {
+        // userid로 확인
+        Manager checkManager = managerDao.getManagerByMid(request.getMid());
+        ResponseEntity response = null;
 
+        checkManager.setEmail(request.getEmail());
+        checkManager.setPassword(request.getPassword());
+        checkManager.setName(request.getName());
+        checkManager.setPhone(request.getPhone());
+        managerDao.save(checkManager);
+
+        final BasicResponse result = new BasicResponse();
+        result.status = true;
+        result.data = "success";
+        result.object = checkManager;
+        response = new ResponseEntity<>(result, HttpStatus.OK);
+
+        return response;
+    }
+
+    @DeleteMapping("/manager/delete")
+    @ApiOperation(value = "삭제하기")
+    public Object delete(String mid) {
+
+        // userid로 확인
+        ResponseEntity response = null;
+        managerDao.deleteById(mid);
+
+        final BasicResponse result = new BasicResponse();
+        result.status = true;
+        result.data = "success";
+        response = new ResponseEntity<>(result, HttpStatus.OK);
+
+        return response;
+    }
 
 }
