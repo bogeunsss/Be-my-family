@@ -84,6 +84,12 @@
                 <td>maria</td>
                 <td>2020-08-6</td>
             </tr>
+            <tr>
+                <th scope="row">5</th>
+                <td>여러분 입양하세요~</td>
+                <td>sora</td>
+                <td>2020-08-6</td>
+            </tr>
         </tbody>
         </template>
     </v-simple-table>
