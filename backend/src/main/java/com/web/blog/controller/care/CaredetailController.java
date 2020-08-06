@@ -5,10 +5,12 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import com.web.blog.dao.care.AdoptionDao;
 import com.web.blog.dao.care.CaredetailDao;
 import com.web.blog.dao.care.InterestDao;
 import com.web.blog.dao.user.UserDao;
 import com.web.blog.model.BasicResponse;
+import com.web.blog.model.adoption.Adoption;
 import com.web.blog.model.care.Careboard;
 import com.web.blog.model.care.Interest;
 import com.web.blog.model.user.SignupRequest;
@@ -48,14 +50,19 @@ public class CaredetailController {
     @Autowired
     InterestDao interestDao;
 
+    @Autowired
+    AdoptionDao adoptionDao;
+
     @GetMapping("/care/detail")
     @ApiOperation(value = "유기견 상세 검색")
-    public Object careboarddetail(@RequestParam(required = true) final String desertionNo, 
+    public Object careboarddetail(@RequestParam(required = true) final String desertionno, 
             @RequestParam(required = true) final String uid) {
 
         ResponseEntity response = null;
-        Optional<Careboard> caredetailOpt = caredetailDao.findByDesertionno(desertionNo);
-        Optional<Interest> careinterestOpt = interestDao.findByUidAndDesertionno(uid, desertionNo);
+        Optional<Careboard> caredetailOpt = caredetailDao.findByDesertionno(desertionno);
+        Optional<Interest> careinterestOpt = interestDao.findByUidAndDesertionno(uid, desertionno);
+        Optional<Adoption> adoptionOpt = adoptionDao.findByUidAndDesertionno(uid, desertionno);
+       
         final BasicResponse result = new BasicResponse();
 
         if(caredetailOpt!=null) {
@@ -69,11 +76,15 @@ public class CaredetailController {
             } else {
                 result.interest = true;
             }
+            if(adoptionOpt != null) {
+                result.adoption = false;
+            } else {
+                result.adoption = true;
+            }
             response = new ResponseEntity<>(result, HttpStatus.OK);
         } else {
             result.data = "fail";
             response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
-            
         }
 
         return response;
