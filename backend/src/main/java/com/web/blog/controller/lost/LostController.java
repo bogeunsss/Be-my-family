@@ -41,7 +41,7 @@ public class LostController {
     LostDao lostDao;
 
     @Autowired
-    LosttagDao losttagDao; 
+    LosttagDao losttagDao;
 
     @PostMapping("/lost/add")
     @ApiOperation(value = "실종/입양/보호 등록/수정")
@@ -55,7 +55,7 @@ public class LostController {
             Lost lost = new Lost();
             LostPic lostPics = new LostPic();
 
-            //사진 업로드
+            // 사진 업로드
             int count = 0;
             lostPics.setLostPics(files);
 
@@ -66,16 +66,19 @@ public class LostController {
                 final String filepath = "C:/Image/" + originalfileName;
                 final File dest = new File(filepath);
                 file.transferTo(dest);
-                
+
                 System.out.println("filepath =======>" + filepath);
 
-                if (count == 0) lost.setLostpic1(filepath);
-                else if (count == 1) lost.setLostpic2(filepath);
-                else if (count == 2) lost.setLostpic3(filepath);
+                if (count == 0)
+                    lost.setLostpic1(filepath);
+                else if (count == 1)
+                    lost.setLostpic2(filepath);
+                else if (count == 2)
+                    lost.setLostpic3(filepath);
                 count++;
             }
 
-            //요청 객체 Lost dto에 저장
+            // 요청 객체 Lost dto에 저장
             lost.setLostage(request.getLostage());
             lost.setLostbreed(request.getLostbreed());
             lost.setLostcontent(request.getLostcontent());
@@ -88,11 +91,11 @@ public class LostController {
             lost.setLosttype(request.getLosttype());
             lost.setUid(request.getUid());
 
-            //lost db
+            // lost db
             lostDao.save(lost);
 
-            //tag dto, db
-            for(String tagname : request.getLosttagtext()) {
+            // tag dto, db
+            for (String tagname : request.getLosttagtext()) {
                 Losttag tag = new Losttag();
                 tag.setLostno(lost.getLostno());
                 tag.setTagname(tagname);
@@ -115,12 +118,37 @@ public class LostController {
             tagGugun.setTagname(lost.getLostgugun());
             losttagDao.save(tagGugun);
 
-            //반환
+            // 반환
             result.status = true;
             result.data = "success";
             response = new ResponseEntity<>(result, HttpStatus.OK);
 
         } catch (final Exception e) {
+            e.printStackTrace();
+            result.status = false;
+            result.data = "fail";
+            response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+        }
+
+        return response;
+    }
+
+    @GetMapping("lost/list")
+    @ApiOperation(value = "실종/보호/목격")
+    public Object listList() {
+
+        ResponseEntity response = null;
+        final BasicResponse result = new BasicResponse();
+
+        try {
+
+            List<Lost> lostList = lostDao.findAll();
+            result.status = true;
+            result.data = "success";
+            result.object = lostList;
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+
+        } catch (Exception e) {
             e.printStackTrace();
             result.status = false;
             result.data = "fail";
