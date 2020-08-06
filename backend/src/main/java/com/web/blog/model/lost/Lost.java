@@ -39,6 +39,7 @@ public class Lost {
     private String lostpic1;
     private String lostpic2;
     private String lostpic3;
+    private String uid;
 
     @Column(insertable = false, updatable = false)
     private Date lostcreatedate;

@@ -86,6 +86,7 @@ public class LostController {
             lost.setLostsex(request.getLostsex());
             lost.setLostsido(request.getLostsido());
             lost.setLosttype(request.getLosttype());
+            lost.setUid(request.getUid());
 
             //lost db
             lostDao.save(lost);

@@ -12,6 +12,9 @@ import lombok.Data;
 @Data
 public class LostRequest {
 
+    @ApiModelProperty(required = true)
+    private String uid;
+
     @ApiModelProperty(required = false)
     private Integer lostno;
 
