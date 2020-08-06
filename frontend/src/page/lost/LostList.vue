@@ -98,7 +98,7 @@
           </v-row>
           <v-list-item>
             <p class="font-weght-black mr-3">태그</p>
-            <p id="characteristic"></p>
+            <div id="characteristic"></div>
           </v-list-item>
           <v-list-item>
             <v-textarea outlined label="내용" v-model="content"></v-textarea>
@@ -129,10 +129,10 @@ export default {
       console.log(newVal[newVal.length-1])
       if(!this.status && newVal[newVal.length-1] === '#'){
         this.status = true
-      }else if(this.status && newVal[newVal.length-1] === ' '){
+      }else if(this.status && (newVal[newVal.length-1] === ' ' || newVal[newVal.length-1] === '\n')){
         this.status = false
-        const icon = document.createElement('i');
-        icon.className = "material-icons icon";
+        const icon = document.createElement('v-chip');
+        // icon.className = "material-icons icon";
         icon.innerHTML = this.sampleText.trim();
         var main = document.getElementById('characteristic');
         main.appendChild(icon);
