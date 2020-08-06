@@ -46,7 +46,7 @@ public class LostController {
     LosttagDao losttagDao;
 
     @PostMapping("/lost/add")
-    @ApiOperation(value = "실종/입양/보호 등록")
+    @ApiOperation(value = "실종/입양/보호 글 등록")
     public Object lostAdd(@RequestPart final List<MultipartFile> files, LostRequest request) {
 
         ResponseEntity response = null;
@@ -136,7 +136,7 @@ public class LostController {
     }
 
     @GetMapping("lost/list")
-    @ApiOperation(value = "실종/보호/목격 전체리스트")
+    @ApiOperation(value = "실종/보호/목격 전체 조회")
     public Object lostList() {
 
         ResponseEntity response = null;
@@ -161,7 +161,7 @@ public class LostController {
     }
 
     @GetMapping("lost/detail")
-    @ApiOperation(value = "")
+    @ApiOperation(value = "실종/목격/보호 상세 조회")
     public Object lostDetail(@RequestParam(required = true) int lostno) {
         
         ResponseEntity response = null;
@@ -193,6 +193,64 @@ public class LostController {
         }
         
         return response;
+    }
+
+    @DeleteMapping("list/delete")
+    @ApiOperation(value = "실종/목격/보호 글 삭제")
+    public Object lostDelete(@RequestParam(required = true) final int lostno, @RequestParam(required = true) final String uid) {
+
+        ResponseEntity response = null;
+        BasicResponse result = new BasicResponse();
+
+        try {
+            Optional<Lost> lost = lostDao.findByLostno(lostno);
+            if (lost.isPresent()) {
+                if (lost.get().getUid().equals(uid)) {
+                    
+                    if(lost.get().getLostpic1() != null) {
+                        File file = new File(lost.get().getLostpic1());
+                        if(file.exists() == true){
+                            file.delete();
+                        }
+                    }
+
+                    if(lost.get().getLostpic2() != null) {
+                        File file = new File(lost.get().getLostpic2());
+                        if(file.exists() == true){
+                            file.delete();
+                        }
+                    }
+
+                    if(lost.get().getLostpic3() != null) {
+                        File file = new File(lost.get().getLostpic3());
+                        if(file.exists() == true){
+                            file.delete();
+                        }
+                    }
+
+                    losttagDao.deleteByLostno(lostno);
+                    lostDao.deleteByLostno(lostno);
+                    result.data = "success";
+
+                } else {
+                    result.data = "uid diff";
+                }
+            } else {
+                result.data = "lostno not exsit";
+            }
+
+            result.status = true;
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.status = false;
+            result.data = "fail";
+            response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+        }
+
+        return response;
+
     }
     
 
