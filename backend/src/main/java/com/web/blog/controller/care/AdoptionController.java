@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import com.mysql.cj.xdevapi.Result;
 import com.web.blog.dao.care.AdoptionDao;
 import com.web.blog.dao.care.SurveyDao;
 import com.web.blog.dao.user.UserDao;
@@ -145,8 +146,8 @@ public class AdoptionController {
 
         result.status = true;
         result.data = "success";
-        //==메일 서비스==
-        // User user = userDao.getUserByEmail(email);
+        //==메일 서비스== 
+        // User user = userDao.getUserByEmail(email); 유저 말고 manager
         // // adoption.setMid(checkmid);
         // if(AdoptionMailService.userMailSend(user)) {
         // }
@@ -155,12 +156,26 @@ public class AdoptionController {
     }
 
     @DeleteMapping("/adoption/delete")
-    @ApiOperation(value = "관심 목록 삭제")
+    @ApiOperation(value = "입양 신청 삭제")
     public Object interestDelete(String uid, String desertionno) {
         ResponseEntity response = null;
-
-
-
+        
+        final BasicResponse result = new BasicResponse();
+        try {
+            Optional<Adoption> adoption = adoptionDao.findByUidAndDesertionno(uid, desertionno);
+            
+            if(adoption.isPresent()) {
+                adoptionDao.deleteByUidAndDesertionno(uid, desertionno);
+                result.status = true;
+                result.data = "success";
+                response = new ResponseEntity<>(result, HttpStatus.OK);
+            }
+        }   catch(Exception e) {
+            System.out.println(e.getMessage());
+            result.status = false;
+            result.data = "fail";
+            response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+        }
         return response;
     }
 }

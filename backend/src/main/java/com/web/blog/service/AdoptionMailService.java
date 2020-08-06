@@ -15,7 +15,7 @@ public class AdoptionMailService {
     private static final String TITLE = "김민주짱에 가입한 것을 환영합니다.";
     private static final String CONTEXT = "님의 회원가입을 축하드립니다.";
 
-    public boolean userMailSend(User user) {
+    public boolean userMailSend(User user) {//manager로 변경
 
         try {
             SimpleMailMessage message = new SimpleMailMessage();
