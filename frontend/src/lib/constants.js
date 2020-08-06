@@ -15,6 +15,10 @@ export default {
         POST: {
             LIST:"list",
             DETAIL: 'detail'
+        },
+        LOST: {
+            LOSTLIST:'lostList',
+            LOSTDETAIL:'lostDetail',
         }
     }
 }
