@@ -26,7 +26,7 @@ public class Manager {
     private String name; 
     private String password;
     private String email;
-    private String phonenumber;
+    private String phone;
 
     @Column(insertable = false, updatable = false)
     private LocalDateTime createdate;

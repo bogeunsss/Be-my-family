@@ -7,10 +7,13 @@ import javax.validation.Valid;
 import com.web.blog.dao.manager.ManagerDao;
 import com.web.blog.dao.user.UserDao;
 import com.web.blog.model.BasicResponse;
+import com.web.blog.model.manager.Manager;
+import com.web.blog.model.manager.ManagerSignupRequest;
 import com.web.blog.model.user.SignupRequest;
 import com.web.blog.model.user.User;
 import com.web.blog.security.JwtAuthenticationResult;
 import com.web.blog.security.JwtTokenProvider;
+import com.web.blog.service.ManagerMailService;
 import com.web.blog.service.MailService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +43,90 @@ import io.swagger.annotations.ApiResponses;
 public class ManagerController {
     @Autowired
     ManagerDao managerDao;
+
+    @Autowired
+    ManagerMailService managerMailService;
+
+    @Autowired
+    JwtTokenProvider tokenProvider;
+
+    @PostMapping("/manager/login")
+    @ApiOperation(value = "관리자 로그인")
+    public Object managerLogin(@RequestParam(required = true) final String email,
+            @RequestParam(required = true) final String password) {
+
+        ResponseEntity response = null;
+        Optional<Manager> managerOpt = managerDao.findManagerByEmailAndPassword(email, password);
+
+        final BasicResponse result = new BasicResponse();
+        if (managerOpt.isPresent()) {
+            result.status = true;
+            result.data = "success";
+
+            Manager manager = new Manager();
+            manager.setMid(managerOpt.get().getMid());
+            manager.setEmail(email);
+            manager.setPassword(password);
+
+            String jwt = tokenProvider.managerToken(manager);
+            result.object = new JwtAuthenticationResult(jwt);
+            result.email = manager.getEmail();
+            result.uid = manager.getMid();
+            result.password = manager.getPassword();
+
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+        } else {
+            result.data = "fail";
+            response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+        }
+
+        return response;
+    }
+
+    @PostMapping("/manager/signup")
+    @ApiOperation(value = "관리자 가입하기")
+    public Object signup(@Valid @RequestBody ManagerSignupRequest request) {
+        // 이메일, 닉네임 중복처리 필수
+        // 회원가입단을 생성해 보세요.
+
+        String mid = request.getMid();
+        String email = request.getEmail();
+        String password = request.getPassword();
+        String name = request.getName();
+        String phone = request.getPhone();
+        String job = request.getCareNM();
+
+        Manager emailCheck = managerDao.getManagerByEmail(email);
+        Manager midcheck = managerDao.getManagerByMid(mid);
+
+        final BasicResponse result = new BasicResponse();
+
+        if (emailCheck != null) {
+            result.status = true;
+            result.data = "emailexist";
+        } else if (midcheck != null) {
+            result.status = true;
+            result.data = "nicknameexist";
+        } else {
+            result.status = true;
+            result.data = "success";
+            Manager manager = new Manager();
+            manager.setMid(mid);
+            manager.setEmail(email);
+            manager.setPassword(password);
+            manager.setName(name);
+            manager.setPhone(phone);
+            managerDao.save(manager);
+
+            if (managerMailService.managerMailSend(manager)) {
+                result.data = "emailsuccess";
+            } else {
+                result.data = "emailfail";
+            }
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 
 
 }
