@@ -122,7 +122,7 @@
     <div class="container mb-5">
       <v-btn outlined @click="goList">List</v-btn>
       <v-btn outlined>실종/보호/목격</v-btn>
-      <v-btn outlined>입양후기</v-btn>
+      <v-btn outlined @click="adoptList">입양후기</v-btn>
     </div>
   
   </div>
@@ -208,6 +208,10 @@ export default {
     goList(){
       this.$router
         .push({ name: constants.URL_TYPE.POST.LIST })
+    },
+    adoptList(){
+      this.$router
+        .push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTLIST })
     }
   },
 
