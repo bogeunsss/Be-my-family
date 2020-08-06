@@ -1,11 +1,15 @@
 Be My Family
 =========
-## 유기견이 가족을 찾을 수 있도록 도와주는 Web Service
+### 유기견이 가족을 찾을 수 있도록 도와주는 Web Service
 
+  
 
+  
 개발환경
 =========
 __SpringBoot, Maven, JPA, MariaDB, VUE.JS, AWS__
+
+  
 
 페이지 구성
 =========
@@ -26,6 +30,7 @@ __SpringBoot, Maven, JPA, MariaDB, VUE.JS, AWS__
 	+ 게시글 등록  
 + 입양후기(구현중)  
 
+  
 
 Developer
 ========
