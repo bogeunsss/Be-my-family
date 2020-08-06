@@ -32,6 +32,7 @@ public class Lost {
     private String gugun;
     private String lostplace;
     private String lostcontent;
+    private String losttagtext;
     private String lostphone;
 
     @Column(insertable = false, updatable = false)

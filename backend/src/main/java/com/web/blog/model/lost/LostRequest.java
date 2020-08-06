@@ -42,6 +42,9 @@ public class LostRequest {
     private String lostcontent;
 
     @ApiModelProperty(required = false)
+    private String losttagtext;
+
+    @ApiModelProperty(required = false)
     private String lostphone;
 
     @ApiModelProperty(required = false)
