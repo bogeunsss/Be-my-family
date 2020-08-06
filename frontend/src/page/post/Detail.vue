@@ -11,134 +11,96 @@
         <v-row>
           <v-col col="12" class="font-weight-black">구조일</v-col>
           {{ dogData.noticesdt }}
-      </v-row>
-      <v-row>
+        </v-row>
+        <v-row>
           <v-col col="12" class="font-weight-black">구조장소</v-col>
           {{ dogData.happenplace }}
-      </v-row>
-      <v-row>
+        </v-row>
+        <v-row>
           <v-col col="6" class="font-weight-black">견종</v-col>
           {{ dogData.kindcd }}
           <v-col col="6" class="font-weight-black">성별</v-col>
           {{ dogData.sexcd}}
-      </v-row>
-      <v-row>
+        </v-row>
+        <v-row>
           <v-col col="6" class="font-weight-black">연령</v-col>
           {{ dogData.age }}
           <v-col col="6" class="font-weight-black">모색</v-col>
           {{ dogData.colorcd }}
-      </v-row>
-      <v-row>
+        </v-row>
+        <v-row>
           <v-col col="6" class="font-weight-black">중성화 여부</v-col>
           {{ dogData.neuteryn }}
           <v-col col="6" class="font-weight-black">체중</v-col>
           {{ dogData.weight }}
-      </v-row>
-      <v-row>
-          <v-col col=12 class="font-weight-black">특징</v-col>
+        </v-row>
+        <v-row>
+          <v-col col="12" class="font-weight-black">특징</v-col>
           {{ dogData.specialmark }}
-      </v-row>
+        </v-row>
 
         <v-divider class="my-2"></v-divider>
       </v-card-text>
 
-    <v-card-actions class="d-flex justify-center">
-      
-      <v-btn color="success" depressed v-if="isLikeDog" @click="likeDog">관심이써여~</v-btn>
-      <v-btn color="success" depressed v-if="!isLikeDog">관심업서여</v-btn>
-      <v-btn
-        color="primary"
-        class="ma-2"
-        dark
-        @click="dialog = true"
-      >
-        입양신청
-      </v-btn>
-      <!-- total 보내야 할 데이터 : email, 상담날짜, 상담시간, 강아지id, url: /account/adoptionList -->
-      <v-dialog
-        v-model="dialog"
-        max-width="500px"
-      >
-        <v-card>
-          <v-card-title>
-            입양신청서
-          </v-card-title>
-          <v-card-text>
-            <!-- 개인 정보 template -->
-            <v-text-field
-              color="primary"
-              @click="dialog2 = !dialog2"
-              v-model="date"
-              label="상담 날짜를 선택해주세요"
-              readonly
-            >
-            </v-text-field>
-            <!-- 상담 시간 template -->
-            <v-text-field
-              color="primary"
-              @click="dialog3 = !dialog3"
-              v-model="selectedTime"
-              label="상담 시간을 선택해주세요"
-              readonly
-            ></v-text-field>
-            
-          </v-card-text>
-          <v-card-actions>
-            <!-- @click 에다가 신청서 보내는 비동기 요청 함수 달기. -->
-            <v-btn
-              color="primary"
-              text
-              @click="requestComplete"
-            >
-              신청완료
-            </v-btn>
-            <v-btn
-              color="primary"
-              text
-              @click="dialog = false"
-            >
-              취소
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-      <!-- 날짜 입력 v-date-picker -->
-      <v-dialog
-        ref="dialog"
-        v-model="dialog2"
-        :return-value.sync="date"
-        persistent
-        width="290px"
-      >
-        <v-date-picker v-model="date" scrollable>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" @click="dialog2 = false">취소</v-btn>
-          <v-btn color="primary" @click="$refs.dialog.save(date)">확인</v-btn>
-        </v-date-picker>
-      </v-dialog>
-      <!-- 시간 입력 -->
-      <v-dialog
-        ref="dialog2"
-        v-model="dialog3"
-        :return-value.sync="selectedTime"
-        persistent
-        width="290px"
-      >
-        <v-list>
-          <v-list-item-group>
-            <v-list-item
-              v-for="time in times"
-              :key="time"
-            >
-              <v-list-item-content @click="$refs.dialog2.save(time+'시')">{{ time }}시</v-list-item-content>
-            </v-list-item>
-          </v-list-item-group>
-        </v-list>
-      </v-dialog>
-
-    </v-card-actions>
-
-  </v-card>
+      <v-card-actions class="d-flex justify-center">
+        <v-btn color="success" depressed v-if="isLikeDog" @click="likeDog">관심이써여~</v-btn>
+        <v-btn color="success" depressed v-if="!isLikeDog">관심업서여</v-btn>
+        <v-btn color="primary" class="ma-2" dark @click="dialog = true">입양신청</v-btn>
+        <!-- total 보내야 할 데이터 : email, 상담날짜, 상담시간, 강아지id, url: /account/adoptionList -->
+        <v-dialog v-model="dialog" max-width="500px">
+          <v-card>
+            <v-card-title>입양신청서</v-card-title>
+            <v-card-text>
+              <!-- 개인 정보 template -->
+              <v-text-field
+                color="primary"
+                @click="dialog2 = !dialog2"
+                v-model="date"
+                label="상담 날짜를 선택해주세요"
+                readonly
+              ></v-text-field>
+              <!-- 상담 시간 template -->
+              <v-text-field
+                color="primary"
+                @click="dialog3 = !dialog3"
+                v-model="selectedTime"
+                label="상담 시간을 선택해주세요"
+                readonly
+              ></v-text-field>
+            </v-card-text>
+            <v-card-actions>
+              <!-- @click 에다가 신청서 보내는 비동기 요청 함수 달기. -->
+              <v-btn color="primary" text @click="requestComplete">신청완료</v-btn>
+              <v-btn color="primary" text @click="dialog = false">취소</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <!-- 날짜 입력 v-date-picker -->
+        <v-dialog ref="dialog" v-model="dialog2" :return-value.sync="date" persistent width="290px">
+          <v-date-picker v-model="date" scrollable>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" @click="dialog2 = false">취소</v-btn>
+            <v-btn color="primary" @click="$refs.dialog.save(date)">확인</v-btn>
+          </v-date-picker>
+        </v-dialog>
+        <!-- 시간 입력 -->
+        <v-dialog
+          ref="dialog2"
+          v-model="dialog3"
+          :return-value.sync="selectedTime"
+          persistent
+          width="290px"
+        >
+          <v-list>
+            <v-list-item-group>
+              <v-list-item v-for="time in times" :key="time">
+                <v-list-item-content @click="$refs.dialog2.save(time+'시')">{{ time }}시</v-list-item-content>
+              </v-list-item>
+            </v-list-item-group>
+          </v-list>
+        </v-dialog>
+      </v-card-actions>
+    </v-card>
   </div>
 </template>
 
@@ -170,30 +132,34 @@ export default {
       ...mapState(['profileData'])
     },
     created(){
-      if(this.$cookies.isKey("auth-token")){
-        var token = this.$cookies.get('auth-token')
-        this.email = token.email
-        this.find(this.email)
-      }
-      console.log(this.$cookies.isKey("auth-token"))
-      console.log(this.profileData.nickName)
-      axios.get('http://localhost:8080/care/detail', {
-        params: {
-          desertionNo: this.$cookies.get('desertionno').desertionno,
-          uid: this.profileData.nickName
-        }
-      })
-          .then( response => {
-              // this.dogs = response.data.message
-              console.log(response)
-              this.dogData = response.data.object
-          })
-          .catch( error => {
-              console.log(error)
-          })
+      this.getDetail()
     },
     methods:{
       ...mapActions(['find']),
+      getDetail(){
+        if(this.$cookies.isKey("auth-token")){
+          var token = this.$cookies.get('auth-token')
+          this.email = token.email
+          this.find(this.email)
+        }
+        console.log(this.$cookies.isKey("auth-token"))
+        console.log(this.profileData.nickName)
+        axios.get('http://localhost:8080/care/detail', {
+          params: {
+            desertionNo: this.$cookies.get('desertionno').desertionno,
+            uid: this.profileData.nickName
+          }
+        })
+        .then( response => {
+            // this.dogs = response.data.message
+            console.log(response)
+            this.dogData = response.data.object
+        })
+        .catch( error => {
+            console.log(error)
+        })
+      },
+
       requestComplete(){
         let st = ""
         if(this.selectedTime.length > 2){
