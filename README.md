@@ -1,11 +1,11 @@
 Be My Family
 =========
-##유기견이 가족을 찾을 수 있도록 도와주는 Web Service
+## 유기견이 가족을 찾을 수 있도록 도와주는 Web Service
 
 
 개발환경
 =========
-SpringBoot, Maven, JPA, MariaDB, VUE.JS, AWS
+__SpringBoot, Maven, JPA, MariaDB, VUE.JS, AWS__
 
 페이지 구성
 =========
@@ -29,11 +29,11 @@ SpringBoot, Maven, JPA, MariaDB, VUE.JS, AWS
 
 Developer
 ========
-### Backend:  길훈성  
-### Backend:  김민주  
-### Frontend: 김준기  
-### Frontend: 김진실  
-### Frontend: 최보근  
+##### Backend:  길훈성  
+##### Backend:  김민주  
+##### Frontend: 김준기  
+##### Frontend: 김진실  
+##### Frontend: 최보근  
 
 
 
