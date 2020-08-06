@@ -1,5 +1,6 @@
 <template>
   <div class="container" style="width:40%;">
+    
     <v-card class="mx-auto" width="95%" height="100%">
       <v-toolbar flat color="blue-grey" dark>
         <v-toolbar-title>상세게시판</v-toolbar-title>
@@ -43,9 +44,9 @@
       </v-card-text>
 
       <v-card-actions class="d-flex justify-center">
-        <v-btn color="success" depressed v-if="isLikeDog" @click="likeDog">관심이써여~</v-btn>
-        <v-btn color="success" depressed v-if="!isLikeDog">관심업서여</v-btn>
-        <v-btn color="primary" class="ma-2" dark @click="dialog = true">입양신청</v-btn>
+        <v-btn color="success" depressed v-if="!isLikeDog && isLoggedIn" @click="likeDog">관심이써여~</v-btn>
+        <v-btn color="success" depressed v-if="isLikeDog" @click="deleteLike">관심업서여</v-btn>
+        <v-btn color="primary" class="ma-2" dark v-if="isLoggedIn" @click="dialog = true">입양신청</v-btn>
         <!-- total 보내야 할 데이터 : email, 상담날짜, 상담시간, 강아지id, url: /account/adoptionList -->
         <v-dialog v-model="dialog" max-width="500px">
           <v-card>
@@ -125,7 +126,8 @@ export default {
             '9','10','11','12','13','14','15','16','17','18'
           ],
           email: '',
-          isLikeDog: true,
+          isLikeDog: false,
+          isLoggedIn: false,
         }
     },
     computed:{
@@ -133,6 +135,8 @@ export default {
     },
     created(){
       this.getDetail()
+      console.log( this.$route.params.uuid )
+      console.log(this.isLoggedIn)
     },
     methods:{
       ...mapActions(['find']),
@@ -140,24 +144,33 @@ export default {
         if(this.$cookies.isKey("auth-token")){
           var token = this.$cookies.get('auth-token')
           this.email = token.email
+          this.isLoggedIn = true
           this.find(this.email)
         }
-        console.log(this.$cookies.isKey("auth-token"))
+        console.log(this.$cookies.get('desertionno').desertionno)
         console.log(this.profileData.nickName)
-        axios.get('http://localhost:8080/care/detail', {
-          params: {
-            desertionNo: this.$cookies.get('desertionno').desertionno,
-            uid: this.profileData.nickName
-          }
-        })
-        .then( response => {
-            // this.dogs = response.data.message
-            console.log(response)
-            this.dogData = response.data.object
-        })
-        .catch( error => {
-            console.log(error)
-        })
+        setTimeout(()=>{
+          axios.get('http://localhost:8080/care/detailUser', {
+            params: {
+              desertionno: this.$cookies.get('desertionno').desertionno,
+              uid: this.profileData.nickName
+            }
+          })
+          .then( response => {
+              // this.dogs = response.data.message
+              console.log(response)
+              this.dogData = response.data.object
+              if(this.$route.params.uuid === undefined){
+                // this.isLikeDog = false
+                this.isLikeDog = response.data.interest
+              }else{
+                this.isLikeDog = true
+              }
+          })
+          .catch( error => {
+              console.log(error)
+          })
+        }, 100)
       },
 
       requestComplete(){
@@ -187,15 +200,32 @@ export default {
           .post("http://localhost:8080/care/interestAdd", formData)
           .then((response) => {
             console.log(response.data);
-            this.isLikeDog = false;
+            console.log(response.data.interest)
+            this.isLikeDog = response.data.interest;
             // this.dogData = response.data.object;
           })
           .catch((error) => {
             console.log(error);
           });
       },
-      dislikeDog() {
-        axios.delete;
+      deleteLike() {
+      console.log(this.$store.state.profileData.nickName);
+      axios
+        .delete(`http://localhost:8080/care/interestDelete`, { params:{
+          uid: this.$cookies.get('nickName'),
+          desertionno: this.$cookies.get('desertionno').desertionno
+        }})
+        .then((response) => {
+          console.log(response);
+          console.log("성공");
+          // index.desertionno = null;
+          this.isLikeDog = false
+          // this.getInterest()
+          // console.log(index.desertionno)
+        })
+        .catch((error) => {
+          console.log("실패");
+        });
       },
     },
     destroyed(){

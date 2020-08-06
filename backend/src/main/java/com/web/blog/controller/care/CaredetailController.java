@@ -57,6 +57,7 @@ public class CaredetailController {
         if(uid!=null) {
             Optional<Interest> careinterestOpt = interestDao.findByUidAndDesertionno(uid, desertionno);
             final BasicResponse result = new BasicResponse();
+            result.uid = uid;
             if(!caredetailOpt.isEmpty()) {
                 result.status = true;
                 result.data = "success";

@@ -5,8 +5,8 @@
       <v-row>
         <v-col v-for="interest in interestData" :key="interest.id" class="my-5 pt-5">
           <!-- {{ dogData }} -->
-          <v-card v-if="interest.desertionno" class="d-inline-block mx-auto">
-            <v-btn @click="deleteLike(interest)"></v-btn>
+          <v-card v-if="interest.desertionno" class="d-inline-block mx-auto" style="width:400px">
+            <i @click="deleteLike(interest)" class="fas fa-backspace float-right" style="font-size:40px; cursor:pointer"></i>
             <v-container>
               <v-row justify="space-between">
                 <v-col cols="auto">
@@ -26,12 +26,12 @@
                       <!-- </v-expand-transition> -->
                     </v-img>
                   </v-hover>
-                  <v-card-title>Top 10 Australian beaches</v-card-title>
+                  <v-card-title>강아지입니다</v-card-title>
                 </v-col>
 
                 <v-col cols="auto" class="text-center pl-0">
                   <v-row class="flex-column ma-0 fill-height" justify="center">
-                    <v-col class="px-0">
+                    <!-- <v-col class="px-0">
                       <v-btn icon>
                         <v-icon>mdi-heart</v-icon>
                       </v-btn>
@@ -47,7 +47,7 @@
                       <v-btn icon>
                         <v-icon>mdi-share-variant</v-icon>
                       </v-btn>
-                    </v-col>
+                    </v-col> -->
                   </v-row>
                 </v-col>
               </v-row>
@@ -72,14 +72,22 @@ export default {
     ...mapState(["profileData"]),
   },
   created() {
-    this.getInterest();
+    this.getInterest()
+    // this.getInformation()
   },
   methods: {
+    ...mapActions(['find']),
     getInterest() {
+      if(this.$cookies.isKey("auth-token")){
+        var token = this.$cookies.get('auth-token')
+        this.email = token.email
+        this.find(this.email)
+      }
       axios
         .get(`http://localhost:8080/care/interestList`, {
           params: {
-            uid: this.$store.state.profileData.nickName,
+            // uid: this.$store.state.profileData.nickName,
+            uid: this.$cookies.get('nickName'),
           },
         })
         .then((response) => {
@@ -90,12 +98,13 @@ export default {
         })
         .catch((err) => console.log(err));
     },
-    getInformation(desertion_no) {
+    getInformation(desertionno_no) {
+      console.log(desertionno_no)
       axios
-        .get(`http://localhost:8080/care/detail`, {
+        .get(`http://localhost:8080/care/detailUser`, {
           params: {
-            desertionNo: desertion_no,
-            uid: this.$store.state.profileData.nickName,
+            desertionno: desertionno_no,
+            uid: this.profileData.nickName,
           },
         })
         .then((response) => {
@@ -110,7 +119,7 @@ export default {
       this.$cookies.set("desertionno", {
         desertionno: index.desertionno,
       });
-      this.$router.push({ name: constants.URL_TYPE.POST.DETAIL });
+      this.$router.push({ name: constants.URL_TYPE.POST.DETAIL , params : { uuid : this.$store.state.profileData.nickName } });
     },
     deleteLike(index) {
       // let formData = new FormData();
@@ -129,6 +138,7 @@ export default {
           console.log(response);
           console.log("성공");
           index.desertionno = null;
+          this.getInterest()
           // console.log(index.desertionno)
         })
         .catch((error) => {

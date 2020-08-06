@@ -49,11 +49,13 @@ public class InterestController {
             result.data = "success";
             result.object = interestlist;
             result.interest = true;
+            result.uid = uid;
             response = new ResponseEntity<>(result, HttpStatus.OK);
         } else {
             result.data = "no search";
             result.object = null;
             result.interest = false;
+            result.uid = uid;
             response = new ResponseEntity<>(result, HttpStatus.OK);
         }
         
