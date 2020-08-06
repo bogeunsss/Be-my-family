@@ -252,6 +252,22 @@ public class LostController {
         return response;
 
     }
+
+    @PutMapping("lost/update")
+    @ApiOperation(value = "실종/목격/보호 글 수정")
+    public Object lostUpdate(LostRequest request, @RequestParam(required = true) final String uid) {
+
+        ResponseEntity response = null;
+        BasicResponse result = new BasicResponse();
+
+        try {
+
+        } catch(Exception e) {
+
+        }
+
+        return response;
+    }
     
 
 }
