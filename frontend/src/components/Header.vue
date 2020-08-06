@@ -211,6 +211,10 @@ export default {
       this.$router
         .push({ name: constants.URL_TYPE.POST.LIST })
     },
+    adoptList(){
+      this.$router
+        .push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTLIST })
+    },
     goLost(){
       this.$router.push({ name: constants.URL_TYPE.LOST.LOSTLIST })
     }

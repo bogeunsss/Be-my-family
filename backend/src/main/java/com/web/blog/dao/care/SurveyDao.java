@@ -12,5 +12,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface SurveyDao extends JpaRepository<Survey, String> { 
 
     Optional<Survey> findByUid(String uid);
-
 }
