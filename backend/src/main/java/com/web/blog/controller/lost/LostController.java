@@ -91,7 +91,6 @@ public class LostController {
             lostDao.save(lost);
 
             //tag dto, db
-            
             for(String tagname : request.getLosttagtext()) {
                 Losttag tag = new Losttag();
                 tag.setLostno(lost.getLostno());
@@ -99,6 +98,21 @@ public class LostController {
                 System.out.println("tag =======>" + tag);
                 losttagDao.save(tag);
             }
+
+            Losttag tagBreed = new Losttag();
+            tagBreed.setLostno(lost.getLostno());
+            tagBreed.setTagname(lost.getLostbreed());
+            losttagDao.save(tagBreed);
+
+            Losttag tagSido = new Losttag();
+            tagSido.setLostno(lost.getLostno());
+            tagSido.setTagname(lost.getLostsido());
+            losttagDao.save(tagSido);
+
+            Losttag tagGugun = new Losttag();
+            tagGugun.setLostno(lost.getLostno());
+            tagGugun.setTagname(lost.getLostgugun());
+            losttagDao.save(tagGugun);
 
             //반환
             result.status = true;
