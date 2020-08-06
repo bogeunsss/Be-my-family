@@ -105,6 +105,9 @@ export default new Vuex.Store({
     },
     setSearchDogs(state, newDogData){
       state.dogData = newDogData
+    },
+    checkLoggedIn(state, check){
+      state.isLoggedIn = check
     }
 
     // isLoggedInChanged(state){
@@ -291,7 +294,10 @@ export default new Vuex.Store({
     },
     setSearchDogs({commit}, payload){
       commit('setSearchDogs', payload)
-    }
+    },
+    isLoggedInChecker({commit}, payload){
+      commit('checkLoggedIn', payload)
+    },
   },
 
   modules: {

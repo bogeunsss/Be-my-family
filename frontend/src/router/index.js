@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Vuex from 'vuex'
 
+import Store from '@/store/index'
 import constants from '@/lib/constants'
 
 import Login from '@/page/user/Login.vue'
@@ -15,6 +16,8 @@ import Params from '@/page/error/Params.vue'
 import Main from '@/page/post/MainList.vue'
 import List from '@/page/post/List.vue'
 import Detail from '@/page/post/Detail.vue'
+import LostList from '@/page/lost/LostList.vue'
+import LostDetail from '@/page/lost/LostDetail.vue'
 
 Vue.use(Router)
 Vue.use(Vuex)
@@ -40,12 +43,26 @@ export default new Router({
       path: '/user/profile',
       name: constants.URL_TYPE.USER.PROFILE,
       component: Profile,
-      props: true
+      props: true,
+      beforeEnter(to, from, next){
+        if(Store.state.isLoggedIn){
+          next()
+        }else{
+          alert('로그인이 필요합니다.')
+        }
+      }
     },
     {
       path: '/user/update',
       name: constants.URL_TYPE.USER.UPDATE,
-      component: Update
+      component: Update,
+      beforeEnter(to, from, next){
+        if(Store.state.isLoggedIn){
+          next()
+        }else{
+          alert('로그인이 필요합니다.')
+        }
+      }
     },
     {
       path: '/',
@@ -65,12 +82,36 @@ export default new Router({
     {
       path: '/user/like',
       name: constants.URL_TYPE.USER.LIKE,
-      component: Like
+      component: Like,
+      beforeEnter(to, from, next){
+        if(Store.state.isLoggedIn){
+          next()
+        }else{
+          alert('로그인이 필요합니다.')
+        }
+      }
     },
     {
       path: '/user/survey',
       name: constants.URL_TYPE.USER.SURVEY,
-      component: Survey
+      component: Survey,
+      beforeEnter(to, from, next){
+        if(Store.state.isLoggedIn){
+          next()
+        }else{
+          alert('로그인이 필요합니다.')
+        }
+      }
+    },
+    {
+      path: '/lost',
+      name: constants.URL_TYPE.LOST.LOSTLIST,
+      component: LostList
+    },
+    {
+      path: '/lost/:articleNo',
+      name: constants.URL_TYPE.LOST.LOSTDETAIL,
+      component: LostDetail
     },
     {
       path: '/params',
