@@ -31,10 +31,10 @@ public class LostRequest {
     private Date lostdate;
 
     @ApiModelProperty(required = true)
-    private String sido;
+    private String lostsido;
 
     @ApiModelProperty(required = true)
-    private String gugun;
+    private String lostgugun;
 
     @ApiModelProperty(required = true)
     private String lostplace;
