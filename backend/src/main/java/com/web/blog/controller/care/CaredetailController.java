@@ -46,7 +46,6 @@ public class CaredetailController {
     @Autowired
     CaredetailDao caredetailDao;
 
-    
     @Autowired
     InterestDao interestDao;
 

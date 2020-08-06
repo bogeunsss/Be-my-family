@@ -6,13 +6,17 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import com.web.blog.dao.care.AdoptionDao;
+import com.web.blog.dao.care.SurveyDao;
 import com.web.blog.dao.user.UserDao;
 import com.web.blog.model.BasicResponse;
-import com.web.blog.model.care.Adoption;
+import com.web.blog.model.adoption.Adoption;
+import com.web.blog.model.adoption.ApplicationRequest;
+import com.web.blog.model.care.Survey;
 import com.web.blog.model.user.SignupRequest;
 import com.web.blog.model.user.User;
 import com.web.blog.security.JwtAuthenticationResult;
 import com.web.blog.security.JwtTokenProvider;
+import com.web.blog.service.AdoptionMailService;
 import com.web.blog.service.MailService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +49,12 @@ public class AdoptionController {
         @Autowired
         AdoptionDao adoptionDao;
 
+        @Autowired
+        SurveyDao surveydao;
+
+        @Autowired
+        MailService mailService;
+
         //상담 시간, 상담 날짜 테이블 추가, 객체로 받기
         //uid 말고 이메일로 받기
     @GetMapping("/account/adoptionList")
@@ -75,6 +85,83 @@ public class AdoptionController {
         return response;
     }
 
-    
+    //입양 신청
+    @PostMapping("/adoption/Application")
+    @ApiOperation(value = "입양신청")
+    public Object adoptionLAplication(@RequestParam(required = true) final String email,
+        @RequestParam(required = true) final String desertionno) { 
 
+        ResponseEntity response = null;
+        
+        Optional<User> userOpt = userDao.findUserByEmail(email);
+        String checkid = userOpt.get().getUid();
+
+        Optional<Survey> surveyOpt = surveydao.findByUid(checkid);
+        
+        final BasicResponse result = new BasicResponse();
+
+        if(surveyOpt.isPresent()) {
+                result.status = true;
+                result.data = desertionno;
+                result.object = userOpt;
+                result.objectsurvey = surveyOpt;
+                response = new ResponseEntity<>(result, HttpStatus.OK);
+        } else {
+                result.data = "survey not yet";
+                result.object = userOpt;
+                response = new ResponseEntity<>(result, HttpStatus.OK);
+        }
+
+        return response;
+    }
+
+    //입양 신청
+    @PostMapping("/adoption/Success")
+    @ApiOperation(value = "입양신청완료")
+//     public Object adoptionLSuccess(@RequestParam(required = true) final String email,
+//         @RequestParam(required = true) final String desertionno, @Valid @RequestBody ApplicationRequest request) { 
+        public Object adoptionLSuccess(@Valid @RequestBody ApplicationRequest request) { 
+                
+        ResponseEntity response = null;
+        
+        // Optional<User> userOpt = userDao.findUserByEmail(email);
+        // String checkid = userOpt.get().getUid();
+        // Optional<Survey> surveyOpt = surveydao.findByUid(checkid);
+        
+        String fixdate = request.getFixdate();
+        String fixtime = request.getFixtime();
+        String checkuid = request.getUid();
+        String checkdog = request.getDesertionno();
+        // String checkmid = request.getMid();
+
+        final BasicResponse result = new BasicResponse();
+
+        Adoption adoption = new Adoption();
+        adoption.setDesertionno(checkdog);
+        adoption.setUid(checkuid);
+        adoption.setFixdate(fixdate);
+        adoption.setFixtime(fixtime);
+        adoptionDao.save(adoption);
+
+        result.status = true;
+        result.data = "success";
+        //==메일 서비스==
+        // User user = userDao.getUserByEmail(email);
+        // // adoption.setMid(checkmid);
+        // if(AdoptionMailService.userMailSend(user)) {
+        // }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/adoption/delete")
+    @ApiOperation(value = "관심 목록 삭제")
+    public Object interestDelete(String uid, String desertionno) {
+        ResponseEntity response = null;
+
+
+
+        return response;
+    }
 }
+
