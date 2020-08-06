@@ -14,4 +14,5 @@ public class BasicResponse {
     public String password;
     public boolean interest;
     public String name;
+    public Object tag;
 }

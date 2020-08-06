@@ -21,7 +21,7 @@ public class Losttag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int tagno;
 
-    private Integer lostno;
+    private int lostno;
     private String tagname;
 
 }

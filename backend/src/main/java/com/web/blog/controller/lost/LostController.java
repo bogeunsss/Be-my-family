@@ -2,6 +2,8 @@ package com.web.blog.controller.lost;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
+
 import com.web.blog.dao.lost.LostDao;
 import com.web.blog.dao.lost.LosttagDao;
 import com.web.blog.model.BasicResponse;
@@ -44,7 +46,7 @@ public class LostController {
     LosttagDao losttagDao;
 
     @PostMapping("/lost/add")
-    @ApiOperation(value = "실종/입양/보호 등록/수정")
+    @ApiOperation(value = "실종/입양/보호 등록")
     public Object lostAdd(@RequestPart final List<MultipartFile> files, LostRequest request) {
 
         ResponseEntity response = null;
@@ -134,8 +136,8 @@ public class LostController {
     }
 
     @GetMapping("lost/list")
-    @ApiOperation(value = "실종/보호/목격")
-    public Object listList() {
+    @ApiOperation(value = "실종/보호/목격 전체리스트")
+    public Object lostList() {
 
         ResponseEntity response = null;
         final BasicResponse result = new BasicResponse();
@@ -157,5 +159,41 @@ public class LostController {
 
         return response;
     }
+
+    @GetMapping("lost/detail")
+    @ApiOperation(value = "")
+    public Object lostDetail(@RequestParam(required = true) int lostno) {
+        
+        ResponseEntity response = null;
+        final BasicResponse result = new BasicResponse();
+
+        try{
+            Optional<Lost> lostDetail = lostDao.findByLostno(lostno);
+            List<Losttag> tagList = losttagDao.findByLostno(lostno);
+            
+            if(lostDetail.isPresent())  {
+                result.status = true;
+                result.data = "success";
+                result.object = lostDetail.get();
+                if(!tagList.isEmpty()) {
+                    result.tag = tagList;
+                } 
+            } else {
+                result.status = true;
+                result.data = "lostno not exist";
+            }
+
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+
+        } catch(Exception e) {
+            e.printStackTrace();
+            result.status = false;
+            result.data = "fail";
+            response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+        }
+        
+        return response;
+    }
+    
 
 }
