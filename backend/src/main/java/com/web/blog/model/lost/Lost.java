@@ -28,12 +28,15 @@ public class Lost {
     private String lostsex;
     private String lostage;
     private Date lostdate;
-    private String sido;
-    private String gugun;
+    private String lostsido;
+    private String lostgugun;
     private String lostplace;
     private String lostcontent;
     private String losttagtext;
     private String lostphone;
+    private String lostpic1;
+    private String lostpic2;
+    private String lostpic3;
 
     @Column(insertable = false, updatable = false)
     private Date lostcreatedate;

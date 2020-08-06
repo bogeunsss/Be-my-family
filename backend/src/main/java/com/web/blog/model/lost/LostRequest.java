@@ -1,6 +1,7 @@
 package com.web.blog.model.lost;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -42,7 +43,7 @@ public class LostRequest {
     private String lostcontent;
 
     @ApiModelProperty(required = false)
-    private String losttagtext;
+    private List<String> losttagtext;
 
     @ApiModelProperty(required = false)
     private String lostphone;
