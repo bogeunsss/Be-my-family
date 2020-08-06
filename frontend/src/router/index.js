@@ -15,6 +15,8 @@ import Params from '@/page/error/Params.vue'
 import Main from '@/page/post/MainList.vue'
 import List from '@/page/post/List.vue'
 import Detail from '@/page/post/Detail.vue'
+import AdoptList from '@/page/adoptionPost/AdoptList.vue'
+import AdoptCreate from '@/page/adoptionPost/AdoptCreate.vue'
 
 Vue.use(Router)
 Vue.use(Vuex)
@@ -56,6 +58,16 @@ export default new Router({
       path: '/list',
       name: constants.URL_TYPE.POST.LIST,
       component: List
+    },
+    {
+      path: '/AdoptList',
+      name: constants.URL_TYPE.ADOPTIONPOST.ADOPTLIST,
+      component: AdoptList
+    },
+    {
+      path: '/AdoptCreate',
+      name: constants.URL_TYPE.ADOPTIONPOST.ADOPTCREATE,
+      component: AdoptCreate
     },
     {
       path: '/detail',
