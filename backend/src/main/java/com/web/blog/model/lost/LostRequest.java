@@ -28,7 +28,7 @@ public class LostRequest {
     private String lostage;
 
     @ApiModelProperty(required = true)
-    private Date lostdate;
+    private String lostdate;
 
     @ApiModelProperty(required = true)
     private String lostsido;
