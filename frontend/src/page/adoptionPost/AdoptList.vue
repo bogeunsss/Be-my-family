@@ -5,19 +5,38 @@
     <i class="fas fa-dog" style="font-size:30px"></i><h2 class="ml-3">입양후기</h2>
     </div> 
 
-    <v-text-field
-        v-model="search"
-        append-icon="mdi-magnify"
-        label="Search"
-        single-line
-        hide-details
-        class="mb-5"
-        style="width:400px;  margin-left:auto"
-    ></v-text-field>
+
+    <v-row align="center">
+        <v-col cols="12" sm="4"></v-col>
+        <v-col cols="12" sm="3" class="mt-5">
+            <v-select
+                v-model="category"
+                :items="items"
+                label="카테고리"
+                item-text="state"
+                item-value="abbr"
+                solo
+                class="ml-5"
+                style="margin-left:auto;"
+            ></v-select>
+        </v-col>
+        
+        <v-col cols="12" sm="5">
+            <v-text-field
+                v-model="search"
+                append-icon="mdi-magnify"
+                label="Search"
+                single-line
+                hide-details
+                class="mb-5"
+                style="width:300px; margin-left: auto;"
+            ></v-text-field>
+        </v-col>
+    </v-row>
 
     <div class="d-flex">
     <!-- <v-btn @click="create" class="mt-5" style="margin-left:auto">후기작성</v-btn> -->
-    <v-btn @click="create"  class="mt-5" style="margin-left:auto" outlined color="blue">
+    <v-btn @click="create"  style="margin-left:auto" outlined color="blue">
       <v-icon left>mdi-pencil</v-icon> 후기작성
     </v-btn>
     </div>
@@ -83,6 +102,7 @@ export default {
         return{
             page: 1,
             pageCount: 1,
+            items: ['글제목', '작성자'],
         }
     },
     methods:{
