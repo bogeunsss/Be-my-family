@@ -73,7 +73,6 @@ export default {
   },
   created() {
     this.getInterest()
-    // this.getInformation()
   },
   methods: {
     ...mapActions(['find']),
@@ -83,6 +82,8 @@ export default {
         this.email = token.email
         this.find(this.email)
       }
+      console.log(this.$cookies.get('nickName'))
+      console.log(this.$store.state.profileData.nickName)
       axios
         .get(`http://localhost:8080/care/interestList`, {
           params: {
