@@ -87,8 +87,8 @@ export default {
       axios
         .get(`http://localhost:8080/care/interestList`, {
           params: {
-            // uid: this.$store.state.profileData.nickName,
-            uid: this.$cookies.get('nickName'),
+            uid: this.$store.state.profileData.nickName,
+            // uid: this.$cookies.get('nickName'),
           },
         })
         .then((response) => {
