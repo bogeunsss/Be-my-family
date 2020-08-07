@@ -103,7 +103,7 @@ public class LostController {
                 tag.setTagname(tagname);
                 System.out.println("tag =======>" + tag);
                 losttagDao.save(tag);
-            }
+            } 
 
             Losttag tagBreed = new Losttag();
             tagBreed.setLostno(lost.getLostno());
