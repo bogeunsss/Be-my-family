@@ -44,7 +44,7 @@ public class InterestController {
         final BasicResponse result = new BasicResponse();
         interestlist = interestDao.findByUid(uid);
 
-        if(interestlist!=null) {
+        if(!interestlist.isEmpty()) {
             result.status = true;
             result.data = "success";
             result.object = interestlist;
