@@ -71,7 +71,7 @@ public class ManagerController {
             String jwt = tokenProvider.managerToken(manager);
             result.object = new JwtAuthenticationResult(jwt);
             result.email = manager.getEmail();
-            result.uid = manager.getMid();
+            result.mid = manager.getMid();
             result.password = manager.getPassword();
 
             response = new ResponseEntity<>(result, HttpStatus.OK);
@@ -86,8 +86,6 @@ public class ManagerController {
     @PostMapping("/manager/signup")
     @ApiOperation(value = "관리자 가입하기")
     public Object managerSignup(@Valid @RequestBody ManagerSignupRequest request) {
-        // 이메일, 닉네임 중복처리 필수
-        // 회원가입단을 생성해 보세요.
 
         String mid = request.getMid();
         String email = request.getEmail();
@@ -131,7 +129,7 @@ public class ManagerController {
     @PutMapping("/manager/update")
     @ApiOperation(value = "관리자 수정하기")
     public Object managerModify(@Valid @RequestBody ManagerSignupRequest request) {
-        // userid로 확인
+
         Manager checkManager = managerDao.getManagerByMid(request.getMid());
         ResponseEntity response = null;
 
@@ -154,7 +152,6 @@ public class ManagerController {
     @ApiOperation(value = "삭제하기")
     public Object delete(String mid) {
 
-        // userid로 확인
         ResponseEntity response = null;
         managerDao.deleteById(mid);
 
