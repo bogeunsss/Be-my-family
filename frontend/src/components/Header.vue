@@ -120,8 +120,9 @@
     </router-link>
     </div>
     <div class="container mb-5">
-      <v-btn outlined @click="goList">List</v-btn>
-      <v-btn outlined>실종/보호/목격</v-btn>
+      <v-btn outlined @click="goHome">메인</v-btn>
+      <v-btn outlined @click="goList">보호소</v-btn>
+      <v-btn outlined @click="goLost">실종/보호/목격</v-btn>
       <v-btn outlined>입양후기</v-btn>
     </div>
   
@@ -141,7 +142,7 @@ export default {
   },
   props: ["isHeader"],
   computed: {
-    ...mapState(["dialog", "loginData", "profileData"]),
+    ...mapState(["dialog", "loginData", "profileData", "isLoggedIn"]),
     email: {
       get() {
         return loginData.email;
@@ -161,14 +162,15 @@ export default {
   },
   watch: {},
   created() {
-    this.isLoggedIn = this.$cookies.isKey("auth-token");
-    if(this.isLoggedIn){
+    var login = this.$cookies.isKey("auth-token");
+    if(login){
       var token = this.$cookies.get('auth-token')
+      this.isLoggedInChecker(login)
       this.find(token.email)
     }
   },
   methods: {
-    ...mapActions(["login", "logout", "find"]),
+    ...mapActions(["login", "logout", "find", "isLoggedInChecker"]),
     ...mapMutations(["setDialog"]),
     Login() {
       this.login(this.$store.state.loginData);
@@ -208,6 +210,13 @@ export default {
     goList(){
       this.$router
         .push({ name: constants.URL_TYPE.POST.LIST })
+    },
+    adoptList(){
+      this.$router
+        .push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTLIST })
+    },
+    goLost(){
+      this.$router.push({ name: constants.URL_TYPE.LOST.LOSTLIST })
     }
   },
 

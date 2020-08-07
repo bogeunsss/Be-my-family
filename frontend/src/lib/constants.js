@@ -15,6 +15,14 @@ export default {
         POST: {
             LIST:"list",
             DETAIL: 'detail'
-        }
+        },
+        ADOPTIONPOST:{
+            ADOPTLIST: "AdoptList",
+            ADOPTCREATE: "AdoptCreate"
+        },
+        LOST: {
+            LOSTLIST:'lostList',
+            LOSTDETAIL:'lostDetail',
+        },
     }
 }

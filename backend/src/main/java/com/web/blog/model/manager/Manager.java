@@ -1,4 +1,4 @@
-package com.web.blog.model.care;
+package com.web.blog.model.manager;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.time.LocalDateTime;
@@ -21,16 +20,15 @@ import java.time.LocalDateTime;
 public class Manager {
    
     @Id
-    private String careNm;
+    private String mid;
 
-    @JsonIgnore
-    private String ManagerId;
-    private String ManagerName; 
-    private String ManagerPassword;
-    private String ManagerEmail;
-    private String ManagePhonenumber;
+    private String careNM;
+    private String name; 
+    private String password;
+    private String email;
+    private String phone;
 
     @Column(insertable = false, updatable = false)
-    private LocalDateTime ManagerCreatedate;
+    private LocalDateTime createdate;
 
 }
