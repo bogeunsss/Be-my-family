@@ -46,7 +46,7 @@ public class LostController {
     LosttagDao losttagDao;
 
     @PostMapping("/lost/add")
-    @ApiOperation(value = "실종/입양/보호 글 등록")
+    @ApiOperation(value = "실종/입양/보호 글 등록/수정")
     public Object lostAdd(@RequestPart final List<MultipartFile> files, LostRequest request) {
 
         ResponseEntity response = null;
@@ -56,6 +56,17 @@ public class LostController {
 
             Lost lost = new Lost();
             LostPic lostPics = new LostPic();
+
+            //수정
+            if(request.getLostno() != null) {
+                int lostno = request.getLostno();
+                String uid = request.getUid();
+                Optional<Lost> lostExist = lostDao.findByLostnoAndUid(lostno, uid);
+                if(lostExist.isPresent()) {
+                    losttagDao.deleteByLostno(lostno);
+                    lost.setLostno(lostno);
+                }
+            }
 
             // 사진 업로드
             int count = 0;
@@ -67,7 +78,11 @@ public class LostController {
                 final String originalfileName = file.getOriginalFilename();
                 final String filepath = "C:/Image/" + originalfileName;
                 final File dest = new File(filepath);
-                file.transferTo(dest);
+
+                //존재하면 서버에 저장 안함
+                if(dest.exists() == false){
+                    file.transferTo(dest);
+                }
 
                 System.out.println("filepath =======>" + filepath);
 
@@ -248,26 +263,8 @@ public class LostController {
             result.data = "fail";
             response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
         }
-
-        return response;
-
-    }
-
-    @PutMapping("lost/update")
-    @ApiOperation(value = "실종/목격/보호 글 수정")
-    public Object lostUpdate(LostRequest request, @RequestParam(required = true) final String uid) {
-
-        ResponseEntity response = null;
-        BasicResponse result = new BasicResponse();
-
-        try {
-
-        } catch(Exception e) {
-
-        }
-
-        return response;
-    }
+       return response;
     
+    }    
 
 }
