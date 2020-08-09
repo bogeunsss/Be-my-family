@@ -60,7 +60,7 @@
             <td>{{ item.name }}</td>
             <td>{{ item.calories }}</td>
             </tr> -->
-            <tr>
+            <tr @click="adoptdetail">
                 <th scope="row">1</th>
                 <td>입양 후기</td>
                 <td>jin</td>
@@ -115,6 +115,10 @@ export default {
         create(){
             this.$router
             .push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTCREATE })
+        },
+        adoptdetail(){
+             this.$router
+            .push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTDETAIL })
         }
     }
 

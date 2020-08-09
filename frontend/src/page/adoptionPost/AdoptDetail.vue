@@ -21,17 +21,17 @@
             height="auto"
           ></v-img>
         </v-card-subtitle>
-          
-        <v-card-actions class="d-flex justify-end mb-3" >
+
+        <v-card-actions class="d-flex justify-end mb-3">
           <v-btn icon large>
-            <v-icon large>mdi-heart</v-icon>
+            <v-icon large color="pink">mdi-heart</v-icon>
           </v-btn>
           <v-btn icon large>
             <v-icon large>mdi-share-variant</v-icon>
           </v-btn>
         </v-card-actions>
 
-          <v-divider></v-divider>
+        <v-divider></v-divider>
 
         <v-card-text>
           <v-list v-for="(subTitle, i) in subTitles" :key="i" dense>
@@ -47,15 +47,44 @@
           <v-btn text color="red accent-4">삭제</v-btn>
         </v-card-actions>
       </v-card>
-       <v-card-actions class="d-flex justify-center">
-      <v-btn>목록</v-btn>
-       </v-card-actions>
+
+      <div class="d-flex justify-left mt-5">
+         <v-textarea
+          label="Comment"
+          auto-grow
+          outlined
+          rows="1"
+          row-height="15"
+        ></v-textarea>
+        <!-- <v-textarea class="mx-2" label="Comment" rows="1"></v-textarea> -->
+        <v-btn class="ma-2 mt-0" outlined medium fab color="indigo" style="border:none;">
+          <v-icon medium>mdi-comment</v-icon>
+        </v-btn>
+      </div>
+
+      <v-card class="mx-auto" max-width="100%" min-height="3rem" outlined style="border-top:none; border-right:none; border-left:none;">
+        <div style="line-height:3rem;">
+          <span class="mb-1 mr-5" style="font-weight:bold;">작성자</span>
+          <span>댓글 내용</span>
+        </div>
+      </v-card>
+
+      <v-card-actions class="d-flex justify-center">
+        <v-btn @click="adoptlist" class="ma-2" outlined color="indigo">목록</v-btn>
+      </v-card-actions>
     </v-container>
   </v-form>
 </template>
 
 <script>
+import constants from "@/lib/constants";
+
 export default {
+  methods: {
+    adoptlist() {
+      this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTLIST });
+    },
+  },
   data() {
     return {
       subTitles: ["품종", "지역", "내용"],
