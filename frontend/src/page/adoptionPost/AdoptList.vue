@@ -29,7 +29,7 @@
                 single-line
                 hide-details
                 class="mb-5"
-                style="width:300px; margin-left: auto;"
+                style="width:400px; margin-left: auto;"
             ></v-text-field>
         </v-col>
     </v-row>
