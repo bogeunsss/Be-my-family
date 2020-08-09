@@ -218,8 +218,8 @@ public class LostController {
         return response;
     }
 
-    @DeleteMapping("list/delete")
-    @ApiOperation(value = "실종/보호/목격 글 삭제")
+    @DeleteMapping("lost/delete")
+    @ApiOperation(value = "실종/목격/보호 글 삭제")
     public Object lostDelete(@RequestParam(required = true) final int lostno, @RequestParam(required = true) final String uid) {
 
         ResponseEntity response = null;
