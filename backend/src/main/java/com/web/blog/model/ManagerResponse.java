@@ -7,7 +7,6 @@ public class ManagerResponse {
     public String email;
     public String password;
     public String name;
-    public String careNM;
     public String phone;
     public Object object;
 }

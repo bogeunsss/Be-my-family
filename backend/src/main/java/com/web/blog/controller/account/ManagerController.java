@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -71,4 +72,32 @@ public class ManagerController {
 
         return response;
     }
+
+    @GetMapping("/manager/find")
+    @ApiOperation(value = "매니저 조회")
+    public Object find(String email) {
+        ResponseEntity response = null;
+
+        Manager checkmanager = managerDao.getManagerByEmail(email);
+        final ManagerResponse result = new ManagerResponse();
+        try {
+            
+            result.status = true;
+            result.data = "success";
+            result.mid = checkmanager.getMid();
+            result.name = checkmanager.getName();
+            result.email = checkmanager.getEmail();
+            result.phone = checkmanager.getPhone();
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            result.data = "fail";
+            result.status = false;
+            response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+        }
+
+        return response;
+    }
+
+
+
 }
