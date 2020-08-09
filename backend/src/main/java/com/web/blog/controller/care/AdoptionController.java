@@ -134,16 +134,15 @@ public class AdoptionController {
     //입양 신청
     @PostMapping("/adoption/Success")
     @ApiOperation(value = "입양신청완료")
-//     public Object adoptionLSuccess(@RequestParam(required = true) final String email,
-//         @RequestParam(required = true) final String desertionno, @Valid @RequestBody ApplicationRequest request) { 
         public Object adoptionLSuccess(@Valid @RequestBody ApplicationRequest request) { 
                 
         ResponseEntity response = null;
         
-        // Optional<User> userOpt = userDao.findUserByEmail(email);
-        // String checkid = userOpt.get().getUid();
-        // Optional<Survey> surveyOpt = surveydao.findByUid(checkid);
+        Optional<User> user = userDao.findById(request.getUid());
+        System.out.println(user);
         
+        
+
         String fixdate = request.getFixdate();
         String fixtime = request.getFixtime();
         String checkuid = request.getUid();
