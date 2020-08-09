@@ -45,22 +45,27 @@ public class PostscriptController {
     @Autowired
     PostscriptSearchDao postscriptSearchDao;
 
-    @GetMapping("/postscript/list")
+    @GetMapping("/postscript/List")
     @ApiOperation(value = "입양후기 리스트")
     public Object postscriptList() {
         
         ResponseEntity response = null;
         final BasicResponse result = new BasicResponse();
 
+        List<Postscript> postscriptList = postscriptDao.findAll();
+    
         try {
-            List<Postscript> postscriptList = postscriptDao.findAll();
+            if(!postscriptList.isEmpty()) {
+                result.object = postscriptList;
+                result.status = true;
+                result.data = "success";
 
-            result.object = postscriptList;
-            result.status = true;
-            result.data = "success";
-
-            response = new ResponseEntity<>(result, HttpStatus.OK);
-
+                response = new ResponseEntity<>(result, HttpStatus.OK);
+            } else {
+                result.status = false;
+                result.data = "no List";
+                response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+            }
         } catch (final Exception e) {
 
             e.printStackTrace();
@@ -73,7 +78,7 @@ public class PostscriptController {
         return response;
     }   
 
-    @PostMapping("/postscript/postAdd")
+    @PostMapping("/postscript/Add")
     @ApiOperation(value = "입양후기 등록")
     public Object postscriptAdd(@RequestBody PostscriptRequest request) {
 
@@ -85,7 +90,7 @@ public class PostscriptController {
         String checkimage = request.getImage();
         String checksido = request.getSido();
         String checkgugun = request.getGugun();
-        String checkplace = request.getPlace();
+        String checkplace = request.getKind();
         
         final BasicResponse result = new BasicResponse();
         
@@ -98,7 +103,7 @@ public class PostscriptController {
             postscript.setImage(checkimage);
             postscript.setSido(checksido);
             postscript.setGugun(checkgugun);
-            postscript.setPlace(checkplace);
+            postscript.setKind(checkplace);
             postscriptDao.save(postscript);
                         
             result.status = true;
@@ -115,7 +120,7 @@ public class PostscriptController {
         return response;
     }
 
-    @DeleteMapping("/postscript/postDelete")
+    @DeleteMapping("/postscript/Delete")
     @ApiOperation(value = "입양후기 게시글 삭제")
     public Object postscriptDelete(@RequestParam(required = true) final Integer postscriptno) {
 
@@ -144,7 +149,7 @@ public class PostscriptController {
     }
 
     
-    @GetMapping("/postscript/postsearch")
+    @GetMapping("/postscript/Search")
     @ApiOperation(value = "입양후기 조회")
     public Object postscriptSearch(@RequestParam(required = true) final String category,
     @RequestParam(required = true) final String searchText) {
@@ -165,6 +170,10 @@ public class PostscriptController {
                 result.status = true;
                 result.object = postscriptList;
                 response = new ResponseEntity<>(result, HttpStatus.OK);
+            } else {
+                result.data = "no search";
+                result.status = false;
+                response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
             }
         } catch(Exception e) {
             
@@ -176,7 +185,7 @@ public class PostscriptController {
         return response;
     }
 
-    @PutMapping("/postscript/modify")
+    @PutMapping("/postscript/Modify")
     @ApiOperation(value = "입양 후기 게시판 글 수정")
     public Object postscriptModify (@Valid @RequestBody PostscriptRequest request) {
 
@@ -190,6 +199,7 @@ public class PostscriptController {
             postscript.setTitle(request.getTitle());
             postscript.setContent(request.getContent());
             postscript.setImage(request.getImage());
+            postscript.setKind(request.getKind());
             postscriptDao.save(postscript);
 
             result.status = true;
