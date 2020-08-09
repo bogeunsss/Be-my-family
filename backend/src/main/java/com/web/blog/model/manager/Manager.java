@@ -22,13 +22,8 @@ public class Manager {
     @Id
     private String mid;
 
-    private String careNM;
     private String name; 
     private String password;
     private String email;
     private String phone;
-
-    @Column(insertable = false, updatable = false)
-    private LocalDateTime createdate;
-
 }
