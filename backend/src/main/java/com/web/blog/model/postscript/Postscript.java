@@ -11,7 +11,6 @@ import javax.persistence.Id;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -23,12 +22,16 @@ public class Postscript {
      
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="postscriptno", columnDefinition = "Int")
     private int postscriptno;
 
-    private String Uid;
+    private String uid;
     private String title;
     private String content;
-    private String profile;
+    private String image;
+    private String sido;
+    private String gugun;
+    private String place;
 
     @Column(insertable = false, updatable = false)
     private Date createdate;

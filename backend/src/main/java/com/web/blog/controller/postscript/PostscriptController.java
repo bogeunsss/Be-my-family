@@ -1,22 +1,16 @@
 package com.web.blog.controller.postscript;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
 
-import com.web.blog.dao.manager.ManagerDao;
 import com.web.blog.dao.postscript.PostscriptDao;
+import com.web.blog.dao.postscript.PostscriptSearchDao;
 import com.web.blog.dao.user.UserDao;
 import com.web.blog.model.BasicResponse;
-import com.web.blog.model.manager.Manager;
-import com.web.blog.model.manager.ManagerSignupRequest;
 import com.web.blog.model.postscript.Postscript;
-import com.web.blog.model.user.SignupRequest;
-import com.web.blog.model.user.User;
-import com.web.blog.security.JwtAuthenticationResult;
-import com.web.blog.security.JwtTokenProvider;
-import com.web.blog.service.ManagerMailService;
-import com.web.blog.service.MailService;
+import com.web.blog.model.postscript.PostscriptRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,61 +37,171 @@ import io.swagger.annotations.ApiResponses;
 @RestController
 public class PostscriptController {
     @Autowired
-    PostscriptDao postscriptdDao;
+    PostscriptDao postscriptDao;
 
     @Autowired
     UserDao userDao;
 
-    @PostMapping("/postscript/postAdd")
-    @ApiOperation(value = "입양후기 등록")
-    public Object postAdd(@RequestBody Postscript request) {
+    @Autowired
+    PostscriptSearchDao postscriptSearchDao;
 
+    @GetMapping("/postscript/list")
+    @ApiOperation(value = "입양후기 리스트")
+    public Object postscriptList() {
+        
         ResponseEntity response = null;
         final BasicResponse result = new BasicResponse();
 
         try {
-            Postscript postscript = request;
-            String uid = request.getUid();
-            postscript.setUid(uid);
-            postscriptdDao.save(postscript);
+            List<Postscript> postscriptList = postscriptDao.findAll();
+
+            result.object = postscriptList;
+            result.status = true;
+            result.data = "success";
+
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+
+        } catch (final Exception e) {
+
+            e.printStackTrace();
+
+            result.status = false;
+            result.data = "fail";
+
+            response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+        }
+        return response;
+    }   
+
+    @PostMapping("/postscript/postAdd")
+    @ApiOperation(value = "입양후기 등록")
+    public Object postscriptAdd(@RequestBody PostscriptRequest request) {
+
+        ResponseEntity response = null;
+
+        String checkuid = request.getUid();
+        String checktitle = request.getTitle();
+        String checkcontent = request.getContent();
+        String checkimage = request.getImage();
+        String checksido = request.getSido();
+        String checkgugun = request.getGugun();
+        String checkplace = request.getPlace();
+        
+        final BasicResponse result = new BasicResponse();
+        
+        try {
+
+            Postscript postscript = new Postscript();
+            postscript.setUid(checkuid);
+            postscript.setTitle(checktitle);
+            postscript.setContent(checkcontent);
+            postscript.setImage(checkimage);
+            postscript.setSido(checksido);
+            postscript.setGugun(checkgugun);
+            postscript.setPlace(checkplace);
+            postscriptDao.save(postscript);
+                        
             result.status = true;
             result.data = "success";
             response = new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+
+            result.status = false;
             result.data = "fail";
+
             response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
         }
 
         return response;
     }
 
-
-    // 조회는 뭐로 하나????
-    
-    @GetMapping("/postscript/postList")
-    @ApiOperation(value = "설문조사 조회")
-    public Object postList(@RequestParam(required = true) final String uid) {
+    @DeleteMapping("/postscript/postDelete")
+    @ApiOperation(value = "입양후기 게시글 삭제")
+    public Object postscriptDelete(@RequestParam(required = true) final Integer postscriptno) {
 
         ResponseEntity response = null;
         final BasicResponse result = new BasicResponse();
 
-        try {
-            Optional<Survey> mySurvey = surveyDao.findByUid(uid);
-            if(mySurvey.isPresent()) {
+        Optional<Postscript> postscriptOpt = postscriptDao.findByPostscriptno(postscriptno);
+
+        if(postscriptOpt.isPresent()) {
+
+                postscriptDao.deleteByPostscriptno(postscriptno);
+
                 result.status = true;
                 result.data = "success";
-                result.object = mySurvey;
-            } else {
-                result.status = true;
-                result.data = "uid not exist";
+                
+                response = new ResponseEntity<>(result, HttpStatus.OK);
             }
-            response = new ResponseEntity<>(result, HttpStatus.OK);
-        } catch(Exception e) {
-            System.out.println(e.getMessage());
+
+         else {
             result.status = false;
             result.data = "fail";
             response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+         }
+
+        return response;
+    }
+
+    
+    @GetMapping("/postscript/postsearch")
+    @ApiOperation(value = "입양후기 조회")
+    public Object postscriptSearch(@RequestParam(required = true) final String category,
+    @RequestParam(required = true) final String searchText) {
+
+        ResponseEntity response = null;
+        List<Postscript> postscriptList = null;
+        final BasicResponse result = new BasicResponse();
+
+        if(category.equals("uid")) {
+            postscriptList = postscriptSearchDao.findByUidContainingOrderByPostscriptnoDesc(searchText);
+        } else if(category.equals("title")) {
+            postscriptList = postscriptSearchDao.findByTitleContainingOrderByPostscriptnoDesc(searchText);
+        }
+        
+        try {
+            if(!postscriptList.isEmpty()){
+                result.data = "success";
+                result.status = true;
+                result.object = postscriptList;
+                response = new ResponseEntity<>(result, HttpStatus.OK);
+            }
+        } catch(Exception e) {
+            
+            result.status = false;
+            result.data = "fail";
+
+            response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+        }
+        return response;
+    }
+
+    @PutMapping("/postscript/modify")
+    @ApiOperation(value = "입양 후기 게시판 글 수정")
+    public Object postscriptModify (@Valid @RequestBody PostscriptRequest request) {
+
+        Postscript postscript = postscriptDao.getPostscriptByPostscriptno(request.getPostscriptno());
+        ResponseEntity response = null;
+        
+        final BasicResponse result = new BasicResponse();
+
+        try{
+
+            postscript.setTitle(request.getTitle());
+            postscript.setContent(request.getContent());
+            postscript.setImage(request.getImage());
+            postscriptDao.save(postscript);
+
+            result.status = true;
+            result.data = "success";
+
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+        } catch(Exception e) {
+
+            result.data = "success";
+            result.status = false;
+
+            response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);           
         }
         return response;
     }
