@@ -210,9 +210,11 @@ export default {
       },
       deleteLike() {
       console.log(this.$store.state.profileData.nickName);
+      console.log(this.$cookies.get('nickName'))
       axios
         .delete(`http://localhost:8080/care/interestDelete`, { params:{
-          uid: this.$cookies.get('nickName'),
+          // uid: this.$cookies.get('nickName'),
+          uid : this.$store.state.profileData.nickName,
           desertionno: this.$cookies.get('desertionno').desertionno
         }})
         .then((response) => {

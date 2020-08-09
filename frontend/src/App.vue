@@ -8,6 +8,7 @@
 <script> 
 import Header from '@/components/Header'
 import constants from '@/lib/constants' 
+import { mapActions } from 'vuex'
 
 export default {
   name: 'App',
@@ -20,14 +21,7 @@ export default {
       this.checkUrl(url);
 
       console.log('App.vue')
-    let token = window.$cookies.get('FootballDiary')
-    if (token) {
-      this.$store.commit('setToken', token)
-      console.log('App.vue.afterSetToken')
-      this.$store.dispatch('getUserFromServer')
-    } else {
-      // this.onLogout()
-  }
+
   },
   watch: {
       $route (to){
@@ -35,6 +29,7 @@ export default {
       }
   },
   methods : {
+    ...mapActions(['find']),
       checkUrl(url) { 
 
           let array = [

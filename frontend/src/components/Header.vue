@@ -5,7 +5,6 @@
       <v-btn class="hambuger" color="cyan" dark @click.stop="drawer = !drawer">
         <i class="lg fas fa-bars" style="font-size:30px"></i>
       </v-btn>
-
       <v-navigation-drawer v-model="drawer" absolute temporary height="400">
         <v-list-item class="pl-0">
           <v-list-item-avatar v-if="isLoggedIn">
@@ -37,12 +36,18 @@
                       ></v-text-field>
                     <!-- </v-col>
                   </v-row> -->
+                    <!-- <v-container fluid> -->
+                    <v-radio-group v-model="radios" :mandatory="false">
+                      <v-radio label="user" value="radio-1"></v-radio>
+                      <v-radio label="manager" value="radio-2"></v-radio>
+                    </v-radio-group>
+                    <!-- </v-container> -->
                 <p >* 아직 회원이 아니신가요?</p>
                 <router-link v-bind:to="{name:constants.URL_TYPE.USER.JOIN}" class="btn--text">회원가입</router-link>
               </v-card-text>
               <div class="d-flex float-right mr-3">
                 <v-btn color="blue darken-1" text @click="setDialog">Close</v-btn>
-                <v-btn color="blue darken-1" text @click="Login">Login</v-btn>
+                <v-btn color="blue darken-1" text @click="Login(radios)">Login</v-btn>
 
               </div>
             </v-card>
@@ -77,7 +82,7 @@
 
             <v-list-item-title v-if="isLoggedIn" @click="userProfile" style="cursor: pointer;">My page</v-list-item-title>
           </div>
-          <div class="ml-5 d-flex inline">
+          <div class="ml-5 d-flex inline" v-if="isLoggedIn && isManager=='radio-1'">
             <!-- like 아이콘, 글자 눌렀을 때 like 페이지로 이동 -->
             <v-list-item-icon style="cursor: pointer;">
               <i
@@ -89,7 +94,7 @@
             </v-list-item-icon>
             <v-list-item-title v-if="isLoggedIn" @click="userLike" style="cursor: pointer;">Like</v-list-item-title>
           </div>
-          <div class="ml-5 d-flex inline">
+          <div class="ml-5 d-flex inline" v-if="isLoggedIn && isManager=='radio-1'">
             <!-- survey 아이콘, 글자 눌렀을 때 survey 페이지로 이동 -->
             <v-list-item-icon style="cursor: pointer;">
               <i
@@ -99,7 +104,18 @@
                 style="font-size:30px"
               ></i>
             </v-list-item-icon>
-            <v-list-item-title v-if="isLoggedIn"  @click="userSurvey" style="cursor: pointer;">Survey</v-list-item-title>
+            <v-list-item-title v-if="isLoggedIn" @click="userSurvey" style="cursor: pointer;">Survey</v-list-item-title>
+          </div>
+          <div class="ml-5 d-flex inline" v-if="isLoggedIn && isManager=='radio-1'">
+            <!-- survey 아이콘, 글자 눌렀을 때 survey 페이지로 이동 -->
+            <v-list-item-icon style="cursor: pointer;">
+              <i
+               class="fas fa-clipboard-list"
+                @click="goManager"
+                style="font-size:30px"
+              ></i>
+            </v-list-item-icon>
+            <v-list-item-title @click="goManager" style="cursor: pointer;">Manager</v-list-item-title>
           </div>
           <div class="ml-5 d-flex inline">
             <v-list-item-icon style="cursor: pointer;">
@@ -142,7 +158,7 @@ export default {
   },
   props: ["isHeader"],
   computed: {
-    ...mapState(["dialog", "loginData", "profileData", "isLoggedIn"]),
+    ...mapState(["dialog", "loginData", "profileData", "isLoggedIn","isManager"]),
     email: {
       get() {
         return loginData.email;
@@ -166,13 +182,22 @@ export default {
     if(login){
       var token = this.$cookies.get('auth-token')
       this.isLoggedInChecker(login)
+      console.log(this.isLoggedIn)
+    //   this.isLoggedInChecker(login)
+    //   this.find(token.email)
+    // }
+    // this.isLoggedIn = this.$cookies.isKey("auth-token");
+    // if(this.$cookies.isKey("auth-token")){
+      // var token = this.$cookies.get('auth-token')\
       this.find(token.email)
     }
   },
   methods: {
     ...mapActions(["login", "logout", "find", "isLoggedInChecker"]),
     ...mapMutations(["setDialog"]),
-    Login() {
+    Login(radios) {
+      this.$store.state.loginData.isManager = radios
+      // console.log()
       this.login(this.$store.state.loginData);
       this.$router.push({ name: constants.URL_TYPE.MAIN });
     },
@@ -217,13 +242,17 @@ export default {
     },
     goLost(){
       this.$router.push({ name: constants.URL_TYPE.LOST.LOSTLIST })
-    }
+    },
+    goManager() {
+      this.$router.push( { name: constants.URL_TYPE.USER.MANAGER })
+    },
   },
 
   data: function () {
     return {
       constants,
       drawer: null,
+      radios: 'radios-1'
     };
   },
 }

@@ -35,7 +35,8 @@ export default new Vuex.Store({
     loginData: {
       token:'',
       email: null,
-      password: null
+      password: null,
+      isManager:null,
     },
     profileData: {
       email: null,
@@ -163,8 +164,7 @@ export default new Vuex.Store({
     },
     checkLoggedIn(state, check){
       state.isLoggedIn = check
-    }
-
+    },
     // isLoggedInChanged(state){
     //   if(cookies.isKey('auth-token')) return state.isLoggedIn = true
     //   else return state.isLoggedIn = false
@@ -230,6 +230,7 @@ export default new Vuex.Store({
       }
     },
     login({ commit, state }, loginData){
+      console.log(loginData)
       let formData = new FormData()
       formData.append('email', loginData.email)
       formData.append('password', loginData.password)
@@ -243,7 +244,37 @@ export default new Vuex.Store({
         alert("이메일 형식을 확인하세요");
       }
       else {
+        if(loginData.isManager=='radio-1'){
       axios.post(SERVER.SERVER_URL +'/account/login ', formData)
+      .then(response => {
+        if(response.status == 200){
+            // commit('SET_TOKEN',response.data.key)
+            state.dialog = true
+            // var jwt = require("jsonwebtoken");
+            // var token = jwt.sign({ sub: loginData.email }, loginData.password);
+            console.log(response)
+            // alert("로그인 성공");
+            state.dialog = false
+            state.isLoggedIn = true
+            // state.isManager = false
+            cookies.set('auth-token', {
+              token:response.data.object.accessToken,
+              email:response.data.email,
+              uid:response.data.uid
+            })
+            state.authToken = cookies.get('auth-token')
+            // router.push({name:constants.URL_TYPE.POST.MAIN})
+            // router.go()
+          }
+        })
+        .catch((error)=>{
+          alert("로그인 실패");
+          console.log(error)
+          state.dialog = false;
+          // router.push({name: 'Params', params: {name: error.response.status}});
+        })
+      }else{
+        axios.post(SERVER.SERVER_URL +'/manager/login ', formData)
       .then(response => {
         if(response.status == 200){
             // commit('SET_TOKEN',response.data.key)
@@ -254,9 +285,11 @@ export default new Vuex.Store({
             alert("로그인 성공");
             state.dialog = false
             state.isLoggedIn = true
+            // state.isManager = true
             cookies.set('auth-token', {
               token:response.data.object.accessToken,
-              email:response.data.email
+              email:response.data.email,
+              uid:response.data.uid
             })
             state.authToken = cookies.get('auth-token')
             router.push({name:constants.URL_TYPE.POST.MAIN})
@@ -269,7 +302,8 @@ export default new Vuex.Store({
           state.dialog = false;
           // router.push({name: 'Params', params: {name: error.response.status}});
         })
-      } 
+      }
+    }
     },
     logout({ commit, state }){
       state.authToken = null
@@ -278,7 +312,6 @@ export default new Vuex.Store({
     },
     // 데이터 조회할때 유저 null 값 나옴
     find({commit, state}, email){
-      // console.log(loginData)
       axios.get(SERVER.SERVER_URL + '/account/find?email=' + email)
       .then(response=>{
         state.profileData.email = response.data.object.email
@@ -308,7 +341,7 @@ export default new Vuex.Store({
         
         state.profileData.nickName = response.data.object.uid
         state.profileData.password = response.data.object.password
-        // console.log(response)
+        // console.log(response.data.object)
       })
       .catch(err=>console.log(err))
     },
@@ -352,6 +385,9 @@ export default new Vuex.Store({
     },
     isLoggedInChecker({commit}, payload){
       commit('checkLoggedIn', payload)
+    },
+    isManagerChecker({commit}, payload){
+      commit('checkManager', payload)
     },
   },
 
