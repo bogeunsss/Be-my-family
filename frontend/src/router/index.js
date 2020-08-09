@@ -18,6 +18,7 @@ import List from '@/page/post/List.vue'
 import Detail from '@/page/post/Detail.vue'
 import AdoptList from '@/page/adoptionPost/AdoptList.vue'
 import AdoptCreate from '@/page/adoptionPost/AdoptCreate.vue'
+import AdoptDetail from '@/page/adoptionPost/AdoptDetail.vue'
 import LostList from '@/page/lost/LostList.vue'
 import LostDetail from '@/page/lost/LostDetail.vue'
 
@@ -85,6 +86,11 @@ export default new Router({
       path: '/AdoptCreate',
       name: constants.URL_TYPE.ADOPTIONPOST.ADOPTCREATE,
       component: AdoptCreate
+    },
+    {
+      path: '/AdoptDetail',
+      name: constants.URL_TYPE.ADOPTIONPOST.ADOPTDETAIL,
+      component: AdoptDetail
     },
     {
       path: '/detail',
