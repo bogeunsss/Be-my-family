@@ -24,7 +24,6 @@ public class User {
     @Id
     private String uid;
 
-    @JsonIgnore
     private String name;
     private String password;
     private String email;

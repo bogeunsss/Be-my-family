@@ -18,7 +18,11 @@ export default {
         },
         ADOPTIONPOST:{
             ADOPTLIST: "AdoptList",
-            ADOPTCREATE: "AdoptCreate",
-        }
+            ADOPTCREATE: "AdoptCreate"
+        },
+        LOST: {
+            LOSTLIST:'lostList',
+            LOSTDETAIL:'lostDetail',
+        },
     }
 }

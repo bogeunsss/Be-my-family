@@ -53,7 +53,9 @@ public class AccountController {
 
         ResponseEntity response = null;
         Optional<User> userOpt = userDao.findUserByEmailAndPassword(email, password);
-
+        System.out.println("======");
+        System.out.println(userOpt);
+        System.out.println("======");
         final BasicResponse result = new BasicResponse();
         if (userOpt.isPresent()) {
             result.status = true;

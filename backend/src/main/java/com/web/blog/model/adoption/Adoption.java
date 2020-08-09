@@ -1,4 +1,4 @@
-package com.web.blog.model.care;
+package com.web.blog.model.adoption;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,13 +19,10 @@ public class Adoption {
     @Id
     private int adoptionno;
 
-    @JsonIgnore
     private String uid;
-    private String mid;
+    // private String mid;
     private String desertionno;
     private String fixdate;
     private String fixtime;
-    // 시간, 날짜, 이메일
-
 
 }
