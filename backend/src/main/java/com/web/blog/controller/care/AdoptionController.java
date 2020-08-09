@@ -9,6 +9,7 @@ import com.mysql.cj.xdevapi.Result;
 import com.web.blog.dao.care.AdoptionDao;
 import com.web.blog.dao.care.SurveyDao;
 import com.web.blog.dao.user.UserDao;
+import com.web.blog.model.AdoptionResponse;
 import com.web.blog.model.BasicResponse;
 import com.web.blog.model.adoption.Adoption;
 import com.web.blog.model.adoption.ApplicationRequest;
@@ -64,7 +65,8 @@ public class AdoptionController {
 
         ResponseEntity response = null;
         
-        Optional<User> userOpt = userDao.findUserByEmail(email);
+        Optional<User> userOpt = userDao.findByEmail(email);
+        System.out.println(userOpt);
         String checkid = userOpt.get().getUid();
 
         List<Adoption> AdoptionList = null;
@@ -94,25 +96,38 @@ public class AdoptionController {
 
         ResponseEntity response = null;
         
-        Optional<User> userOpt = userDao.findUserByEmail(email);
-        String checkid = userOpt.get().getUid();
+        User userOpt = userDao.getUserByEmail(email);
+        Optional<Survey> surveyOpt = surveydao.findByUid(userOpt.getUid());
+        Optional<Adoption> adoptionOpt = adoptionDao.findByUidAndDesertionno(userOpt.getUid(), desertionno);
+        System.out.println(userOpt);
+        System.out.println(surveyOpt);
+        System.out.println(adoptionOpt);
 
-        Optional<Survey> surveyOpt = surveydao.findByUid(checkid);
-        
-        final BasicResponse result = new BasicResponse();
+        final AdoptionResponse result = new AdoptionResponse();
 
-        if(surveyOpt.isPresent()) {
-                result.status = true;
-                result.data = desertionno;
-                result.object = userOpt;
-                result.objectsurvey = surveyOpt;
-                response = new ResponseEntity<>(result, HttpStatus.OK);
+        if(!surveyOpt.isPresent()) {
+            result.status = false;
+            result.data = "It hasn't been surveyed yet.";
+            result.checksurvey = false;
+            result.user = userOpt;
+            response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+        } else if(!adoptionOpt.isEmpty()){
+            result.status = false;
+            result.data = "Already applied";
+            result.checksurvey = true;
+            result.checkadoption = false;
+            result.user = userOpt;
+            response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
         } else {
-                result.data = "survey not yet";
-                result.object = userOpt;
-                response = new ResponseEntity<>(result, HttpStatus.OK);
+            result.status = true;
+            result.data = "success";
+            result.checksurvey = true;
+            result.checkadoption = true;
+            result.survey = surveyOpt;
+            result.user = userOpt;
+            result.desertionno = desertionno;
+            response = new ResponseEntity<>(result, HttpStatus.OK);
         }
-
         return response;
     }
 

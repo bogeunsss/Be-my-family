@@ -12,8 +12,7 @@ public class ApplicationRequest {
 
     @NotNull
     String uid;
-    // @NotNull
-    // String mid;
+    String mid;
     @NotNull
     String desertionno;
     @NotNull
