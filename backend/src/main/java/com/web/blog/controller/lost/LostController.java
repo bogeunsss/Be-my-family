@@ -137,6 +137,11 @@ public class LostController {
             tagGugun.setTagname(lost.getLostgugun());
             losttagDao.save(tagGugun);
 
+            Losttag tagType = new Losttag();
+            tagType.setLostno(lost.getLostno());
+            tagType.setTagname(lost.getLosttype());
+            losttagDao.save(tagType);
+
             // 반환
             result.status = true;
             result.data = "success";
