@@ -6,15 +6,16 @@
         <h2 style="margin:0 auto;"><i class="fas fa-pencil-alt mr-2" style="font-size:30px"></i>입양후기 작성</h2>
         </div>
         <v-row>
-        <v-file-input
+        <!-- <v-file-input
             class="mt-5"
             :rules="rules"
             accept="image/png, image/jpeg, image/bmp"
             placeholder="Pick an avatar"
-            prepend-icon="mdi-camera"
+            prepend-icon="mdi-camera" 
             multiple
             label="사진"
-        ></v-file-input>
+            v-model="adoptcreate.image"
+        ></v-file-input> -->
         </v-row>
           <v-row class="mt-5"> 제목 </v-row> 
             <v-row> 
@@ -23,7 +24,8 @@
                 label="제목" 
                 name="title" 
                 required 
-                maxlength="50" 
+                maxlength="50"
+                v-model="adoptcreate.title"
             ></v-text-field> 
             </v-row> 
        
@@ -33,7 +35,7 @@
                     </v-col>
                     <v-col cols="10" sm="4">
                         <v-select
-                        v-model="selectSido"
+                        v-model="adoptcreate.sido"
                         :items="sido_states"
                         hint="시/도를 선택하세요"
                         persistent-hint
@@ -46,8 +48,8 @@
 
                     <v-col cols="10" sm="4">
                         <v-select
-                        v-model="selectGugun"
-                        :items="gugun_states[selectSido]"
+                        v-model="adoptcreate.gugun"
+                        :items="gugun_states[adoptcreate.sido]"
                         hint="거주 지역을 선택하세요"
                         persistent-hint
                         ></v-select>
@@ -55,7 +57,7 @@
                     </v-row>
    
 
-            <v-row align="center">
+            <!-- <v-row align="center">
                <v-col cols="12" sm="1">
                         품종:
                 </v-col>
@@ -65,21 +67,22 @@
                     :menu-props="{ bottom: true, offsetY: true }"
                     hint="품종을 선택하세요"
                     persistent-hint
+
                 ></v-select>
                 </v-col>
-            </v-row>
+            </v-row> -->
 
               <v-row class="mt-5"> 내용 </v-row> 
                 <v-row> 
                 <v-textarea 
                     filled name="context" 
                     hint="내용을 입력해주세요." 
-                     
+                    v-model="adoptcreate.content"
                 ></v-textarea> 
                 </v-row> 
          
             <v-row>          
-            <v-btn outlined color="blue" style="margin-left: auto;"> 등록 </v-btn> 
+            <v-btn outlined color="blue" style="margin-left: auto;" @click="submitadopt"> 등록 </v-btn> 
             </v-row> 
             </v-col>
         </v-container> 
@@ -89,14 +92,35 @@
 
 <script>
 import constants from '../../lib/constants'
-import { mapState } from 'vuex'
+import axios from 'axios'
+import { mapState,  mapActions} from 'vuex'
 
 export default {
+    created(){
+        var token = this.$cookies.get('auth-token')
+        this.find(token.email)
+        
+    },
     computed:{
-    ...mapState(['sido_states', 'gugun_states']),
+        ...mapState(['loginData', 'sido_states', 'gugun_states']),
+    },
+    methods:{
+        ...mapActions(['find']),
+        submitadopt(){
+            axios
+            .post("http://localhost:8080/postscript/postAdd",this.adoptcreate)
+            .then((res) =>{
+                console.log(this.adoptcreates)
+                this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTLIST });
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+        }
     },
     data () {
         return{
+            token:'',
             rules: [
               // value => !value || value.size < 7000000000000 || 'Avatar size should be less than 2 MB!',
             ],
@@ -117,6 +141,14 @@ export default {
             ],
             selectSido: '',
             selectGugun: '',
+            adoptcreate:{
+                image:"",
+                title:"",
+                sido:"",
+                gugun:"",
+                content:"",
+                uid:'',
+            }
         }
         
     },

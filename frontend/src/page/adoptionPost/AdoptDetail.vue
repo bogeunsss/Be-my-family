@@ -48,6 +48,14 @@
         </v-card-actions>
       </v-card>
 
+
+      <v-card class="mx-auto mt-5" max-width="100%" min-height="3rem" outlined style="border-top:none; border-right:none; border-left:none;">
+        <div style="line-height:3rem;">
+          <span class="mb-1 mr-5" style="font-weight:bold;">작성자</span>
+          <span>댓글 내용</span>
+        </div>
+      </v-card>
+
       <div class="d-flex justify-left mt-5">
          <v-textarea
           label="Comment"
@@ -61,13 +69,6 @@
           <v-icon medium>mdi-comment</v-icon>
         </v-btn>
       </div>
-
-      <v-card class="mx-auto" max-width="100%" min-height="3rem" outlined style="border-top:none; border-right:none; border-left:none;">
-        <div style="line-height:3rem;">
-          <span class="mb-1 mr-5" style="font-weight:bold;">작성자</span>
-          <span>댓글 내용</span>
-        </div>
-      </v-card>
 
       <v-card-actions class="d-flex justify-center">
         <v-btn @click="adoptlist" class="ma-2" outlined color="indigo">목록</v-btn>
