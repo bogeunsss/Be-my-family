@@ -135,7 +135,14 @@
           
           <v-list-item>
             <p class="font-weght-black mr-3">태그:</p>
-            <v-text-field></v-text-field>
+            <div class="d-flex flex-column">
+              <v-text-field v-model="lostTagText"></v-text-field>
+              <div class="d-flex flex-row">
+                <v-list v-for="(lostTag, index) in lostTags" :key="index">
+                  <v-chip close color="teal" text-color="white" @click:close="closeTag(index)">{{ lostTag }}</v-chip>
+                </v-list>
+              </div>
+            </div>
           </v-list-item>
           <v-list-item>
             <v-textarea v-model="lostContent" outlined label="내용"></v-textarea>
@@ -160,7 +167,6 @@
       <v-btn color="primary" @click="$refs.dialog.save(lostDate)">확인</v-btn>
     </v-date-picker>
   </v-dialog>
-
 
   </div>
 </template>
@@ -206,6 +212,19 @@ export default {
     //   console.log(newVal)
     //   console.log(oldVal)
     // }
+    lostTagText(newVal, oldVal){
+      if(newVal[newVal.length-1] === '#'){
+        this.tagState = true
+      }
+      if(this.tagState && newVal[newVal.length-1] === ' '){
+        this.lostTagText = this.lostTagText.substring(1, this.lostTagText.length)
+        this.lostTags.push(this.lostTagText.trim())
+        this.lostTagText = ''
+        this.tagState = false
+        console.log(this.lostTags)
+      }
+
+    }
   },
   data(){
     return {
@@ -244,6 +263,8 @@ export default {
       lostSex: '',
       lostAge: '',
       lostTagText: '',
+      lostTags: [],
+      tagState: false,
     }
   },
   methods: {
@@ -288,6 +309,7 @@ export default {
       formData.append('lostcontent', this.lostContent)
       formData.append('lostsex', this.lostSex)
       formData.append('lostphone', this.profileData.phone)
+      formData.append('losttagtext', this.lostTags)
       for(var x=0;x<this.images.length;x++){
         console.log(this.images.length + '  ' + x)
         console.log(this.images[x].name)
@@ -315,6 +337,10 @@ export default {
       
       this.dialog = false
       this.$router.go()
+    },
+    closeTag(index){
+      this.lostTags.splice(index, 1)
+      console.log(this.lostTags)
     }
   }
 }

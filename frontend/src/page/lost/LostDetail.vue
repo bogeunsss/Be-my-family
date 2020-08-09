@@ -32,126 +32,127 @@
             </v-card-text>
             <v-card-actions class="d-flex justify-center">
               <v-spacer></v-spacer>
-              <v-btn v-if="isWriter">수정</v-btn>
+              <!-- <v-btn v-if="isWriter">수정</v-btn> -->
+
+                <v-dialog v-model="dialog" scrollable max-width="700px">
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                            color="success"
+                            fab
+                            dark
+                            v-bind="attrs"
+                            v-on="on"
+                            v-if="isWriter"
+                        >
+                            수정
+                        </v-btn>
+                    </template>
+                    <v-card>
+                    <v-card-title>글 작성하기</v-card-title>
+                    <v-divider></v-divider>
+                    <v-card-text style="height: 500px;">
+                        <v-list>
+                        <v-list-item-subtitle>카테고리</v-list-item-subtitle>
+                        <v-list-item class="mt-3 d-flex justify-space-between">
+                            <v-radio-group v-model="lostType" v-for="category in categories" :key="category">
+                            <v-radio :label=category :value=category :selected="lostType"></v-radio>
+                            </v-radio-group>
+                        </v-list-item>
+                        <v-list-item-subtitle>성별</v-list-item-subtitle>
+                        <v-list-item class="mt-3 d-flex justify-space-between">
+                            <v-radio-group v-model="lostSex" v-for="gd in gender" :key="gd">
+                            <v-radio :label=gd :value=gd :selected="lostSex"></v-radio>
+                            </v-radio-group>
+                        </v-list-item>
+                        <v-list-item-subtitle>품종</v-list-item-subtitle>
+                        <v-list-item class="mt-3">
+                            <v-select
+                            v-model="lostBreed"
+                            :items="kinds"
+                            label="선택해주세요"
+                            solo
+                            ></v-select>
+                        </v-list-item>
+                        <v-row>
+                            <v-col>
+                            <v-list-item-subtitle>시/도</v-list-item-subtitle>
+                            <v-list-item class="mt-3">
+                                <v-select
+                                v-model="lostSido"
+                                :items="sido_states"
+                                label="선택해주세요"
+                                solo
+                                ></v-select>
+                            </v-list-item>
+                            </v-col>
+                            <v-col>
+                            <div v-if="lostSido.length > 0">
+                                <v-list-item-subtitle>구/군</v-list-item-subtitle>
+                                <v-list-item class="mt-3">
+                                <v-select
+                                    v-model="lostGugun"
+                                    :items="gugun_states[lostSido]"
+                                    label="선택해주세요"
+                                    solo
+                                ></v-select>
+                                </v-list-item>
+                            </div>
+                            </v-col>
+                        </v-row>
+
+                        <v-row>
+                            <v-col>
+                            <v-list-item-subtitle>상세주소</v-list-item-subtitle>
+                            <v-list-item>
+                                <v-text-field v-model="lostPlace"></v-text-field>
+                            </v-list-item>
+                            </v-col>
+                            <v-col>
+                            <v-list-item-subtitle>발생날짜</v-list-item-subtitle>
+                            <v-list-item>
+                                <v-text-field
+                                color="primary"
+                                @click="dialog2 = !dialog2"
+                                v-model="lostDate"
+                                label="발생 날짜를 선택해주세요"
+                                readonly
+                                ></v-text-field>
+                            </v-list-item>
+                            </v-col>
+                        </v-row>
+                        
+                        <v-list-item>
+                            <p class="font-weght-black mr-3">태그:</p>
+                            <v-text-field></v-text-field>
+                        </v-list-item>
+                        <v-list-item>
+                            <v-textarea v-model="content" outlined label="내용">{{content}}</v-textarea>
+                        </v-list-item>
+                        </v-list>
+                    </v-card-text>
+                    <v-divider></v-divider>
+                    <v-card-actions class="d-flex justify-space-between">
+                        <input @change="onChangeImages" type="file" id="inputFiles" multiple="multiple" accept="image/*">
+                        <div>
+                        <v-btn type="button" color="blue darken-1" text @click="submit">Save</v-btn>
+                        <v-btn color="blue darken-1" text @click="closeDialog">Close</v-btn>
+                        </div>
+                    </v-card-actions>
+                    </v-card>
+                </v-dialog>
+                <v-dialog ref="dialog" v-model="dialog2" :return-value.sync="lostDate" persistent width="290px">
+                    <v-date-picker v-model="lostDate" scrollable>
+                    <v-spacer></v-spacer>
+                    <v-btn color="primary" @click="dialog2 = false">취소</v-btn>
+                    <v-btn color="primary" @click="$refs.dialog.save(lostDate)">확인</v-btn>
+                    </v-date-picker>
+                </v-dialog>
               <v-btn v-if="isWriter" @click="deleteLost">삭제</v-btn>
               <v-btn @click="goList">목록</v-btn>
             </v-card-actions>
           </v-card>
       </v-container>
 
-    <v-dialog v-model="dialog" scrollable max-width="700px">
-        <template v-slot:activator="{ on, attrs }">
-        <v-btn
-            color="success"
-            fab
-            dark
-            v-bind="attrs"
-            v-on="on"
-        >
-            <v-icon>mdi-pencil</v-icon>
-        </v-btn>
-        </template>
-        <v-card>
-        <v-card-title>글 작성하기</v-card-title>
-        <v-divider></v-divider>
-        <v-card-text style="height: 500px;">
-            <v-list>
-            <v-list-item-subtitle>카테고리</v-list-item-subtitle>
-            <v-list-item class="mt-3 d-flex justify-space-between">
-                <v-radio-group v-model="lostType" v-for="category in categories" :key="category">
-                <v-radio :label=category :value=category :selected="lostType"></v-radio>
-                </v-radio-group>
-            </v-list-item>
-            <v-list-item-subtitle>성별</v-list-item-subtitle>
-            <v-list-item class="mt-3 d-flex justify-space-between">
-                <v-radio-group v-model="lostSex" v-for="gd in gender" :key="gd">
-                <v-radio :label=gd :value=gd :selected="lostSex"></v-radio>
-                </v-radio-group>
-            </v-list-item>
-            <v-list-item-subtitle>품종</v-list-item-subtitle>
-            <v-list-item class="mt-3">
-                <v-select
-                v-model="lostBreed"
-                :items="kinds"
-                label="선택해주세요"
-                solo
-                ></v-select>
-            </v-list-item>
-            <v-row>
-                <v-col>
-                <v-list-item-subtitle>시/도</v-list-item-subtitle>
-                <v-list-item class="mt-3">
-                    <v-select
-                    v-model="lostSido"
-                    :items="sido_states"
-                    label="선택해주세요"
-                    solo
-                    ></v-select>
-                </v-list-item>
-                </v-col>
-                <v-col>
-                <div v-if="lostSido.length > 0">
-                    <v-list-item-subtitle>구/군</v-list-item-subtitle>
-                    <v-list-item class="mt-3">
-                    <v-select
-                        v-model="lostGugun"
-                        :items="gugun_states[lostSido]"
-                        label="선택해주세요"
-                        solo
-                    ></v-select>
-                    </v-list-item>
-                </div>
-                </v-col>
-            </v-row>
-
-            <v-row>
-                <v-col>
-                <v-list-item-subtitle>상세주소</v-list-item-subtitle>
-                <v-list-item>
-                    <v-text-field v-model="lostPlace"></v-text-field>
-                </v-list-item>
-                </v-col>
-                <v-col>
-                <v-list-item-subtitle>발생날짜</v-list-item-subtitle>
-                <v-list-item>
-                    <v-text-field
-                    color="primary"
-                    @click="dialog2 = !dialog2"
-                    v-model="lostDate"
-                    label="발생 날짜를 선택해주세요"
-                    readonly
-                    ></v-text-field>
-                </v-list-item>
-                </v-col>
-            </v-row>
-            
-            <v-list-item>
-                <p class="font-weght-black mr-3">태그:</p>
-                <v-text-field></v-text-field>
-            </v-list-item>
-            <v-list-item>
-                <v-textarea v-model="content" outlined label="내용"></v-textarea>
-            </v-list-item>
-            </v-list>
-        </v-card-text>
-        <v-divider></v-divider>
-        <v-card-actions class="d-flex justify-space-between">
-            <input @change="onChangeImages" type="file" id="inputFiles" multiple="multiple" accept="image/*">
-            <div>
-            <v-btn type="button" color="blue darken-1" text @click="submit">Save</v-btn>
-            <v-btn color="blue darken-1" text @click="closeDialog">Close</v-btn>
-            </div>
-        </v-card-actions>
-        </v-card>
-    </v-dialog>
-
-    <v-dialog ref="dialog" v-model="dialog2" :return-value.sync="lostDate" persistent width="290px">
-        <v-date-picker v-model="lostDate" scrollable>
-        <v-spacer></v-spacer>
-        <v-btn color="primary" @click="dialog2 = false">취소</v-btn>
-        <v-btn color="primary" @click="$refs.dialog.save(lostDate)">확인</v-btn>
-        </v-date-picker>
-    </v-dialog>
   </div>
 </template>
 
@@ -231,7 +232,6 @@ export default {
             lostBreed: '',
             lostSido: '',
             lostGugun: '',
-            lostContent: '',
             images: [],
             lostType: '',
             lostDate: null,
@@ -256,9 +256,6 @@ export default {
         },
         closeDialog(){
             this.dialog = false
-            this.lostSido = ''
-            this.lostGugun = ''
-            this.lostBreed = ''
         },
             // fileSelect(){
             //   console.log(this.$refs)
@@ -289,9 +286,10 @@ export default {
             formData.append('lostsido', this.lostSido)
             formData.append('lostgugun', this.lostGugun)
             formData.append('lostplace', this.lostPlace)
-            formData.append('lostcontent', this.lostContent)
+            formData.append('lostcontent', this.content)
             formData.append('lostsex', this.lostSex)
             formData.append('lostphone', this.profileData.phone)
+            formData.append('lostno', this.$route.params.articleNo)
             for(var x=0;x<this.images.length;x++){
                 console.log(this.images.length + '  ' + x)
                 console.log(this.images[x].name)
