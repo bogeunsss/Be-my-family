@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
+import javax.swing.text.html.HTML.Tag;
+
 import com.web.blog.dao.lost.LostDao;
 import com.web.blog.dao.lost.LosttagDao;
 import com.web.blog.model.BasicResponse;
@@ -46,7 +48,7 @@ public class LostController {
     LosttagDao losttagDao;
 
     @PostMapping("/lost/add")
-    @ApiOperation(value = "실종/입양/보호 글 등록/수정")
+    @ApiOperation(value = "실종/보호/목격 글 등록/수정")
     public Object lostAdd(@RequestPart final List<MultipartFile> files, LostRequest request) {
 
         ResponseEntity response = null;
@@ -176,7 +178,7 @@ public class LostController {
     }
 
     @GetMapping("lost/detail")
-    @ApiOperation(value = "실종/목격/보호 상세 조회")
+    @ApiOperation(value = "실종/보호/목격 상세 조회")
     public Object lostDetail(@RequestParam(required = true) int lostno) {
         
         ResponseEntity response = null;
@@ -187,17 +189,18 @@ public class LostController {
             List<Losttag> tagList = losttagDao.findByLostno(lostno);
             
             if(lostDetail.isPresent())  {
-                result.status = true;
                 result.data = "success";
                 result.object = lostDetail.get();
+                
                 if(!tagList.isEmpty()) {
                     result.tag = tagList;
-                } 
+                }
+
             } else {
-                result.status = true;
                 result.data = "lostno not exist";
             }
 
+            result.status = true;
             response = new ResponseEntity<>(result, HttpStatus.OK);
 
         } catch(Exception e) {
@@ -211,7 +214,7 @@ public class LostController {
     }
 
     @DeleteMapping("list/delete")
-    @ApiOperation(value = "실종/목격/보호 글 삭제")
+    @ApiOperation(value = "실종/보호/목격 글 삭제")
     public Object lostDelete(@RequestParam(required = true) final int lostno, @RequestParam(required = true) final String uid) {
 
         ResponseEntity response = null;
@@ -265,6 +268,43 @@ public class LostController {
         }
        return response;
     
-    }    
+    }
+
+    @GetMapping("lost/search")
+    @ApiOperation(value = "실종/보호/목격 태그 검색")
+    public Object lostSearch(@RequestParam final List<String> tags) {
+
+        ResponseEntity response = null;
+        BasicResponse result = new BasicResponse();
+
+        try{
+            int size = tags.size();
+            if(size == 0){
+                result.data = "검색어를 입력하세요";
+            } else {
+                List<Losttag> losttag = losttagDao.findtag(tags, size);
+
+                if(losttag.isEmpty()) {
+                    result.data = "lostno not exist";
+                } else {
+                    result.object =  losttag;
+                    result.data = "success";
+                }
+
+            }
+
+            result.status = true;
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.status = false;
+            result.data = "fail";
+            response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+        }
+
+        return response;
+    }
+
 
 }
