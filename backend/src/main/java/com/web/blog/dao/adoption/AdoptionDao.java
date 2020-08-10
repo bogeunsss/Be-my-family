@@ -1,4 +1,4 @@
-package com.web.blog.dao.care;
+package com.web.blog.dao.adoption;
 
 import java.util.Optional;
 
@@ -21,5 +21,6 @@ public interface AdoptionDao extends JpaRepository<Adoption, String>{
     void deleteByUidAndDesertionno(String uid, String desertionno);
     String getAdoptionByUid(String uid);
     List<Adoption> findByUid(String uid);
+    List<Adoption> findByMid(String mid);
     Adoption save(Adoption adoption);
 }
