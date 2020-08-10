@@ -13,5 +13,5 @@ public interface CareDao extends JpaRepository<Careboard, String> {
 
     List<Careboard> findByCareaddrContainingOrderByNoticesdtDesc(String searchText);
     List<Careboard> findBykindcdContainingOrderByNoticesdtDesc(String searchText);
-
+    Careboard findByDesertionno(String desertionno);
 }

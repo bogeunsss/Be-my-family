@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import com.web.blog.dao.adoption.AdoptionDao;
+import com.web.blog.dao.care.CareDao;
 import com.web.blog.dao.care.SurveyDao;
 import com.web.blog.dao.manager.ManagerDao;
 import com.web.blog.dao.user.UserDao;
@@ -13,6 +14,7 @@ import com.web.blog.model.AdoptionResponse;
 import com.web.blog.model.BasicResponse;
 import com.web.blog.model.adoption.Adoption;
 import com.web.blog.model.adoption.ApplicationRequest;
+import com.web.blog.model.care.Careboard;
 import com.web.blog.model.care.Survey;
 import com.web.blog.model.manager.Manager;
 import com.web.blog.model.user.User;
@@ -60,6 +62,9 @@ public class AdoptionController {
         @Autowired
         ManagerMailService managerMailService;
 
+        @Autowired
+        CareDao careDao;
+
         //상담 시간, 상담 날짜 테이블 추가, 객체로 받기
         //uid 말고 이메일로 받기
     @GetMapping("/account/adoptionList")
@@ -102,6 +107,9 @@ public class AdoptionController {
         User userOpt = userDao.getUserByEmail(email);
         Optional<Survey> surveyOpt = surveydao.findByUid(userOpt.getUid());
         Optional<Adoption> adoptionOpt = adoptionDao.findByUidAndDesertionno(userOpt.getUid(), desertionno);
+        Careboard careboard = careDao.findByDesertionno(desertionno);
+        String checkmid = careboard.getCarenm();
+        System.out.println(checkmid);
         System.out.println(userOpt);
         System.out.println(surveyOpt);
         System.out.println(adoptionOpt);
@@ -128,6 +136,7 @@ public class AdoptionController {
             result.checkadoption = true;
             result.survey = surveyOpt;
             result.user = userOpt;
+            result.mid = checkmid;
             result.desertionno = desertionno;
             response = new ResponseEntity<>(result, HttpStatus.OK);
         }
