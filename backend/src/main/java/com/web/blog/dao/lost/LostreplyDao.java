@@ -21,4 +21,8 @@ public interface LostreplyDao extends JpaRepository<Lostreply, String> {
     @Modifying
     void deleteByLostreplynoAndUid(int lostreplyno, String uid);
 
+    @Transactional
+    @Modifying
+    void deleteByLostno(int lostno);
+
 }

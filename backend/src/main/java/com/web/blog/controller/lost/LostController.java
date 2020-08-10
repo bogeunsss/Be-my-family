@@ -264,6 +264,7 @@ public class LostController {
                         }
                     }
 
+                    lostreplyDao.deleteByLostno(lostno);
                     losttagDao.deleteByLostno(lostno);
                     lostDao.deleteByLostno(lostno);
                     result.data = "success";
@@ -397,5 +398,5 @@ public class LostController {
 
         return response;
     }
-    
+
 }
