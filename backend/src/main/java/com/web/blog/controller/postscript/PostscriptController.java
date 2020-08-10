@@ -90,8 +90,8 @@ public class PostscriptController {
         String checkimage = request.getImage();
         String checksido = request.getSido();
         String checkgugun = request.getGugun();
-        String checkplace = request.getKind();
-        
+        String checkkind = request.getKind();
+      
         final BasicResponse result = new BasicResponse();
         
         try {
@@ -103,7 +103,7 @@ public class PostscriptController {
             postscript.setImage(checkimage);
             postscript.setSido(checksido);
             postscript.setGugun(checkgugun);
-            postscript.setKind(checkplace);
+            postscript.setKind(checkkind);
             postscriptDao.save(postscript);
                         
             result.status = true;
