@@ -222,9 +222,6 @@ export default {
                 console.log(this.lostTags)
             }
         },
-        lostTags(){
-            console.log(this.lostTags)
-        }
     },
     computed:{
         param(){
@@ -304,6 +301,18 @@ export default {
             }
         },
         submit(){
+            if(this.lostTags.indexOf(this.lostBreed)>=0){
+                this.lostTags.splice(this.lostTags.indexOf(this.lostBreed),1)
+            }
+            if(this.lostTags.indexOf(this.lostSido)>=0){
+                this.lostTags.splice(this.lostTags.indexOf(this.lostSido),1)
+            }
+            if(this.lostTags.indexOf(this.lostGugun)>=0){
+                this.lostTags.splice(this.lostTags.indexOf(this.lostGugun),1)
+            }
+            if(this.lostTags.indexOf(this.lostType)>=0){
+                this.lostTags.splice(this.lostTags.indexOf(this.lostType),1)
+            }
             const formData = new FormData()
             formData.append('uid', this.profileData.nickName)
             formData.append('lostbreed', this.lostBreed)
