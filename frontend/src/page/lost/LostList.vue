@@ -3,30 +3,23 @@
     <v-container >
       <form>
         <v-row class="d-flex align-center mx-auto">
-          <v-col cols="2"></v-col>
-          <v-col cols="10" class="d-flex">
-            <v-col>
-              <v-select
-                v-model="searchType"
-                :items="categories"
-                label="카테고리"
-                item-text="state"
-                item-value="abbr"
-                solo
-              ></v-select>
-            </v-col>
-            <v-col>
-              <v-text-field
-                label="검색어를 입력하세요"
-                v-model="searchText"
-                class="mx-2"
-              ></v-text-field>
-            </v-col>
-            <v-col>
-              <v-btn large type="submit">
-                검색
-              </v-btn>
-            </v-col>
+          <v-col class="d-flex">
+            
+          <v-text-field
+            id="searchInput"
+            label="검색어를 입력하세요"
+            v-model="searchText"
+            class="ma-0 pa-0"
+            @keyup.enter="makeSearchTag"
+          ></v-text-field>
+          <v-btn fab depressed style="background: transparent" small @click="search">
+            <v-icon>mdi-magnify</v-icon>
+          </v-btn>
+          </v-col>
+          <v-col class="d-flex flex-row">
+            <v-list v-for="(searchTag, index) in searchTags" :key="index">
+              <v-chip close color="pink" text-color="white" @click:close="closeSearchTag(index)">{{ searchTag }}</v-chip>
+            </v-list>
           </v-col>
         </v-row>
       </form>
@@ -150,7 +143,7 @@
           <v-list-item>
             <p class="font-weght-black mr-3">태그:</p>
             <div class="d-flex flex-column">
-              <v-text-field v-model="lostTagText"></v-text-field>
+              <v-text-field v-model="lostTagText" @keyup.enter="makeApplyTag"></v-text-field>
               <div class="d-flex flex-row">
                 <v-list v-for="(lostTag, index) in lostTags" :key="index">
                   <v-chip close color="teal" text-color="white" @click:close="closeTag(index)">{{ lostTag }}</v-chip>
@@ -204,30 +197,12 @@ import { mapState } from 'vuex'
 
 export default {
   created(){
-    axios.get('http://localhost:8080/lost/list')
-      .then(response => {
-        console.log(response.data.object[0].lostpic1)
-        this.cards = response.data.object
-      }).catch(error => {
-        console.log(error)
-      })
+    this.getList()
   },
   computed:{
     ...mapState(['sido_states', 'gugun_states', 'profileData']),
   },
   watch:{
-    lostTagText(newVal, oldVal){
-      if(newVal[newVal.length-1] === '#'){
-        this.tagState = true
-      }
-      if(this.tagState && newVal[newVal.length-1] === ' '){
-        this.lostTagText = this.lostTagText.substring(1, this.lostTagText.length)
-        this.lostTags.push(this.lostTagText.trim())
-        this.lostTagText = ''
-        this.tagState = false
-        console.log(this.lostTags)
-      }
-    }
   },
   data(){
     return {
@@ -268,11 +243,22 @@ export default {
       lostTagText: '',
       lostTags: [],
       tagState: false,
-      searchType: '',
       searchText: '',
+      searchTags: [],
+      tempCards: [],
     }
   },
   methods: {
+    getList(){
+      axios.get('http://localhost:8080/lost/list')
+      .then(response => {
+        // console.log(response.data.object[0].lostpic1)
+        this.cards = response.data.object
+        this.tempCards = this.cards
+      }).catch(error => {
+        console.log(error)
+      })
+    },
     goDetail(index){
       this.$router.push({name: constants.URL_TYPE.LOST.LOSTDETAIL, params: { articleNo: index }})
     },
@@ -286,7 +272,6 @@ export default {
       if(event.target.files.length > 3){
         alert('파일은 3개까지 저장 가능합니다.')
         document.getElementById('inputFiles').value = '';
-        console.log(document.getElementById('inputFiles').files.length)
       }else{
         this.images = event.target.files
       }
@@ -305,8 +290,6 @@ export default {
       formData.append('lostphone', this.profileData.phone)
       formData.append('losttagtext', this.lostTags)
       for(var x=0;x<this.images.length;x++){
-        console.log(this.images.length + '  ' + x)
-        console.log(this.images[x].name)
         formData.append('files', this.images[x])
       }
       
@@ -325,7 +308,6 @@ export default {
       }).then(response => {
         console.log(response)
       }).catch(error => {
-        console.log("에러다!!!!!")
         console.log(error)
       })
       
@@ -334,7 +316,48 @@ export default {
     },
     closeTag(index){
       this.lostTags.splice(index, 1)
-      console.log(this.lostTags)
+    },
+    closeSearchTag(index){
+      this.searchTags.splice(index, 1)
+      
+      if(this.searchTags.length === 0){
+        this.getList()
+      }else{
+        this.search()
+      }
+    },
+    makeSearchTag(){
+      if(this.searchText.length > 0){
+        if(this.searchText[0] === '#'){
+          this.searchTags.push(this.searchText.substring(1,this.searchText.length))
+          this.searchText = ''
+          this.search()
+        }
+      }
+    },
+    makeApplyTag(){
+      if(this.lostTagText.length > 0){
+        if(this.lostTagText[0] === "#"){
+          this.lostTags.push(this.lostTagText.substring(1,this.lostTagText.length))
+          this.lostTagText = ''
+        }
+      }
+    },
+    search(){
+      axios.get('http://localhost:8080/lost/search?tags='+this.searchTags)
+        .then(response => {
+          var temp = []
+          for(var x in response.data.object){
+            for(var y in this.tempCards){
+              if(response.data.object[x].lostno === this.tempCards[y].lostno){
+                temp.push(this.ards[y])
+              }
+            }
+          }
+          this.cards = temp
+        }).catch(error => {
+          console.log(error)
+        })
     }
   }
 }
