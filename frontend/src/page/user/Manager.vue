@@ -67,6 +67,16 @@ import axios from "axios";
 
 export default {
     name: 'Manager',
+    create(){
+
+    },
+    methods: {
+      getAdoptionList() {
+        axios.get('http://localhost/account/adoptionList', {params : {
+          email : this.$cookies.get('auth-token').email
+        }})
+      },
+    },
     data() {
         return {
           

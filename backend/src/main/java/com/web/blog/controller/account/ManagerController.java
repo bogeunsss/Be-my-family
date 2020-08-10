@@ -81,10 +81,11 @@ public class ManagerController {
 
     @GetMapping("/manager/find")
     @ApiOperation(value = "매니저 조회")
-    public Object find(String email) {
+    public Object find (String email) {
         ResponseEntity response = null;
 
         Manager checkmanager = managerDao.getManagerByEmail(email);
+        System.out.println(checkmanager);
         final ManagerResponse result = new ManagerResponse();
         List<Adoption> adoptionList = adoptionDao.findByMid(checkmanager.getMid());
 
