@@ -289,11 +289,8 @@ export default new Vuex.Store({
             cookies.set('auth-token', {
               token:response.data.object.accessToken,
               email:response.data.email,
-<<<<<<< HEAD
-              uid:response.data.uid
-=======
+              uid:response.data.uid,
               mid:response.data.mid
->>>>>>> 9837d476902c24a09f48daa81f4ba23764a5971a
             })
             state.authToken = cookies.get('auth-token')
             router.push({name:constants.URL_TYPE.POST.MAIN})
@@ -344,11 +341,6 @@ export default new Vuex.Store({
         
         state.profileData.nickName = response.data.object.uid
         state.profileData.password = response.data.object.password
-<<<<<<< HEAD
-        console.log(response)
-=======
-
->>>>>>> 9837d476902c24a09f48daa81f4ba23764a5971a
       })
       .catch(err=>console.log(err))
     },
