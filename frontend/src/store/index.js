@@ -253,39 +253,10 @@ export default new Vuex.Store({
             // var jwt = require("jsonwebtoken");
             // var token = jwt.sign({ sub: loginData.email }, loginData.password);
             console.log(response)
-            // alert("로그인 성공");
-            state.dialog = false
-            state.isLoggedIn = true
-            // state.isManager = false
-            cookies.set('auth-token', {
-              token:response.data.object.accessToken,
-              email:response.data.email,
-              uid:response.data.uid
-            })
-            state.authToken = cookies.get('auth-token')
-            // router.push({name:constants.URL_TYPE.POST.MAIN})
-            // router.go()
-          }
-        })
-        .catch((error)=>{
-          alert("로그인 실패");
-          console.log(error)
-          state.dialog = false;
-          // router.push({name: 'Params', params: {name: error.response.status}});
-        })
-      }else{
-        axios.post(SERVER.SERVER_URL +'/manager/login ', formData)
-      .then(response => {
-        if(response.status == 200){
-            // commit('SET_TOKEN',response.data.key)
-            state.dialog = true
-            // var jwt = require("jsonwebtoken");
-            // var token = jwt.sign({ sub: loginData.email }, loginData.password);
-            console.log(response)
             alert("로그인 성공");
             state.dialog = false
             state.isLoggedIn = true
-            // state.isManager = true
+            // state.isManager = false
             cookies.set('auth-token', {
               token:response.data.object.accessToken,
               email:response.data.email,
@@ -300,7 +271,30 @@ export default new Vuex.Store({
           alert("로그인 실패");
           console.log(error)
           state.dialog = false;
-          // router.push({name: 'Params', params: {name: error.response.status}});
+        })
+      }else{
+        axios.post(SERVER.SERVER_URL +'/manager/login ', formData)
+      .then(response => {
+        if(response.status == 200){
+            state.dialog = true
+            console.log(response)
+            alert("로그인 성공");
+            state.dialog = false
+            state.isLoggedIn = true
+            cookies.set('auth-token', {
+              token:response.data.object.accessToken,
+              email:response.data.email,
+              mid:response.data.mid
+            })
+            state.authToken = cookies.get('auth-token')
+            router.push({name:constants.URL_TYPE.POST.MAIN})
+            router.go()
+          }
+        })
+        .catch((error)=>{
+          alert("로그인 실패");
+          console.log(error)
+          state.dialog = false;
         })
       }
     }

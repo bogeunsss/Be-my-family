@@ -97,7 +97,7 @@ export default new Router({
       name: constants.URL_TYPE.USER.LIKE,
       component: Like,
       beforeEnter(to, from, next){
-        if($cookies.get('auth-token')){
+        if($cookies.get('auth-token').uid){
           next()
         }else{
           alert('로그인이 필요합니다.')

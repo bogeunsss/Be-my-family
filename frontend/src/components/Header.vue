@@ -53,7 +53,8 @@
             </v-card>
           </v-dialog>
         <!-- </v-list-item-content> -->
-          <p class="mb-0" v-if="isLoggedIn">{{ $store.state.profileData.nickName }}</p>
+          <p class="mb-0" v-if="isLoggedIn && !isManager">{{ $store.state.profileData.nickName }}</p>
+          <p class="mb-0" v-else-if="isLoggedIn && isManager ">{{ $cookies.get('auth-token').mid }}</p>
           <!-- {{$store.state.profileData}} -->
           <!-- </v-list-item-content> -->
         </v-list-item>
@@ -82,7 +83,7 @@
 
             <v-list-item-title v-if="isLoggedIn" @click="userProfile" style="cursor: pointer;">My page</v-list-item-title>
           </div>
-          <div class="ml-5 d-flex inline" v-if="isLoggedIn && isManager=='radio-1'">
+          <div class="ml-5 d-flex inline" v-if="isLoggedIn && !isManager">
             <!-- like 아이콘, 글자 눌렀을 때 like 페이지로 이동 -->
             <v-list-item-icon style="cursor: pointer;">
               <i
@@ -94,7 +95,7 @@
             </v-list-item-icon>
             <v-list-item-title v-if="isLoggedIn" @click="userLike" style="cursor: pointer;">Like</v-list-item-title>
           </div>
-          <div class="ml-5 d-flex inline" v-if="isLoggedIn && isManager=='radio-1'">
+          <div class="ml-5 d-flex inline" v-if="isLoggedIn && !isManager">
             <!-- survey 아이콘, 글자 눌렀을 때 survey 페이지로 이동 -->
             <v-list-item-icon style="cursor: pointer;">
               <i
@@ -106,7 +107,7 @@
             </v-list-item-icon>
             <v-list-item-title v-if="isLoggedIn" @click="userSurvey" style="cursor: pointer;">Survey</v-list-item-title>
           </div>
-          <div class="ml-5 d-flex inline" v-if="isLoggedIn && isManager=='radio-1'">
+          <div class="ml-5 d-flex inline" v-if="isLoggedIn && isManager">
             <!-- survey 아이콘, 글자 눌렀을 때 survey 페이지로 이동 -->
             <v-list-item-icon style="cursor: pointer;">
               <i
@@ -158,7 +159,7 @@ export default {
   },
   props: ["isHeader"],
   computed: {
-    ...mapState(["dialog", "loginData", "profileData", "isLoggedIn","isManager"]),
+    ...mapState(["dialog", "loginData", "profileData", "isLoggedIn"]),
     email: {
       get() {
         return loginData.email;
@@ -183,13 +184,19 @@ export default {
       var token = this.$cookies.get('auth-token')
       this.isLoggedInChecker(login)
       console.log(this.isLoggedIn)
+      console.log(this.$cookies.get('auth-token').mid)
+    if(this.$cookies.get('auth-token').mid != null){
+      this.isManager = true
+      }else{
+        this.isManager = false
+        this.find(token.email)
+      }
     //   this.isLoggedInChecker(login)
     //   this.find(token.email)
     // }
     // this.isLoggedIn = this.$cookies.isKey("auth-token");
     // if(this.$cookies.isKey("auth-token")){
       // var token = this.$cookies.get('auth-token')\
-      this.find(token.email)
     }
   },
   methods: {
@@ -252,7 +259,8 @@ export default {
     return {
       constants,
       drawer: null,
-      radios: 'radios-1'
+      radios: 'radios-1',
+      isManager: false,
     };
   },
 }
