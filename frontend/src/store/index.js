@@ -256,10 +256,11 @@ export default new Vuex.Store({
             state.isLoggedIn = true
             cookies.set('auth-token', {
               token:response.data.object.accessToken,
-              email:response.data.email
+              email:response.data.email,
+              uid:response.data.uid
             })
             state.authToken = cookies.get('auth-token')
-            router.push({name:constants.URL_TYPE.POST.MAIN})
+            // router.push({name:constants.URL_TYPE.POST.MAIN})
             router.go()
           }
         })
