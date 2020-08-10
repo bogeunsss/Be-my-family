@@ -1,21 +1,35 @@
 <template>
   <div>
     <v-container >
-      <!-- <form>
+      <form>
         <v-row class="d-flex align-center mx-auto">
-          <v-col></v-col>
-          <v-col class="d-flex">
-            <v-text-field
-              label="검색어를 입력하세요"
-              v-model="searchText"
-              class="mx-2"
-            ></v-text-field>
-            <v-btn large @click="search" type="submit">
-              검색
-            </v-btn>
+          <v-col cols="2"></v-col>
+          <v-col cols="10" class="d-flex">
+            <v-col>
+              <v-select
+                v-model="searchType"
+                :items="categories"
+                label="카테고리"
+                item-text="state"
+                item-value="abbr"
+                solo
+              ></v-select>
+            </v-col>
+            <v-col>
+              <v-text-field
+                label="검색어를 입력하세요"
+                v-model="searchText"
+                class="mx-2"
+              ></v-text-field>
+            </v-col>
+            <v-col>
+              <v-btn large type="submit">
+                검색
+              </v-btn>
+            </v-col>
           </v-col>
         </v-row>
-      </form> -->
+      </form>
       <v-row dense>
         <v-col
           v-for="(card, i) in cards"
@@ -143,6 +157,17 @@
                 </v-list>
               </div>
             </div>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-icon
+                  color="primary"
+                  dark
+                  v-bind="attrs"
+                  v-on="on"
+                >mdi-alert-circle-outline</v-icon>
+              </template>
+              <span>태그 생성 시 #을 입력하세요.</span>
+            </v-tooltip>
           </v-list-item>
           <v-list-item>
             <v-textarea v-model="lostContent" outlined label="내용"></v-textarea>
@@ -195,7 +220,7 @@ export default {
       if(newVal[newVal.length-1] === '#'){
         this.tagState = true
       }
-      if(this.tagState && newVal[newVal.length-1] === '\n'){
+      if(this.tagState && newVal[newVal.length-1] === ' '){
         this.lostTagText = this.lostTagText.substring(1, this.lostTagText.length)
         this.lostTags.push(this.lostTagText.trim())
         this.lostTagText = ''
@@ -243,6 +268,8 @@ export default {
       lostTagText: '',
       lostTags: [],
       tagState: false,
+      searchType: '',
+      searchText: '',
     }
   },
   methods: {
@@ -255,18 +282,7 @@ export default {
       this.lostGugun = ''
       this.lostBreed = ''
     },
-    // fileSelect(){
-    //   console.log(this.$refs)
-    //   this.images = this.$refs.images.files[0]
-    //   // for(let file in this.$refs.images.files){
-    //   //   this.images.push(file)
-    //   // }
-    // },
     onChangeImages(event){
-      // for(let x=0;x<event.target.files.length;x++){
-      //   this.images.push(event.target.files[x])
-      // }
-      
       if(event.target.files.length > 3){
         alert('파일은 3개까지 저장 가능합니다.')
         document.getElementById('inputFiles').value = '';
