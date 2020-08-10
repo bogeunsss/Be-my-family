@@ -25,16 +25,10 @@ public class ManagerSignupRequest {
     @NotNull
     String mid;
 
-    @ApiModelProperty(required = true)
-    @NotNull
     String name;
 
-    @ApiModelProperty(required = true)
-    @NotNull
     String phone;
 
-    @ApiModelProperty(required = true)
-    @NotNull
     String careNM;
 
     public String getEmail() {
