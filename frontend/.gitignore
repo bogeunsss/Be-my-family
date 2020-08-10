@@ -2,8 +2,6 @@
 /dist
 node_modules/
 
-node_modules/
-
 # local env files
 node_modules/
 .env.local
