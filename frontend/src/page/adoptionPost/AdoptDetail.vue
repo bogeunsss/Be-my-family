@@ -42,8 +42,8 @@
         </v-card-text>
 
         <v-card-actions class="d-flex justify-end">
-          <v-btn text color="deep-purple accent-4" v-if="this.$cookies.isKey('auth-token')">수정</v-btn>
-          <v-btn text color="red accent-4" v-if="this.$cookies.isKey('auth-token')">삭제</v-btn>
+          <v-btn text color="deep-purple accent-4" v-if="this.$cookies.isKey('auth-token')" @click="postupdate">수정</v-btn>
+          <v-btn text color="red accent-4" v-if="this.$cookies.isKey('auth-token')" @click="postdelete">삭제</v-btn>
         </v-card-actions>
       </v-card>
 
@@ -84,12 +84,18 @@ export default {
   created(){
     this.adoptdetail()
   },
+  computed:{
+    param()
+    {
+      return this.$route.params.ID
+    }
+  },
   methods: {
     adoptlist() {
       this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTLIST });
     },
     adoptdetail(){
-      axios.get(`http://localhost:8080/postscript/detail?postscriptno=`+this.$route.params.ID)
+      axios.get("http://localhost:8080/postscript/detail?postscriptno="+this.$route.params.ID)
       .then((res) =>{
         this.Adoptdata = res.data.object
         console.log(this.Adoptdata)
@@ -97,7 +103,21 @@ export default {
       .catch((error) =>{
         console.log(error)
       })
+    },
+    postdelete(){
+      console.log(this.postscriptno)
+      axios.delete(`http://localhost:8080/postscript/Delete?postscriptno=`+this.$route.params.ID)
+      .then(()=>{
+         this.adoptlist()
+      })
+      .catch((error)=>{
+        console.log(error)
+      })
+    },
+    postupdate(){
+      this.$router.push( {name: constants.URL_TYPE.ADOPTIONPOST.ADOPTUPDATE , params:{ ID: this.$route.params.ID}})
     }
+
   },
   data() {
     return {

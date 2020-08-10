@@ -79,8 +79,8 @@ import { mapState, mapActions } from "vuex";
 
 export default {
   name: "Adoptlist",
-  computed: {
-    
+  computed:{
+
   },
   created() {
     this.adoptList();
@@ -129,7 +129,7 @@ export default {
         this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTCREATE })}
     },
     adoptdetail(postscriptno) {
-      this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTDETAIL, params:{ ID: postscriptno} });
+      this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTDETAIL, params:{ ID: postscriptno} })
     },
     nowdate(createdate){
         var nowdate = createdate+""
