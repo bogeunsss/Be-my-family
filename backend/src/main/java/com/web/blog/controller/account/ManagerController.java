@@ -47,6 +47,7 @@ public class ManagerController {
     @Autowired
     JwtTokenProvider tokenProvider;
 
+
     @PostMapping("/manager/login")
     @ApiOperation(value = "관리자 로그인")
     public Object managerLogin(@RequestParam(required = true) final String email,

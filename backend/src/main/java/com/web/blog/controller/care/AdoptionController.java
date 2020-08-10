@@ -60,36 +60,7 @@ public class AdoptionController {
         @Autowired
         ManagerMailService managerMailService;
 
-        //상담 시간, 상담 날짜 테이블 추가, 객체로 받기
-        //uid 말고 이메일로 받기
-    @GetMapping("/account/adoptionList")
-    @ApiOperation(value = "사용자 입양 목록 리스트")
-    public Object userAdoptionList(@RequestParam(required = true) final String email) { //uid ==> email
-
-        ResponseEntity response = null;
-        
-        Optional<User> userOpt = userDao.findByEmail(email);
-        System.out.println(userOpt);
-        String checkid = userOpt.get().getUid();
-
-        List<Adoption> AdoptionList = null;
-
-        final BasicResponse result = new BasicResponse();
-        AdoptionList = adoptionDao.findByUid(checkid);
-
-        if(AdoptionList!=null) {
-                result.status = true;
-                result.data = "success";
-                result.object = AdoptionList;
-                response = new ResponseEntity<>(result, HttpStatus.OK);
-        } else {
-                result.data = "no search";
-                result.object = null;
-                response = new ResponseEntity<>(result, HttpStatus.OK);
-        }
-
-        return response;
-    }
+   
 
     //입양 신청
     @PostMapping("/adoption/Application")
