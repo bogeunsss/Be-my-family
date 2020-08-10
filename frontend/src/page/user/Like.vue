@@ -73,21 +73,14 @@ export default {
   },
   created() {
     this.getInterest()
-    // this.getInformation()
   },
   methods: {
-    ...mapActions(['find']),
+    ...mapActions(['find' ,"isLoggedInChecker"]),
     getInterest() {
-      if(this.$cookies.isKey("auth-token")){
-        var token = this.$cookies.get('auth-token')
-        this.email = token.email
-        this.find(this.email)
-      }
       axios
         .get(`http://localhost:8080/care/interestList`, {
           params: {
-            // uid: this.$store.state.profileData.nickName,
-            uid: this.$cookies.get('nickName'),
+            uid: this.$cookies.get('auth-token').uid,
           },
         })
         .then((response) => {
