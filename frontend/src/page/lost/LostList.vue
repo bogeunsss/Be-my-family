@@ -350,7 +350,7 @@ export default {
           for(var x in response.data.object){
             for(var y in this.tempCards){
               if(response.data.object[x].lostno === this.tempCards[y].lostno){
-                temp.push(this.ards[y])
+                temp.push(this.tempCards[y])
               }
             }
           }

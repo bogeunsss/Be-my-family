@@ -140,7 +140,7 @@
       <v-btn outlined @click="goHome">메인</v-btn>
       <v-btn outlined @click="goList">보호소</v-btn>
       <v-btn outlined @click="goLost">실종/보호/목격</v-btn>
-      <v-btn outlined>입양후기</v-btn>
+      <v-btn outlined @click="adoptList">입양후기</v-btn>
     </div>
   
   </div>
