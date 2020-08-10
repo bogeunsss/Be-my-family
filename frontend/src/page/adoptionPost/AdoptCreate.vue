@@ -97,16 +97,15 @@ import { mapState,  mapActions} from 'vuex'
 
 export default {
     created(){
-        var token = this.$cookies.get('auth-token')
-        this.find(token.email)
-        
+
     },
     computed:{
-        ...mapState(['loginData', 'sido_states', 'gugun_states']),
+        ...mapState(['profileData','loginData', 'sido_states', 'gugun_states']),
     },
     methods:{
-        ...mapActions(['find']),
         submitadopt(){
+            // console.log(this.profileData.nickName)
+            this.adoptcreate.uid = this.profileData.nickName
             axios
             .post("http://localhost:8080/postscript/postAdd",this.adoptcreate)
             .then((res) =>{

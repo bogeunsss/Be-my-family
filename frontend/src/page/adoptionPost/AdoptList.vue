@@ -42,7 +42,10 @@
         </v-btn>
       </div>
 
-      <v-simple-table fixed-header height="300px" class="mt-5" page.sync="page">
+      <v-simple-table 
+        class="mt-5" 
+        page.sync="page">
+
         <template v-slot:default>
           <thead>
             <tr>
@@ -53,10 +56,6 @@
             </tr>
           </thead>
           <tbody>
-            <!-- <tr v-for="item in desserts" :key="item.name">
-            <td>{{ item.name }}</td>
-            <td>{{ item.calories }}</td>
-            </tr>-->
             <tr v-for="(adopt, index) in adoptData" :key="index" @click="adoptdetail">
               <th scope="row">{{ adopt.postscriptno}}</th>
               <td>{{ adopt.title }}</td>
@@ -67,7 +66,9 @@
         </template>
       </v-simple-table>
 
-      <v-pagination v-model="page" :length="pageCount"></v-pagination>
+
+
+      <v-pagination v-model="page" :length="pageCount"  :total-visible="5" circle></v-pagination>
     </v-col>
   </v-container>
 </template>
@@ -90,7 +91,8 @@ export default {
   data() {
     return {
       page: 1,
-      pageCount: 1,
+      pageCount: 15,
+  
       items: [                
           { state: '글제목', abbr: 'title' },
           { state: '작성자', abbr: 'uid' }],
