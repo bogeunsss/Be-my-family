@@ -6,11 +6,14 @@ import java.util.Optional;
 
 import com.web.blog.dao.lost.LostDao;
 import com.web.blog.dao.lost.LosttagDao;
+import com.web.blog.dao.postscript.CommentDao;
 import com.web.blog.model.BasicResponse;
 import com.web.blog.model.lost.Lost;
 import com.web.blog.model.lost.LostPic;
 import com.web.blog.model.lost.LostRequest;
 import com.web.blog.model.lost.Losttag;
+import com.web.blog.model.postscript.Comment;
+import com.web.blog.model.postscript.CommentRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,5 +42,54 @@ import io.swagger.annotations.ApiResponses;
 @CrossOrigin(origins = { "http://localhost:3000" })
 @RestController
 public class PostscriptCommentController {
-    
+        
+        @Autowired
+        CommentDao commentDao;
+
+        @PostMapping("/comment/add")
+        @ApiOperation(value = "댓글 등록")
+        public Object commentAdd(@RequestBody CommentRequest request) {
+                
+                ResponseEntity response = null;
+                final BasicResponse result = new BasicResponse();
+
+                try {
+                        Comment comment = new Comment();
+                        comment.setUid(request.getUid());
+                        comment.setPostscriptno(request.getPostscriptno());
+                        comment.setContent(request.getContent());
+                        commentDao.save(comment);
+                        result.data = "success";
+                        result.status = true;
+                        response = new ResponseEntity<>(result, HttpStatus.OK);
+                } catch(Exception e) {
+                        result.data = "fail";
+                        result.status = false;
+                        response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+                }
+                return response;
+        }
+
+        @PutMapping("/comment/modify")
+        @ApiOperation(value = "댓글 수정")
+        public Object commentModify(@RequestBody CommentRequest request) {
+                
+                ResponseEntity response = null;
+                final BasicResponse result = new BasicResponse();
+
+                try {
+                        Comment comment = new Comment();
+                        comment.setContent(request.getContent());
+                        commentDao.save(comment);
+                        result.data = "success";
+                        result.status = true;
+                        response = new ResponseEntity<>(result, HttpStatus.OK);
+                } catch(Exception e) {
+                        result.data = "fail";
+                        result.status = false;
+                        response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+                }
+                return response;
+        }
+
 }
