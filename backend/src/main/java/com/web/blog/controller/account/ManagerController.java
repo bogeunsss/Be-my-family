@@ -148,9 +148,6 @@ public class ManagerController {
             result.status = true;
             result.data = "success";
             result.mid = checkmanager.getMid();
-            result.name = checkmanager.getName();
-            result.email = checkmanager.getEmail();
-            result.phone = checkmanager.getPhone();
             result.adoptions = adoptionList;
             response = new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
