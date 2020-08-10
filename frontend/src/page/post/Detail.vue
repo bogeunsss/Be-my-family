@@ -130,15 +130,19 @@ export default {
           email: '',
           isLikeDog: false,
           isLoggedIn: false,
+          isManager: false,
         }
     },
     computed:{
-      ...mapState(['profileData'])
+      ...mapState(['profileData','loginData'])
     },
     created(){
       this.getDetail()
       console.log( this.$route.params.uuid )
       console.log(this.isLoggedIn)
+      console.log(this.isManager)
+      console.log($cookies.get('auth-token').email)
+      console.log(this.profileData.email)
     },
     methods:{
       ...mapActions(['find']),
@@ -210,11 +214,19 @@ export default {
         }else{
           st = this.selectedTime.slice(0,1)
         }
+        let formData = new FormData();
+        formData.append('email', this.$cookies.get('auth-token').email)
+        formData.append('desertionno', this.$cookies.get('desertionno').desertionno)
+      // console.log(index.desertionno)
+      // console.log(formData)
         // console.log(this.date + " " + st + " " + this.dogData.desertionno + " " + this.email)
-
-        axios.get(`http://localhost:8080/account/adoptionList?`)
+        console.log(this.$cookies.get('auth-token').email)
+        axios.post('http://localhost:8080/adoption/Application', formData 
+          // desertionno : this.$cookies.get('desertionno').desertionno,
+          // email : this.$cookies.get('auth-token').email
+        )
           .then(response => {
-
+            console.log(response)
           })
           .catch(error => {
               console.log(error)

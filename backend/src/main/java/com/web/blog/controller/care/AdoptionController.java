@@ -153,7 +153,7 @@ public class AdoptionController {
         Adoption adoption = new Adoption();
         adoption.setUid(request.getUid());
         adoption.setName(request.getName());
-        adoption.setEmail(request.getEmail());
+        // adoption.setEmail(request.getEmail());
         adoption.setPhone(request.getPhone());
         adoption.setJob(request.getJob());
         adoption.setMarriaged(request.getMarriaged());
@@ -198,7 +198,8 @@ public class AdoptionController {
 
         result.status = true;
 
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        response = new ResponseEntity<>(result, HttpStatus.OK);
+        return response;
     }
 
     @DeleteMapping("/adoption/delete")
