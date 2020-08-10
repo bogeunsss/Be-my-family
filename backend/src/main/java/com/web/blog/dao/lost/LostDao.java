@@ -19,6 +19,9 @@ public interface LostDao extends JpaRepository<Lost, String> {
 
     @Query(value = "SELECT * FROM lost WHERE lostno IN (:lostnoList)", nativeQuery = true)
     List<Lost> findByLostnoList(@Param("lostnoList") List<Integer> lostnoList);
+
+    @Query(value = "SELECT * FROM lost WHERE losttype IN(:matchType) AND lostBreed = :lostBreed AND lostsido = :lostSido", nativeQuery = true)
+    List<Lost> findMatch(List<String> matchType, String lostSido, String lostBreed);
     
     @Transactional
     void deleteByLostno(int lostno);

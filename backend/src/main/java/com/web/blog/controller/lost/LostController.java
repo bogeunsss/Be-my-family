@@ -335,4 +335,59 @@ public class LostController {
         return response;
     }
 
+    @GetMapping("lost/match")
+    @ApiOperation(value = "실종/보호/목격 매칭")
+    public Object lostMatch(@RequestParam final int lostno) {
+
+        ResponseEntity response = null;
+        BasicResponse result = new BasicResponse();
+
+        try {
+            //lostno 해당 객체 불러오기
+            Optional<Lost> lost = lostDao.findByLostno(lostno);
+
+            if(lost.isPresent()) {
+                
+                //종 지역 일치
+                //보호, 목격 -> 실종
+                //실종 -> 보호, 목격
+                String lostType = lost.get().getLosttype();
+                String lostBreed = lost.get().getLostbreed();
+                String lostSido = lost.get().getLostsido();
+
+                List<String> matchType = new ArrayList<>();
+                List<Lost> matchList;
+                if(lostType.equals("실종")){
+                    matchType.add("보호");
+                    matchType.add("목격");
+                } else {
+                    matchType.add("실종");
+                }
+
+                matchList = lostDao.findMatch(matchType, lostSido, lostBreed);
+
+                if(matchList.isEmpty()) {
+                    result.data = "no match";
+                } else {
+                    result.data = "success";
+                    result.match = matchList;
+                }
+
+            } else {
+                result.data = "lostno not exist";
+            }
+
+            result.status = true;
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.status = false;
+            result.data = "fail";
+            response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+        }
+
+        return response;
+    }
+
 }

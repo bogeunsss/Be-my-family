@@ -18,4 +18,5 @@ public class BasicResponse {
     public Object tag;
     public boolean adoption;
     public Object madetag;
+    public Object match;
 }
