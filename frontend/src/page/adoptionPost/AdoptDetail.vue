@@ -43,8 +43,8 @@
         </v-card-text>
 
         <v-card-actions class="d-flex justify-end">
-          <v-btn text color="deep-purple accent-4">수정</v-btn>
-          <v-btn text color="red accent-4">삭제</v-btn>
+          <v-btn text color="deep-purple accent-4" v-if="this.$cookies.isKey('auth-token')">수정</v-btn>
+          <v-btn text color="red accent-4" v-if="this.$cookies.isKey('auth-token')">삭제</v-btn>
         </v-card-actions>
       </v-card>
 

@@ -105,7 +105,7 @@ export default {
         image: "",
         sido: "",
         gugun: "",
-        place: "",
+        kind: "",
         createdate: "",
       },
     };
@@ -113,7 +113,7 @@ export default {
   methods: {
     adoptList(){
       axios
-          .get("http://localhost:8080/postscript/list")
+          .get("http://localhost:8080/postscript/List")
           .then((res) =>{
             this.adoptData = res.data.object
             console.log(this.adoptData)
