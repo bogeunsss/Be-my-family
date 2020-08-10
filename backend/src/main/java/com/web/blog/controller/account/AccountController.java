@@ -162,7 +162,7 @@ public class AccountController {
         ResponseEntity response = null;
 
         User newUser = userDao.getUserByEmail(email);
-
+        
         final BasicResponse result = new BasicResponse();
         
         result.status = true;

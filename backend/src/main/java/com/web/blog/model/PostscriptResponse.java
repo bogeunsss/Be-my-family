@@ -5,4 +5,5 @@ public class PostscriptResponse {
     public String data;
     public Object object;
     public int good;
+    public Object comments;
 }
