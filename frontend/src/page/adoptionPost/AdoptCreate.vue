@@ -97,25 +97,39 @@ import { mapState,  mapActions} from 'vuex'
 
 export default {
     created(){
-
+        // var token = this.$cookies.get('auth-token')
+        // this.find(token.email)
     },
     computed:{
         ...mapState(['profileData','loginData', 'sido_states', 'gugun_states']),
     },
     methods:{
+        // ...mapActions(['find']),
         submitadopt(){
             // console.log(this.profileData.nickName)
-            this.adoptcreate.uid = this.profileData.nickName
-            axios
-            .post("http://localhost:8080/postscript/postAdd",this.adoptcreate)
-            .then((res) =>{
-                console.log(this.adoptcreates)
-                this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTLIST });
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-        }
+            var flag = 0
+            if(this.adoptcreate.title == ""){
+                alert("제목을 입력해주세요")
+                flag = 1
+            }
+            if(this.adoptcreate.content == ""){
+                alert("내용을 입력해주세요")
+                flag = 1          
+            }
+            if(flag == 0){
+                this.adoptcreate.uid = this.profileData.nickName
+                axios
+                .post("http://localhost:8080/postscript/postAdd",this.adoptcreate)
+                .then((res) =>{
+                    console.log(this.adoptcreates)
+                    alert('작성이 완료됬습니다.')
+                    this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTLIST });
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+            }
+            }
     },
     data () {
         return{

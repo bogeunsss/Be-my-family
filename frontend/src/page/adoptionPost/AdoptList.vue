@@ -66,9 +66,7 @@
         </template>
       </v-simple-table>
 
-
-
-      <v-pagination v-model="page" :length="pageCount"  :total-visible="5" circle></v-pagination>
+      <v-pagination v-model="page" :length="pageCount"  :total-visible="5" circle class="mt-5"></v-pagination>
     </v-col>
   </v-container>
 </template>
@@ -125,7 +123,10 @@ export default {
           })
     },
     create() {
-      this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTCREATE });
+      if(!this.$cookies.isKey("auth-token")){
+            alert('로그인해주세요')
+        }else{
+        this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTCREATE })}
     },
     adoptdetail() {
       this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTDETAIL });
