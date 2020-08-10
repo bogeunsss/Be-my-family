@@ -88,7 +88,7 @@ export default new Router({
       component: AdoptCreate
     },
     {
-      path: '/AdoptDetail',
+      path: '/AdoptDetail/:ID',
       name: constants.URL_TYPE.ADOPTIONPOST.ADOPTDETAIL,
       component: AdoptDetail
     },

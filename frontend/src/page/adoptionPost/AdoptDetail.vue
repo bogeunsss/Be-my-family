@@ -34,12 +34,11 @@
         <v-divider></v-divider>
 
         <v-card-text>
-          <v-list v-for="(subTitle, i) in subTitles" :key="i" dense>
-            <v-list-item>
-              <p class="font-weight-black mr-3">{{subTitle}}:</p>
-              <p>{{subContents[subTitle]}}</p>
-            </v-list-item>
-          </v-list>
+          <p><span style="font-weight:bold; font-size:1.2rem;">제목 : </span><span>{{Adoptdata.title}}</span></p>
+          <p><span style="font-weight:bold; font-size:1.2rem;">지역 : </span><span>{{Adoptdata.sido}} {{Adoptdata.gugun}}</span></p>
+          <p><span style="font-weight:bold; font-size:1.2rem;">품종 : </span><span>{{Adoptdata.kind}}</span></p>
+          <p><span style="font-weight:bold; font-size:1.2rem;">내용 : </span><span>{{Adoptdata.content}}</span></p>
+  
         </v-card-text>
 
         <v-card-actions class="d-flex justify-end">
@@ -79,21 +78,31 @@
 
 <script>
 import constants from "@/lib/constants";
+import axios from 'axios'
 
 export default {
+  created(){
+    this.adoptdetail()
+  },
   methods: {
     adoptlist() {
       this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTLIST });
     },
+    adoptdetail(){
+      axios.get(`http://localhost:8080/postscript/detail?postscriptno=`+this.$route.params.ID)
+      .then((res) =>{
+        this.Adoptdata = res.data.object
+        console.log(this.Adoptdata)
+      })
+      .catch((error) =>{
+        console.log(error)
+      })
+    }
   },
   data() {
     return {
-      subTitles: ["품종", "지역", "내용"],
-      subContents: {
-        지역: "대전광역시 유성구",
-        품종: "보스턴 테리어",
-        내용: "입양후기",
-      },
+      Adoptdata: {},
+      
     };
   },
 };

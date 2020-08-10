@@ -57,7 +57,7 @@
                     </v-row>
    
 
-            <!-- <v-row align="center">
+            <v-row align="center">
                <v-col cols="12" sm="1">
                         품종:
                 </v-col>
@@ -67,10 +67,10 @@
                     :menu-props="{ bottom: true, offsetY: true }"
                     hint="품종을 선택하세요"
                     persistent-hint
-
+                    v-model="adoptcreate.kind"
                 ></v-select>
                 </v-col>
-            </v-row> -->
+            </v-row>
 
               <v-row class="mt-5"> 내용 </v-row> 
                 <v-row> 
@@ -119,7 +119,7 @@ export default {
             if(flag == 0){
                 this.adoptcreate.uid = this.profileData.nickName
                 axios
-                .post("http://localhost:8080/postscript/postAdd",this.adoptcreate)
+                .post("http://localhost:8080/postscript/Add",this.adoptcreate)
                 .then((res) =>{
                     console.log(this.adoptcreates)
                     alert('작성이 완료됬습니다.')
@@ -160,6 +160,7 @@ export default {
                 sido:"",
                 gugun:"",
                 content:"",
+                kind:"",
                 uid:'',
             }
         }

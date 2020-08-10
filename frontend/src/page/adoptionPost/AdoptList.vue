@@ -56,8 +56,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(adopt, index) in adoptData" :key="index" @click="adoptdetail">
-              <th scope="row">{{ adopt.postscriptno}}</th>
+            <tr v-for="(adopt, index) in adoptData" :key="index" @click="adoptdetail(adopt.postscriptno)">
+              <th scope="row">{{ adopt.postscriptno }}</th>
               <td>{{ adopt.title }}</td>
               <td>{{ adopt.uid}}</td>
               <td>{{ nowdate(adopt.createdate)}}</td>
@@ -128,8 +128,8 @@ export default {
         }else{
         this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTCREATE })}
     },
-    adoptdetail() {
-      this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTDETAIL });
+    adoptdetail(postscriptno) {
+      this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTDETAIL, params:{ ID: postscriptno} });
     },
     nowdate(createdate){
         var nowdate = createdate+""
