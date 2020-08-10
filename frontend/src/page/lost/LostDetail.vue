@@ -28,8 +28,8 @@
                 </v-list>
                 <p>태그:</p>
                 <div class="d-flex flex-row">
-                    <v-list v-for="(lostTag, i) in lostTags" :key="'tag'+i">
-                        <v-chip v-if="lostTag">{{ lostTag }}</v-chip>
+                    <v-list v-for="(madeTag, i) in madeTags" :key="'tag'+i">
+                        <v-chip v-if="madeTag">{{ madeTag }}</v-chip>
                     </v-list>
                 </div>
                 <v-divider></v-divider>
@@ -130,8 +130,8 @@
                             <div class="d-flex flex-column">
                                 <v-text-field v-model="lostTagText"></v-text-field>
                                 <div class="d-flex flex-row">
-                                    <v-list v-for="(lostTag, index) in lostTags" :key="index">
-                                        <v-chip v-if="lostTag" close color="teal" text-color="white" @click:close="closeTag(index)">{{ lostTag }}</v-chip>
+                                    <v-list v-for="(madeTag, index) in madeTags" :key="index">
+                                        <v-chip v-if="madeTag" close color="teal" text-color="white" @click:close="closeTag(index)">{{ madeTag }}</v-chip>
                                     </v-list>
                                 </div>
                             </div>
@@ -164,7 +164,11 @@
             </v-card-actions>
           </v-card>
       </v-container>
-
+    <div class="float-window">
+        <v-card>
+            <v-card-title>이 강아지를 찾으시나요?</v-card-title>
+        </v-card>
+    </div>
   </div>
 </template>
 
@@ -175,7 +179,8 @@ import { mapState } from 'vuex'
 
 export default {
     created(){
-        axios.get(`http://localhost:8080/lost/detail?lostno=${this.$route.params.articleNo}`)
+        console.log(this.$route.params.articleNo)
+        axios.get(`http://localhost:8080/lost/detail?lostno=${this.lostno}`)
             .then(response => {
                 console.log(response)
                 let result = response.data.object
@@ -191,12 +196,18 @@ export default {
                 this.lostPlace = result.lostplace
                 this.lostSex = result.lostsex
                 this.lostAge = result.lostage
-                this.lostTags = []
+                this.madeTags = []
                 var temp = []
-                for(var x=0;x<response.data.tag.length;x++){
-                    temp.push(response.data.tag[x].tagname)
+                for(var x=0;x<response.data.madetag.length;x++){
+                    temp.push(response.data.madetag[x].tagname)
                 }
-                this.lostTags = temp
+                this.madeTags = temp
+                this.lostTags = []
+                var temp2 = []
+                for(var x=0;x<response.data.tag.length;x++){
+                    temp2.push(response.data.tag[x].tagname)
+                }
+                this.lostTags = temp2
                 this.images = result.lostpic1
                 this.content = result.lostcontent
                 this.writer = result.uid
@@ -208,20 +219,27 @@ export default {
             }).catch(error => {
                 console.log(error)
             })
+        axios.get(`http://localhost:8080/lost/match?lostno=${this.lostno}`)
+            .then(response => {
+                console.log(response)
+                this.matched = response.data.match
+            }).catch(error => {
+                console.log(error)
+            })
     },
     watch:{
-        lostTagText(newVal, oldVal){
-            if(newVal[newVal.length-1] === '#'){
-                this.tagState = true
-            }
-            if(this.tagState && newVal[newVal.length-1] === ' '){
-                this.lostTagText = this.lostTagText.substring(1, this.lostTagText.length)
-                this.lostTags.push(this.lostTagText.trim())
-                this.lostTagText = ''
-                this.tagState = false
-                console.log(this.lostTags)
-            }
-        },
+        // lostTagText(newVal, oldVal){
+        //     if(newVal[newVal.length-1] === '#'){
+        //         this.tagState = true
+        //     }
+        //     if(this.tagState && newVal[newVal.length-1] === ' '){
+        //         this.lostTagText = this.lostTagText.substring(1, this.lostTagText.length)
+        //         this.lostTags.push(this.lostTagText.trim())
+        //         this.lostTagText = ''
+        //         this.tagState = false
+        //         console.log(this.lostTags)
+        //     }
+        // },
     },
     computed:{
         param(){
@@ -260,6 +278,7 @@ export default {
             ],
             categories: ['실종', '보호', '목격'],
             gender:['암컷', '수컷', '알 수 없음'],
+            lostno: this.$route.params.articleNo,
             lostBreed: '',
             lostSido: '',
             lostGugun: '',
@@ -271,6 +290,8 @@ export default {
             lostAge: '',
             lostTagText: '',
             lostTags: [],
+            madeTags: [],
+            matched: [],
         }
     },
     methods:{
@@ -353,7 +374,7 @@ export default {
             this.$router.go()
         },
         closeTag(index){
-            this.lostTags.splice(index, 1)
+            this.madeTags.splice(index, 1)
             console.log(this.lostTags)
         }
     },
@@ -361,5 +382,9 @@ export default {
 </script>
 
 <style>
-
+.float-window {
+  position: fixed;
+  bottom: 30vw;
+  right: 5vw;
+}
 </style>
