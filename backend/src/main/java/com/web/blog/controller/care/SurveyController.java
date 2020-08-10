@@ -66,9 +66,10 @@ public class SurveyController {
 
         ResponseEntity response = null;
         final BasicResponse result = new BasicResponse();
-
+        System.out.println(uid);
         try {
             Optional<Survey> mySurvey = surveyDao.findByUid(uid);
+            System.out.println(mySurvey);
             if(mySurvey.isPresent()) {
                 result.status = true;
                 result.data = "success";

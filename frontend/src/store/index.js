@@ -165,6 +165,11 @@ export default new Vuex.Store({
     checkLoggedIn(state, check){
       state.isLoggedIn = check
     },
+
+    getProfileData(state){
+      return state.profileData
+    }
+
     // isLoggedInChanged(state){
     //   if(cookies.isKey('auth-token')) return state.isLoggedIn = true
     //   else return state.isLoggedIn = false
@@ -309,7 +314,7 @@ export default new Vuex.Store({
       axios.get(SERVER.SERVER_URL + '/account/find?email=' + email)
       .then(response=>{
         state.profileData.email = response.data.object.email
-        state.profileData.name = response.data.object.name
+        state.profileData.name = response.data.name
         state.profileData.job = response.data.object.job
         state.profileData.phone = response.data.object.phone
         if(response.data.object.marriaged){
@@ -335,7 +340,7 @@ export default new Vuex.Store({
         
         state.profileData.nickName = response.data.object.uid
         state.profileData.password = response.data.object.password
-        // console.log(response.data.object)
+
       })
       .catch(err=>console.log(err))
     },
@@ -383,6 +388,12 @@ export default new Vuex.Store({
     isManagerChecker({commit}, payload){
       commit('checkManager', payload)
     },
+    getProfile({commit}){
+      let pro = commit('getProfileData')
+      console.log("액션에서 ")
+      console.log(pro)
+      return commit('getProfileData')
+    }
   },
 
   modules: {
