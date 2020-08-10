@@ -1,10 +1,13 @@
 package com.web.blog.controller.account;
 
+import java.util.List;
 import java.util.Optional;
 
+import com.web.blog.dao.adoption.AdoptionDao;
 import com.web.blog.dao.manager.ManagerDao;
 import com.web.blog.model.BasicResponse;
 import com.web.blog.model.ManagerResponse;
+import com.web.blog.model.adoption.Adoption;
 import com.web.blog.model.manager.Manager;
 import com.web.blog.security.JwtAuthenticationResult;
 import com.web.blog.security.JwtTokenProvider;
@@ -34,6 +37,9 @@ import io.swagger.annotations.ApiResponses;
 public class ManagerController {
     @Autowired
     ManagerDao managerDao;
+
+    @Autowired
+    AdoptionDao adoptionDao;
 
     @Autowired
     ManagerMailService managerMailService;
@@ -80,14 +86,16 @@ public class ManagerController {
 
         Manager checkmanager = managerDao.getManagerByEmail(email);
         final ManagerResponse result = new ManagerResponse();
+        List<Adoption> adoptionList = adoptionDao.findByMid(checkmanager.getMid());
+
         try {
-            
             result.status = true;
             result.data = "success";
             result.mid = checkmanager.getMid();
             result.name = checkmanager.getName();
             result.email = checkmanager.getEmail();
             result.phone = checkmanager.getPhone();
+            result.adoptions = adoptionList;
             response = new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
             result.data = "fail";
