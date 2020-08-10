@@ -73,6 +73,8 @@ public class PostscriptController {
         return response;
     }   
 
+    
+
     @PostMapping("/postscript/postAdd")
     @ApiOperation(value = "입양후기 등록")
     public Object postscriptAdd(@RequestBody PostscriptRequest request) {
@@ -85,7 +87,7 @@ public class PostscriptController {
         String checkimage = request.getImage();
         String checksido = request.getSido();
         String checkgugun = request.getGugun();
-        String checkplace = request.getPlace();
+        String checkkind = request.getKind();
         
         final BasicResponse result = new BasicResponse();
         
@@ -98,7 +100,7 @@ public class PostscriptController {
             postscript.setImage(checkimage);
             postscript.setSido(checksido);
             postscript.setGugun(checkgugun);
-            postscript.setPlace(checkplace);
+            postscript.setKind(checkkind);
             postscriptDao.save(postscript);
                         
             result.status = true;

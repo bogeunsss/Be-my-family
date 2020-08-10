@@ -31,7 +31,7 @@ public class Postscript {
     private String image;
     private String sido;
     private String gugun;
-    private String place;
+    private String kind;
 
     @Column(insertable = false, updatable = false)
     private Date createdate;
