@@ -26,19 +26,23 @@
                         <p> {{subContents[subTitle]}} </p>
                     </v-list-item>
                 </v-list>
-            
+                <p>태그:</p>
+                <div class="d-flex flex-row">
+                    <v-list v-for="(lostTag, i) in lostTags" :key="'tag'+i">
+                        <v-chip v-if="lostTag">{{ lostTag }}</v-chip>
+                    </v-list>
+                </div>
                 <v-divider></v-divider>
                 <p>{{ content }}</p>
             </v-card-text>
             <v-card-actions class="d-flex justify-center">
               <v-spacer></v-spacer>
               <!-- <v-btn v-if="isWriter">수정</v-btn> -->
-
+              <div v-if="isWriter">
                 <v-dialog v-model="dialog" scrollable max-width="700px">
                     <template v-slot:activator="{ on, attrs }">
                         <v-btn
                             color="success"
-                            fab
                             dark
                             v-bind="attrs"
                             v-on="on"
@@ -123,7 +127,14 @@
                         
                         <v-list-item>
                             <p class="font-weght-black mr-3">태그:</p>
-                            <v-text-field></v-text-field>
+                            <div class="d-flex flex-column">
+                                <v-text-field v-model="lostTagText"></v-text-field>
+                                <div class="d-flex flex-row">
+                                    <v-list v-for="(lostTag, index) in lostTags" :key="index">
+                                        <v-chip v-if="lostTag" close color="teal" text-color="white" @click:close="closeTag(index)">{{ lostTag }}</v-chip>
+                                    </v-list>
+                                </div>
+                            </div>
                         </v-list-item>
                         <v-list-item>
                             <v-textarea v-model="content" outlined label="내용">{{content}}</v-textarea>
@@ -140,6 +151,7 @@
                     </v-card-actions>
                     </v-card>
                 </v-dialog>
+              </div>
                 <v-dialog ref="dialog" v-model="dialog2" :return-value.sync="lostDate" persistent width="290px">
                     <v-date-picker v-model="lostDate" scrollable>
                     <v-spacer></v-spacer>
@@ -147,7 +159,7 @@
                     <v-btn color="primary" @click="$refs.dialog.save(lostDate)">확인</v-btn>
                     </v-date-picker>
                 </v-dialog>
-              <v-btn v-if="isWriter" @click="deleteLost">삭제</v-btn>
+              <v-btn v-if="isWriter" @click="deleteLost" color="red">삭제</v-btn>
               <v-btn @click="goList">목록</v-btn>
             </v-card-actions>
           </v-card>
@@ -179,7 +191,12 @@ export default {
                 this.lostPlace = result.lostplace
                 this.lostSex = result.lostsex
                 this.lostAge = result.lostage
-                this.lostTagText = result.lostTagText
+                this.lostTags = []
+                var temp = []
+                for(var x=0;x<response.data.tag.length;x++){
+                    temp.push(response.data.tag[x].tagname)
+                }
+                this.lostTags = temp
                 this.images = result.lostpic1
                 this.content = result.lostcontent
                 this.writer = result.uid
@@ -191,6 +208,23 @@ export default {
             }).catch(error => {
                 console.log(error)
             })
+    },
+    watch:{
+        lostTagText(newVal, oldVal){
+            if(newVal[newVal.length-1] === '#'){
+                this.tagState = true
+            }
+            if(this.tagState && newVal[newVal.length-1] === ' '){
+                this.lostTagText = this.lostTagText.substring(1, this.lostTagText.length)
+                this.lostTags.push(this.lostTagText.trim())
+                this.lostTagText = ''
+                this.tagState = false
+                console.log(this.lostTags)
+            }
+        },
+        lostTags(){
+            console.log(this.lostTags)
+        }
     },
     computed:{
         param(){
@@ -239,6 +273,7 @@ export default {
             lostSex: '',
             lostAge: '',
             lostTagText: '',
+            lostTags: [],
         }
     },
     methods:{
@@ -256,18 +291,9 @@ export default {
         },
         closeDialog(){
             this.dialog = false
+            this.$router.go()
         },
-            // fileSelect(){
-            //   console.log(this.$refs)
-            //   this.images = this.$refs.images.files[0]
-            //   // for(let file in this.$refs.images.files){
-            //   //   this.images.push(file)
-            //   // }
-            // },
         onChangeImages(event){
-            // for(let x=0;x<event.target.files.length;x++){
-            //   this.images.push(event.target.files[x])
-            // }
             
             if(event.target.files.length > 3){
                 alert('파일은 3개까지 저장 가능합니다.')
@@ -290,9 +316,8 @@ export default {
             formData.append('lostsex', this.lostSex)
             formData.append('lostphone', this.profileData.phone)
             formData.append('lostno', this.$route.params.articleNo)
+            formData.append('losttagtext', this.lostTags)
             for(var x=0;x<this.images.length;x++){
-                console.log(this.images.length + '  ' + x)
-                console.log(this.images[x].name)
                 formData.append('files', this.images[x])
             }
             
@@ -317,6 +342,10 @@ export default {
             
             this.dialog = false
             this.$router.go()
+        },
+        closeTag(index){
+            this.lostTags.splice(index, 1)
+            console.log(this.lostTags)
         }
     },
 }

@@ -191,39 +191,17 @@ export default {
     ...mapState(['sido_states', 'gugun_states', 'profileData']),
   },
   watch:{
-    // lostContent(newVal, oldVal){
-    //   console.log(this.status)
-    //   console.log(newVal[newVal.length-1])
-    //   if(!this.status && newVal[newVal.length-1] === '#'){
-    //     this.status = true
-    //   }else if(this.status && (newVal[newVal.length-1] === ' ' || newVal[newVal.length-1] === '\n')){
-    //     this.status = false
-    //     const icon = document.createElement('v-chip');
-    //     // icon.className = "material-icons icon";
-    //     icon.innerHTML = this.sampleText.trim();
-    //     var main = document.getElementById('characteristic');
-    //     main.appendChild(icon);
-    //   }
-    //   if(this.status){
-    //     this.sampleText = this.sampleText + newVal[newVal.length-1]
-    //   }
-    // },
-    // images(newVal, oldVal){
-    //   console.log(newVal)
-    //   console.log(oldVal)
-    // }
     lostTagText(newVal, oldVal){
       if(newVal[newVal.length-1] === '#'){
         this.tagState = true
       }
-      if(this.tagState && newVal[newVal.length-1] === ' '){
+      if(this.tagState && newVal[newVal.length-1] === '\n'){
         this.lostTagText = this.lostTagText.substring(1, this.lostTagText.length)
         this.lostTags.push(this.lostTagText.trim())
         this.lostTagText = ''
         this.tagState = false
         console.log(this.lostTags)
       }
-
     }
   },
   data(){
