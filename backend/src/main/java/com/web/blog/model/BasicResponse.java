@@ -17,4 +17,7 @@ public class BasicResponse {
     public String name;
     public Object tag;
     public boolean adoption;
+    public Object madetag;
+    public Object match;
+    public Object lostReply;
 }

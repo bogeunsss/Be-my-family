@@ -268,7 +268,7 @@ export default new Vuex.Store({
               uid:response.data.uid
             })
             state.authToken = cookies.get('auth-token')
-            router.push({name:constants.URL_TYPE.POST.MAIN})
+            // router.push({name:constants.URL_TYPE.POST.MAIN})
             router.go()
           }
         })
