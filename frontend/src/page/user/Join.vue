@@ -5,13 +5,18 @@
       <div>
         <form>
           1.Email:
-          <v-text-field v-model="signupData.email" id="email" placeholder="이메일을 입력해주세요" type="text"></v-text-field>2.NickName:
+          <v-text-field v-model="signupData.email" id="email" placeholder="이메일을 입력해주세요" type="text"></v-text-field>
+          2.Name:
+          <v-text-field v-model="signupData.name" id="name" placeholder="이메일을 입력해주세요" type="text"></v-text-field>
+          
+          2.NickName:
           <v-text-field
             v-model="signupData.nickName"
             id="nickname"
             placeholder="닉네임을 입력해주세요"
             type="text"
-          ></v-text-field>3.Password:
+          ></v-text-field>
+          3.Password:
           <v-text-field
             v-model="signupData.password"
             id="password"
@@ -19,7 +24,8 @@
             placeholder="비밀번호를 입력해주세요"
           >
             <span :class="{active : signupData.passwordType==='text'}"></span>
-          </v-text-field>4.Password Confirm:
+          </v-text-field>
+          4.Password Confirm:
           <v-text-field
             v-model="signupData.passwordConfirm"
             id="password-confirm"
@@ -33,30 +39,25 @@
           <!-- 핸드폰 번호 -->
           5.Phone Number:
           <v-text-field
-            v-model="signupData.passwordConfirm"
-            id="password-confirm"
-            :type="signupData.passwordConfirmType"
+            v-model="signupData.phone"
+            id="phone"
+            type="text"
             placeholder="휴대번호를 입력해주세요"
           ></v-text-field>
 
           <!-- 직업 -->
           6.Job:
-          <v-text-field
-            v-model="signupData.passwordConfirm"
-            id="password-confirm"
-            :type="signupData.passwordConfirmType"
-            placeholder="직업을 적어주세요"
-          ></v-text-field>
+          <v-text-field v-model="signupData.job" id="job" type="text" placeholder="직업을 적어주세요"></v-text-field>
 
           <!-- 결혼여부 -->
           7.결혼 여부를 선택해 주세요.
           <v-container fluid>
             <!-- <p>{{ radios || 'null' }}</p> -->
-            <v-radio-group v-model="radios" :mandatory="false">
-                <div class="d-flex inline">
-              <v-radio label="미혼" value="미혼"></v-radio>
-              <v-radio label="기혼" value="기혼"></v-radio>
-                </div>
+            <v-radio-group v-model="signupData.marriaged" :mandatory="false">
+              <div class="d-flex inline">
+                <v-radio label="미혼" value="0"></v-radio>
+                <v-radio label="기혼" value="1"></v-radio>
+              </div>
             </v-radio-group>
           </v-container>
 
@@ -64,11 +65,11 @@
           8.성별을 선택해 주세요.
           <v-container fluid>
             <!-- <p>{{ radios || 'null' }}</p> -->
-            <v-radio-group v-model="radios" :mandatory="false">
-                <div class="d-flex inline">
-              <v-radio label="남" value="남"></v-radio>
-              <v-radio label="여" value="여"></v-radio>
-                </div>
+            <v-radio-group v-model="signupData.sex" :mandatory="false">
+              <div class="d-flex inline">
+                <v-radio label="남" value="0"></v-radio>
+                <v-radio label="여" value="1"></v-radio>
+              </div>
             </v-radio-group>
           </v-container>
 
@@ -76,42 +77,42 @@
           9.생년월일을 선택해주세요.
           <!-- <v-row justify="space-around">
             <v-date-picker v-model="picker" color="green lighten-1" header-color="primary"></v-date-picker>
-          </v-row> -->
-           <v-row> 
-               <v-col cols="12" sm="6" md="4">
-      <v-menu
-        ref="menu"
-        v-model="menu"
-        :close-on-content-click="false"
-        :return-value.sync="date"
-        transition="scale-transition"
-        offset-y
-        min-width="290px"
-      >
-        <template v-slot:activator="{ on, attrs }">
-          <v-text-field
-            v-model="date"
-            label="Picker in birthdate"
-            readonly
-            v-bind="attrs"
-            v-on="on"
-          ></v-text-field>
-        </template>
-        <v-date-picker v-model="date" no-title scrollable>
-          <v-spacer></v-spacer>
-          <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
-          <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
-        </v-date-picker>
-      </v-menu>
-    </v-col>
-    <v-spacer></v-spacer>
-           </v-row>
+          </v-row>-->
+          <v-row>
+            <v-col cols="12" sm="6" md="4">
+              <v-menu
+                ref="menu"
+                v-model="menu"
+                :close-on-content-click="false"
+                :return-value.sync="date"
+                transition="scale-transition"
+                offset-y
+                min-width="290px"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    v-model="signupData.birthdate"
+                    label="Picker in birthdate"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                  ></v-text-field>
+                </template>
+                <v-date-picker v-model="signupData.birthdate" no-title scrollable>
+                  <v-spacer></v-spacer>
+                  <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
+                  <v-btn text color="primary" @click="$refs.menu.save(signupData.birthdate)">OK</v-btn>
+                </v-date-picker>
+              </v-menu>
+            </v-col>
+            <v-spacer></v-spacer>
+          </v-row>
         </form>
-      <label>
-        <input type="checkbox" id="term" />
-        <span>약관에 동의합니다</span>
-      </label>
-      <span class="go-term ml-5 pl-5">약관 보기</span>
+        <label>
+          <input type="checkbox" id="term" />
+          <span>약관에 동의합니다</span>
+        </label>
+        <span class="go-term ml-5 pl-5">약관 보기</span>
       </div>
 
       <v-btn class="btn mt-5" @click="join">작성완료</v-btn>
@@ -139,6 +140,14 @@ export default {
         this.$store.commit("setNickName", value);
       },
     },
+    name: {
+      get() {
+        return this.$store.state.signupData.name;
+      },
+      set(value) {
+        this.$store.commit("setName", value);
+      },
+    },
     email: {
       get() {
         return this.$store.state.signupData.email;
@@ -163,6 +172,46 @@ export default {
         this.$store.commit("setPasswordConfirm", value);
       },
     },
+    phone: {
+      get() {
+        return this.$store.state.signupData.phone;
+      },
+      set(value) {
+        this.$store.commit("setPhone", value);
+      },
+    },
+    job: {
+      get() {
+        return this.$store.state.signupData.job;
+      },
+      set(value) {
+        this.$store.commit("setJob", value);
+      },
+    },
+    marriaged: {
+      get() {
+        return this.$store.state.signupData.marriaged;
+      },
+      set(value) {
+        this.$store.commit("setMarriaged", value);
+      },
+    },
+    sex: {
+      get() {
+        return this.$store.state.signupData.sex;
+      },
+      set(value) {
+        this.$store.commit("setSex", value);
+      },
+    },
+    birthdate: {
+      get() {
+        return this.$store.state.signupData.birthdate;
+      },
+      set(value) {
+        this.$store.commit("setBirthDate", value);
+      },
+    },
   },
   methods: {
     ...mapActions(["signup"]),
@@ -174,7 +223,8 @@ export default {
   data: () => {
     return {
       constants,
-      radios: "radio-1",
+      radios1: "radio-1",
+      radios2: "radio-2",
       picker: new Date().toISOString().substr(0, 10),
       date: new Date().toISOString().substr(0, 10),
       menu: false,

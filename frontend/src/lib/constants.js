@@ -11,10 +11,19 @@ export default {
             JOINSUCCESS: 'joinSuccess',
             LIKE : 'like',
             SURVEY : 'survey',
+            MANAGER : 'manager',
         },
         POST: {
             LIST:"list",
             DETAIL: 'detail'
-        }
+        },
+        ADOPTIONPOST:{
+            ADOPTLIST: "AdoptList",
+            ADOPTCREATE: "AdoptCreate"
+        },
+        LOST: {
+            LOSTLIST:'lostList',
+            LOSTDETAIL:'lostDetail',
+        },
     }
 }
