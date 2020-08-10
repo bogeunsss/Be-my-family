@@ -1,17 +1,24 @@
 package com.web.blog.dao.lost;
 
 import java.util.Optional;
+import java.util.List;
 
 import com.web.blog.model.lost.Lost;
+import com.web.blog.model.lost.Losttag;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface LostDao extends JpaRepository<Lost, String> {
     
     Optional<Lost> findByLostno(int lostno);
 
-    Optional<Lost> findByLostnoAndUid(int lostno, String uid);
+    Optional<Lost> findByLostnoAndUid(int lostno, String uid);   
+
+    @Query(value = "SELECT * FROM lost WHERE lostno IN (:lostnoList)", nativeQuery = true)
+    List<Lost> findByLostnoList(@Param("lostnoList") List<Integer> lostnoList);
     
     @Transactional
     void deleteByLostno(int lostno);

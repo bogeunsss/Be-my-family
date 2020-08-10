@@ -1,6 +1,7 @@
 package com.web.blog.controller.lost;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,12 +60,12 @@ public class LostController {
             Lost lost = new Lost();
             LostPic lostPics = new LostPic();
 
-            //수정
-            if(request.getLostno() != null) {
+            // 수정
+            if (request.getLostno() != null) {
                 int lostno = request.getLostno();
                 String uid = request.getUid();
                 Optional<Lost> lostExist = lostDao.findByLostnoAndUid(lostno, uid);
-                if(lostExist.isPresent()) {
+                if (lostExist.isPresent()) {
                     losttagDao.deleteByLostno(lostno);
                     lost.setLostno(lostno);
                 }
@@ -81,8 +82,8 @@ public class LostController {
                 final String filepath = "C:/Image/" + originalfileName;
                 final File dest = new File(filepath);
 
-                //존재하면 서버에 저장 안함
-                if(dest.exists() == false){
+                // 존재하면 서버에 저장 안함
+                if (dest.exists() == false) {
                     file.transferTo(dest);
                 }
 
@@ -120,7 +121,7 @@ public class LostController {
                 tag.setTagname(tagname);
                 System.out.println("tag =======>" + tag);
                 losttagDao.save(tag);
-            } 
+            }
 
             Losttag tagBreed = new Losttag();
             tagBreed.setLostno(lost.getLostno());
@@ -185,19 +186,19 @@ public class LostController {
     @GetMapping("lost/detail")
     @ApiOperation(value = "실종/보호/목격 상세 조회")
     public Object lostDetail(@RequestParam(required = true) int lostno) {
-        
+
         ResponseEntity response = null;
         final BasicResponse result = new BasicResponse();
 
-        try{
+        try {
             Optional<Lost> lostDetail = lostDao.findByLostno(lostno);
             List<Losttag> tagList = losttagDao.findByLostno(lostno);
-            
-            if(lostDetail.isPresent())  {
+
+            if (lostDetail.isPresent()) {
                 result.data = "success";
                 result.object = lostDetail.get();
-                
-                if(!tagList.isEmpty()) {
+
+                if (!tagList.isEmpty()) {
                     result.tag = tagList;
                 }
 
@@ -208,19 +209,20 @@ public class LostController {
             result.status = true;
             response = new ResponseEntity<>(result, HttpStatus.OK);
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             result.status = false;
             result.data = "fail";
             response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
         }
-        
+
         return response;
     }
 
     @DeleteMapping("list/delete")
     @ApiOperation(value = "실종/보호/목격 글 삭제")
-    public Object lostDelete(@RequestParam(required = true) final int lostno, @RequestParam(required = true) final String uid) {
+    public Object lostDelete(@RequestParam(required = true) final int lostno,
+            @RequestParam(required = true) final String uid) {
 
         ResponseEntity response = null;
         BasicResponse result = new BasicResponse();
@@ -229,24 +231,24 @@ public class LostController {
             Optional<Lost> lost = lostDao.findByLostno(lostno);
             if (lost.isPresent()) {
                 if (lost.get().getUid().equals(uid)) {
-                    
-                    if(lost.get().getLostpic1() != null) {
+
+                    if (lost.get().getLostpic1() != null) {
                         File file = new File(lost.get().getLostpic1());
-                        if(file.exists() == true){
+                        if (file.exists() == true) {
                             file.delete();
                         }
                     }
 
-                    if(lost.get().getLostpic2() != null) {
+                    if (lost.get().getLostpic2() != null) {
                         File file = new File(lost.get().getLostpic2());
-                        if(file.exists() == true){
+                        if (file.exists() == true) {
                             file.delete();
                         }
                     }
 
-                    if(lost.get().getLostpic3() != null) {
+                    if (lost.get().getLostpic3() != null) {
                         File file = new File(lost.get().getLostpic3());
-                        if(file.exists() == true){
+                        if (file.exists() == true) {
                             file.delete();
                         }
                     }
@@ -271,36 +273,55 @@ public class LostController {
             result.data = "fail";
             response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
         }
-       return response;
-    
+        return response;
+
     }
 
     @GetMapping("lost/search")
     @ApiOperation(value = "실종/보호/목격 태그 검색")
-    public Object lostSearch(@RequestParam final List<String> tags) {
+    public Object lostSearch(@RequestParam(required = false) final List<String> tags) {
 
         ResponseEntity response = null;
         BasicResponse result = new BasicResponse();
 
-        try{
-            int size = tags.size();
-            if(size == 0){
+        try {
+            if (tags == null) {
                 result.data = "검색어를 입력하세요";
             } else {
-                List<Losttag> losttag = losttagDao.findtag(tags, size);
+                int size = tags.size();
+                
+                if (size > 0) {
+                    
+                    List<Losttag> losttagList = losttagDao.findtag(tags, size);
 
-                if(losttag.isEmpty()) {
-                    result.data = "lostno not exist";
+                    if (losttagList.isEmpty()) {
+                        result.data = "lostno not exist";
+                    } else {
+
+                        //lostno만 받아오는 리스트
+                        List<Integer> lostnoList = new ArrayList<>();
+                        for (int i = 0; i < losttagList.size(); i++) {
+                            int lostno = losttagList.get(i).getLostno();
+                            lostnoList.add(lostno);
+                        }
+
+                        List<Lost> lostList = lostDao.findByLostnoList(lostnoList);
+
+                        if (lostList.isEmpty()) {
+                            result.data = "no result";
+                        } else {
+                            result.object = lostList;
+                            result.data = "success";
+                        }
+                    }
                 } else {
-                    result.object =  losttag;
-                    result.data = "success";
+                    result.data = "검색어를 입력하세요";
                 }
-
             }
 
             result.status = true;
             response = new ResponseEntity<>(result, HttpStatus.OK);
-            
+
         } catch (Exception e) {
             e.printStackTrace();
             result.status = false;
@@ -310,6 +331,5 @@ public class LostController {
 
         return response;
     }
-
 
 }
