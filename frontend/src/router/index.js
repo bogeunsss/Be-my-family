@@ -21,6 +21,7 @@ import AdoptCreate from '@/page/adoptionPost/AdoptCreate.vue'
 import LostList from '@/page/lost/LostList.vue'
 import LostDetail from '@/page/lost/LostDetail.vue'
 import Manager from '@/page/user/Manager.vue'
+import AdoptionDetail from '@/page/user/AdoptionDetail.vue'
 
 Vue.use(Router)
 Vue.use(Vuex)
@@ -130,6 +131,11 @@ export default new Router({
       path: '/user/manager',
       name: constants.URL_TYPE.USER.MANAGER,
       component: Manager
+    },
+    {
+      path: '/user/adoption/:adoptionno',
+      name: constants.URL_TYPE.USER.ADOPTIONDETAIL,
+      component: AdoptionDetail
     },
     {
       path: '/params',

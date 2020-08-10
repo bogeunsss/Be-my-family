@@ -5,52 +5,47 @@
       <h2>입양신청 목록</h2>
         <v-row>
           <v-col
-            v-for="i in 5"
-            :key="i"
+            v-for="adoption in adoptions"
+            :key="adoption.id"
             cols="12"
             sm="6"
             md="4"
-            lg="3"
+            
           >
-            <v-card>
-              <v-card-title class="subheading font-weight-bold">유기견입니다</v-card-title>
+            <v-card style="width:350px" @click="goAdoptionDetail(adoption.adoptionno)">
+              <v-card-title class="subheading font-weight-bold">i dont know what to do</v-card-title>
 
               <v-divider></v-divider>
 
               <v-list dense>
                 <v-list-item>
-                  <v-list-item-content>Calories:</v-list-item-content>
-                  <v-list-item-content class="align-end">강아지</v-list-item-content>
+                  <v-list-item-content>Name :</v-list-item-content>
+                  <v-list-item-content class="align-end">{{ adoption.name }}</v-list-item-content>
                 </v-list-item>
 
                 <v-list-item>
-                  <v-list-item-content>Fat:</v-list-item-content>
-                  <v-list-item-content class="align-end">강아지</v-list-item-content>
+                  <v-list-item-content>Email :</v-list-item-content>
+                  <v-list-item-content class="align-end">{{ adoption.email }}</v-list-item-content>
                 </v-list-item>
 
                 <v-list-item>
-                  <v-list-item-content>Carbs:</v-list-item-content>
-                  <v-list-item-content class="align-end">강아지</v-list-item-content>
+                  <v-list-item-content>Phone :</v-list-item-content>
+                  <v-list-item-content class="align-end">{{ adoption.phone }}</v-list-item-content>
                 </v-list-item>
 
                 <v-list-item>
-                  <v-list-item-content>Protein:</v-list-item-content>
-                  <v-list-item-content class="align-end">강아지</v-list-item-content>
+                  <v-list-item-content>Nation :</v-list-item-content>
+                  <v-list-item-content class="align-end">{{ adoption.nation }}</v-list-item-content>
                 </v-list-item>
 
                 <v-list-item>
-                  <v-list-item-content>Sodium:</v-list-item-content>
-                  <v-list-item-content class="align-end">강아지</v-list-item-content>
+                  <v-list-item-content>Reservation :</v-list-item-content>
+                  <v-list-item-content class="align-end">{{ adoption.fixdate }}.{{ adoption.fixtime }} </v-list-item-content>
                 </v-list-item>
 
                 <v-list-item>
-                  <v-list-item-content>Calcium:</v-list-item-content>
-                  <v-list-item-content class="align-end">강아지</v-list-item-content>
-                </v-list-item>
-
-                <v-list-item>
-                  <v-list-item-content>Iron:</v-list-item-content>
-                  <v-list-item-content class="align-end">강아지</v-list-item-content>
+                  <v-list-item-content>DesertionNo:</v-list-item-content>
+                  <v-list-item-content class="align-end">{{ adoption.desertionno }}</v-list-item-content>
                 </v-list-item>
               </v-list>
             </v-card>
@@ -67,19 +62,28 @@ import axios from "axios";
 
 export default {
     name: 'Manager',
-    create(){
-
+    created(){
+      this.getAdoptionList()
     },
     methods: {
       getAdoptionList() {
-        axios.get('http://localhost/account/adoptionList', {params : {
+        console.log(this.$cookies.get('auth-token').email)
+        axios.get('http://localhost:8080/manager/adoptionList', {params :{ 
           email : this.$cookies.get('auth-token').email
-        }})
+        }}
+      )
+      .then((response)=>{
+        this.adoptions = response.data.adoptions
+        console.log(this.adoptions)
+      }).catch((err) => console.log(err))
       },
+      goAdoptionDetail(adoptionNo){
+        this.$router.push({name:constants.URL_TYPE.USER.ADOPTIONDETAIL, params:{adoptionno:adoptionNo}})
+      }
     },
     data() {
         return {
-          
+          adoptions : [],          
        
         
         }
