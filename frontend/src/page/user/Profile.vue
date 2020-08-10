@@ -30,14 +30,16 @@
                 </v-col>
             </v-row>
             </v-container>
+            <router-link v-bind:to="{name:constants.URL_TYPE.USER.UPDATE}" class="update-btn">
+                <v-btn style="float:right">회원정보 수정</v-btn>
+            </router-link>  
+            <v-btn @click="userAccountDelete" style="float:right">회원탈퇴</v-btn>
         </v-card>
-    <div>
-    </div>
-    <!-- <v-btn @click="userUpdate" style="float:right">회원정보 수정</v-btn> -->
-    <router-link v-bind:to="{name:constants.URL_TYPE.USER.UPDATE}" class="update-btn">
-        <v-btn style="float:right">회원정보 수정</v-btn>
-    </router-link>  
-    <v-btn @click="userAccountDelete" style="float:right">회원탈퇴</v-btn>
+        <v-list>
+            <v-list-item>
+
+            </v-list-item>
+        </v-list>
     </v-container>
 </div>
 </template>
@@ -62,6 +64,12 @@
             // this.isLoggedIn = this.$cookies.isKey('auth-token')
             var token = this.$cookies.get('auth-token')
             this.find(token.email)
+            axios.get('http://localhost:8080/account/adoptionList?uid='+this.profileData.nickName)
+                .then(response => {
+                    console.log(response)
+                }).catch(error => {
+                    console.log(error)
+                })
         },
         computed: {
           ...mapState(['profileData', 'loginData']),
