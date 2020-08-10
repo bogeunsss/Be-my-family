@@ -18,6 +18,6 @@ public class PostscriptRequest {
     String image;
     String sido;
     String gugun;
-    String place;
+    String kind;
     int postscriptno;
 }
