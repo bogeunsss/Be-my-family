@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface LosttagDao extends JpaRepository<Losttag, String> {
     
     List<Losttag> findByLostno(int lostno);
+    List<Losttag> findByLostnoAndFlag(int lostno, int flag);
 
     @Query(value = "SELECT * FROM losttag WHERE tagname IN (:tags) GROUP BY lostno having count(lostno)>=:size", nativeQuery = true)
     List<Losttag> findtag(@Param("tags") List<String> tags, int size);

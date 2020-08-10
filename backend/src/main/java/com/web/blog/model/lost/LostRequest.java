@@ -16,7 +16,7 @@ public class LostRequest {
     private String uid;
 
     @ApiModelProperty(required = false)
-    private int lostno;
+    private Integer lostno;
 
     @ApiModelProperty(required = true)
     private String losttype;

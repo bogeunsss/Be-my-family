@@ -23,5 +23,6 @@ public class Losttag {
 
     private int lostno;
     private String tagname;
+    private int flag;
 
 }

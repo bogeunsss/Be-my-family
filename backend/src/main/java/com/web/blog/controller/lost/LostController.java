@@ -119,6 +119,7 @@ public class LostController {
                 Losttag tag = new Losttag();
                 tag.setLostno(lost.getLostno());
                 tag.setTagname(tagname);
+                tag.setFlag(0);
                 System.out.println("tag =======>" + tag);
                 losttagDao.save(tag);
             }
@@ -192,7 +193,9 @@ public class LostController {
 
         try {
             Optional<Lost> lostDetail = lostDao.findByLostno(lostno);
+            
             List<Losttag> tagList = losttagDao.findByLostno(lostno);
+            List<Losttag> madetagList = losttagDao.findByLostnoAndFlag(lostno, 0);
 
             if (lostDetail.isPresent()) {
                 result.data = "success";
@@ -200,6 +203,7 @@ public class LostController {
 
                 if (!tagList.isEmpty()) {
                     result.tag = tagList;
+                    result.madetag = madetagList;
                 }
 
             } else {
