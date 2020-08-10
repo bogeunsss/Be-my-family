@@ -5,6 +5,7 @@ import lombok.ToString;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @Valid
 @ToString
@@ -20,6 +21,9 @@ public class ApplicationRequest {
     String name;
     @ApiModelProperty(required = true)
     @NotNull
+    @Pattern(regexp =
+    "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" +
+    "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
     String email;
     @ApiModelProperty(required = true)
     @NotNull

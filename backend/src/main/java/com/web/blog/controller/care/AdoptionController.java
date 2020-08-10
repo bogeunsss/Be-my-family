@@ -5,21 +5,19 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
-import com.mysql.cj.xdevapi.Result;
 import com.web.blog.dao.care.AdoptionDao;
 import com.web.blog.dao.care.SurveyDao;
+import com.web.blog.dao.manager.ManagerDao;
 import com.web.blog.dao.user.UserDao;
 import com.web.blog.model.AdoptionResponse;
 import com.web.blog.model.BasicResponse;
 import com.web.blog.model.adoption.Adoption;
 import com.web.blog.model.adoption.ApplicationRequest;
 import com.web.blog.model.care.Survey;
-import com.web.blog.model.user.SignupRequest;
+import com.web.blog.model.manager.Manager;
 import com.web.blog.model.user.User;
-import com.web.blog.security.JwtAuthenticationResult;
-import com.web.blog.security.JwtTokenProvider;
-import com.web.blog.service.AdoptionMailService;
 import com.web.blog.service.MailService;
+import com.web.blog.service.ManagerMailService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,7 +26,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,6 +53,12 @@ public class AdoptionController {
 
         @Autowired
         MailService mailService;
+
+        @Autowired
+        ManagerDao managerDao;
+
+        @Autowired
+        ManagerMailService managerMailService;
 
         //상담 시간, 상담 날짜 테이블 추가, 객체로 받기
         //uid 말고 이메일로 받기
@@ -138,33 +141,62 @@ public class AdoptionController {
                 
         ResponseEntity response = null;
         
-        Optional<User> user = userDao.findById(request.getUid());
-        System.out.println(user);
+        Optional<User> checkuser = userDao.findById(request.getUid());
+        System.out.println(checkuser);
         
-        
+        Optional<Manager> checkmanager = managerDao.findById(request.getMid());
+        System.out.println(checkmanager);
 
-        String fixdate = request.getFixdate();
-        String fixtime = request.getFixtime();
-        String checkuid = request.getUid();
-        String checkdog = request.getDesertionno();
-        // String checkmid = request.getMid();
-
-        final BasicResponse result = new BasicResponse();
+        Manager manager = managerDao.getManagerByMid(request.getMid());
+        System.out.println(manager);
 
         Adoption adoption = new Adoption();
-        adoption.setDesertionno(checkdog);
-        adoption.setUid(checkuid);
-        adoption.setFixdate(fixdate);
-        adoption.setFixtime(fixtime);
+        adoption.setUid(request.getUid());
+        adoption.setName(request.getName());
+        adoption.setEmail(request.getEmail());
+        adoption.setPhone(request.getPhone());
+        adoption.setJob(request.getJob());
+        adoption.setMarriaged(request.getMarriaged());
+        adoption.setSex(request.getSex());
+
+        adoption.setMid(request.getMid());
+
+        adoption.setNation(request.getNation());
+        adoption.setSido(request.getSido());
+        adoption.setGugun(request.getGugun());
+        adoption.setPlace(request.getPlace());
+        adoption.setBeforeover(request.isBeforeover());
+        adoption.setBeforeadopt(request.isBeforeadopt());
+        adoption.setPresentanimal(request.getPresentanimal());
+        adoption.setFamilyunder(request.getFamilyunder());
+        adoption.setFamilymiddle(request.getFamilymiddle());
+        adoption.setFamilyagree(request.isFamilyagree());
+        adoption.setDissolution(request.getDissolution());
+        adoption.setSickness(request.isSickness());
+        adoption.setAlone(request.getAlone());
+        adoption.setTemp(request.getTemp());
+        adoption.setHouse(request.getHouse());
+        adoption.setEatmoney(request.getEatmoney());
+        adoption.setCaremoney(request.getCaremoney());
+        adoption.setReason(request.getReason());
+        adoption.setThink(request.getThink());
+
+        adoption.setDesertionno(request.getDesertionno());
+
+        adoption.setFixdate(request.getFixdate());
+        adoption.setFixtime(request.getFixtime());
+        
         adoptionDao.save(adoption);
 
+        BasicResponse result = new BasicResponse();
+
+        if(managerMailService.managerMailSend(manager)) {
+            result.data = "send email success";
+        } else {
+            result.data = "send email fail";
+        }
+
         result.status = true;
-        result.data = "success";
-        //==메일 서비스== 
-        // User user = userDao.getUserByEmail(email); 유저 말고 manager
-        // // adoption.setMid(checkmid);
-        // if(AdoptionMailService.userMailSend(user)) {
-        // }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
