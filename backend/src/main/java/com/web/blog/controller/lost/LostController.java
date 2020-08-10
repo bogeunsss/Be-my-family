@@ -8,11 +8,14 @@ import java.util.Optional;
 import javax.swing.text.html.HTML.Tag;
 
 import com.web.blog.dao.lost.LostDao;
+import com.web.blog.dao.lost.LostreplyDao;
 import com.web.blog.dao.lost.LosttagDao;
 import com.web.blog.model.BasicResponse;
 import com.web.blog.model.lost.Lost;
 import com.web.blog.model.lost.LostPic;
 import com.web.blog.model.lost.LostRequest;
+import com.web.blog.model.lost.Lostreply;
+import com.web.blog.model.lost.LostreplyRequest;
 import com.web.blog.model.lost.Losttag;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +50,9 @@ public class LostController {
 
     @Autowired
     LosttagDao losttagDao;
+
+    @Autowired
+    LostreplyDao lostreplyDao;
 
     @PostMapping("/lost/add")
     @ApiOperation(value = "실종/보호/목격 글 등록/수정")
@@ -197,10 +203,12 @@ public class LostController {
             List<Losttag> tagList = losttagDao.findByLostno(lostno);
             List<Losttag> madetagList = losttagDao.findByLostnoAndFlag(lostno, 0);
 
+            List<Lostreply> replyList = lostreplyDao.findByLostnoOrderByCreatedate(lostno);
+
             if (lostDetail.isPresent()) {
                 result.data = "success";
                 result.object = lostDetail.get();
-
+                result.lostReply = replyList;
                 if (!tagList.isEmpty()) {
                     result.tag = tagList;
                     result.madetag = madetagList;
@@ -389,5 +397,5 @@ public class LostController {
 
         return response;
     }
-
+    
 }
