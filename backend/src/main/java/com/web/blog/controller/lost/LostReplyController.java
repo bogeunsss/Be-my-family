@@ -1,20 +1,18 @@
-package com.web.blog.controller.care;
+package com.web.blog.controller.lost;
 
-import java.util.List;
 import java.util.Optional;
 
-import com.web.blog.dao.care.SurveyDao;
+import com.web.blog.dao.lost.LostreplyDao;
 import com.web.blog.model.BasicResponse;
-import com.web.blog.model.care.Survey;
+import com.web.blog.model.lost.Lostreply;
+import com.web.blog.model.lost.LostreplyRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,63 +28,69 @@ import io.swagger.annotations.ApiResponses;
 
 @CrossOrigin(origins = { "http://localhost:3000" })
 @RestController
-
-public class SurveyController {
+public class LostReplyController {
 
     @Autowired
-    SurveyDao surveyDao;
+    LostreplyDao lostreplyDao;
 
-    @PostMapping("/care/surveyAdd")
-    @ApiOperation(value = "설문 조사 등록/수정")
-    public Object surveyAdd(@RequestBody Survey request) {
+    @PostMapping("lost/reply/add")
+    @ApiOperation(value = "실종/보호/목격 댓글 등록/수정")
+    public Object lostReplyAdd(@RequestBody LostreplyRequest request) {
 
         ResponseEntity response = null;
-        final BasicResponse result = new BasicResponse();
+        BasicResponse result = new BasicResponse();
 
         try {
-            Survey survey = request;
-            String uid = request.getUid();
-            survey.setUid(uid);
-            surveyDao.save(survey);
+
+            Lostreply reply = new Lostreply();
+            if(request.getLostreplyno() != null && request.getLostreplyno() != 0) {
+                reply.setLostreplyno(request.getLostreplyno());
+            }
+            reply.setLostreplycontent(request.getLostcontent());
+            reply.setLostno(request.getLostno());
+            reply.setUid(request.getUid());
+
+            lostreplyDao.save(reply);
+
             result.status = true;
             result.data = "success";
             response = new ResponseEntity<>(result, HttpStatus.OK);
+
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
+            result.status = false;
             result.data = "fail";
-            response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+            response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
         }
 
         return response;
     }
 
-    @GetMapping("/care/survey")
-    @ApiOperation(value = "설문조사 조회")
-    public Object survey(@RequestParam(required = true) final String uid) {
+    @DeleteMapping("lost/reply/delete")
+    @ApiOperation(value = "실종/보호/목격 댓글 삭제")
+    public Object lostReplyDelete(@RequestParam final int lostreplyno, @RequestParam final String uid) {
 
         ResponseEntity response = null;
         final BasicResponse result = new BasicResponse();
-        System.out.println(uid);
+
         try {
-            Optional<Survey> mySurvey = surveyDao.findByUid(uid);
-            System.out.println(mySurvey);
-            if(mySurvey.isPresent()) {
-                result.status = true;
+            Optional<Lostreply> reply = lostreplyDao.findByLostreplynoAndUid(lostreplyno, uid);
+            if(reply.isPresent()) {
+                lostreplyDao.deleteByLostreplynoAndUid(lostreplyno, uid);
                 result.data = "success";
-                result.object = mySurvey;
             } else {
-                result.status = true;
-                result.data = "uid not exist";
+                result.data = "reply not exist";
             }
+            result.status = true;
             response = new ResponseEntity<>(result, HttpStatus.OK);
-        } catch(Exception e) {
-            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
             result.status = false;
             result.data = "fail";
-            response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+            response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
         }
+
         return response;
     }
-
-
+    
 }

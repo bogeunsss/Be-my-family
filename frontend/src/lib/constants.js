@@ -11,6 +11,8 @@ export default {
             JOINSUCCESS: 'joinSuccess',
             LIKE : 'like',
             SURVEY : 'survey',
+            MANAGER : 'manager',
+            ADOPTIONDETAIL:'adoptiondetail'
         },
         POST: {
             LIST:"list",

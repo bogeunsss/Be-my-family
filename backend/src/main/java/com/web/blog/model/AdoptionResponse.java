@@ -8,4 +8,5 @@ public class AdoptionResponse {
 	public Object survey;
 	public Object user;
     public String desertionno;
+    public String mid;
 }

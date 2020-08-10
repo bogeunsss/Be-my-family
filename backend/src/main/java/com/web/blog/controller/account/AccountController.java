@@ -164,6 +164,7 @@ public class AccountController {
         final BasicResponse result = new BasicResponse();
 
         User newUser = userDao.getUserByEmail(email);
+
         List<Adoption> adoptionList = null;
 
         try{
@@ -177,7 +178,7 @@ public class AccountController {
             result.name = newUser.getName();
 
             response = new ResponseEntity<>(result, HttpStatus.OK);
-        
+  
         }  catch(Exception e) {
 
             result.status = false;

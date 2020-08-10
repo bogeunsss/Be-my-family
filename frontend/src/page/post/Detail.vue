@@ -44,9 +44,11 @@
       </v-card-text>
 
       <v-card-actions class="d-flex justify-center">
-        <v-btn color="success" depressed v-if="!isLikeDog && isLoggedIn" @click="likeDog">관심이써여~</v-btn>
+        <div v-if="isLoggedIn && !isManager">
+        <v-btn color="success" depressed v-if="!isLikeDog" @click="likeDog">관심이써여~</v-btn>
         <v-btn color="success" depressed v-if="isLikeDog" @click="deleteLike">관심업서여</v-btn>
-        <v-btn color="primary" class="ma-2" dark v-if="isLoggedIn" @click="dialog = true">입양신청</v-btn>
+        <v-btn color="primary" class="ma-2" dark @click="dialog = true">입양신청</v-btn>
+        </div>
         <!-- total 보내야 할 데이터 : email, 상담날짜, 상담시간, 강아지id, url: /account/adoptionList -->
         <v-dialog v-model="dialog" max-width="500px">
           <v-card>
@@ -128,15 +130,19 @@ export default {
           email: '',
           isLikeDog: false,
           isLoggedIn: false,
+          isManager: false,
         }
     },
     computed:{
-      ...mapState(['profileData'])
+      ...mapState(['profileData','loginData'])
     },
     created(){
       this.getDetail()
       console.log( this.$route.params.uuid )
       console.log(this.isLoggedIn)
+      console.log(this.isManager)
+      console.log($cookies.get('auth-token').email)
+      console.log(this.profileData.email)
     },
     methods:{
       ...mapActions(['find']),
@@ -145,32 +151,60 @@ export default {
           var token = this.$cookies.get('auth-token')
           this.email = token.email
           this.isLoggedIn = true
-          this.find(this.email)
-        }
-        console.log(this.$cookies.get('desertionno').desertionno)
-        console.log(this.profileData.nickName)
-        setTimeout(()=>{
-          axios.get('http://localhost:8080/care/detailUser', {
-            params: {
-              desertionno: this.$cookies.get('desertionno').desertionno,
-              uid: this.profileData.nickName
+          if(this.$cookies.get('auth-token').mid == null){
+              this.find(token.email)
+              setTimeout(()=>{
+                axios.get('http://localhost:8080/care/detailUser', {
+                  params: {
+                    desertionno: this.$cookies.get('desertionno').desertionno,
+                    uid: this.profileData.nickName
+                  }
+                })
+                .then( response => {
+                    console.log(response)
+                    this.dogData = response.data.object
+                    if(this.$route.params.uuid === undefined){
+                      this.isLikeDog = response.data.interest
+                    }else{
+                      this.isLikeDog = true
+                    }
+                })
+                .catch( error => {
+                    console.log(error)
+                })
+              }, 100)
+      
+          }else{
+              this.isManager = true
+              axios.get('http://localhost:8080/care/detailUser', {
+                params: {
+                  desertionno: this.$cookies.get('desertionno').desertionno,
+                }
+              })
+              .then( response => {
+                  console.log(response)
+                  this.dogData = response.data.object
+              })
+              .catch( error => {
+                  console.log(error)
+              })
+             }
             }
-          })
-          .then( response => {
-              // this.dogs = response.data.message
-              console.log(response)
-              this.dogData = response.data.object
-              if(this.$route.params.uuid === undefined){
-                // this.isLikeDog = false
-                this.isLikeDog = response.data.interest
-              }else{
-                this.isLikeDog = true
-              }
-          })
-          .catch( error => {
-              console.log(error)
-          })
-        }, 100)
+        else{
+          axios.get('http://localhost:8080/care/detailUser', {
+                params: {
+                  desertionno: this.$cookies.get('desertionno').desertionno,
+                }
+              })
+              .then( response => {
+                  console.log(response)
+                  this.dogData = response.data.object
+              })
+              .catch( error => {
+                  console.log(error)
+              })
+             }
+          
       },
 
       requestComplete(){
@@ -180,11 +214,19 @@ export default {
         }else{
           st = this.selectedTime.slice(0,1)
         }
+        let formData = new FormData();
+        formData.append('email', this.$cookies.get('auth-token').email)
+        formData.append('desertionno', this.$cookies.get('desertionno').desertionno)
+      // console.log(index.desertionno)
+      // console.log(formData)
         // console.log(this.date + " " + st + " " + this.dogData.desertionno + " " + this.email)
-
-        axios.get(`http://localhost:8080/account/adoptionList?`)
+        console.log(this.$cookies.get('auth-token').email)
+        axios.post('http://localhost:8080/adoption/Application', formData 
+          // desertionno : this.$cookies.get('desertionno').desertionno,
+          // email : this.$cookies.get('auth-token').email
+        )
           .then(response => {
-
+            console.log(response)
           })
           .catch(error => {
               console.log(error)
@@ -210,9 +252,11 @@ export default {
       },
       deleteLike() {
       console.log(this.$store.state.profileData.nickName);
+      console.log(this.$cookies.get('nickName'))
       axios
         .delete(`http://localhost:8080/care/interestDelete`, { params:{
-          uid: this.$cookies.get('nickName'),
+          // uid: this.$cookies.get('nickName'),
+          uid : this.$store.state.profileData.nickName,
           desertionno: this.$cookies.get('desertionno').desertionno
         }})
         .then((response) => {
@@ -227,10 +271,10 @@ export default {
           console.log("실패");
         });
       },
-    },
     destroyed(){
       this.$cookies.remove('desertionno')
     },
+    }
 }
 </script>
 

@@ -41,7 +41,7 @@
 import InfiniteLoading from "vue-infinite-loading";
 
 export default {
-  name: "Post",
+  name: "Main",
   components: {
     InfiniteLoading,
   },
