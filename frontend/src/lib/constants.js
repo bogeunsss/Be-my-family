@@ -18,7 +18,9 @@ export default {
         },
         ADOPTIONPOST:{
             ADOPTLIST: "AdoptList",
-            ADOPTCREATE: "AdoptCreate"
+            ADOPTCREATE: "AdoptCreate",
+            ADOPTDETAIL: "AdoptDetail",
+            ADOPTUPDATE: "AdoptUpdate"
         },
         LOST: {
             LOSTLIST:'lostList',
