@@ -17,4 +17,5 @@ public class BasicResponse {
     public String name;
     public Object tag;
     public boolean adoption;
+    public Object adoptions;
 }
