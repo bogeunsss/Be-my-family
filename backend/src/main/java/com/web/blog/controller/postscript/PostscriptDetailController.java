@@ -43,7 +43,7 @@ import io.swagger.annotations.ApiResponses;
 
 @CrossOrigin(origins = { "http://localhost:3000" })
 @RestController
-public class PostscriptDetail {
+public class PostscriptDetailController {
     
     @Autowired
     PostscriptDao postscriptDao;

@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import com.web.blog.dao.postscript.CommentDao;
 import com.web.blog.dao.postscript.PostscriptDao;
 import com.web.blog.dao.postscript.PostscriptSearchDao;
 import com.web.blog.dao.user.UserDao;
@@ -36,6 +37,7 @@ import io.swagger.annotations.ApiResponses;
 @CrossOrigin(origins = { "http://localhost:3000" })
 @RestController
 public class PostscriptController {
+    
     @Autowired
     PostscriptDao postscriptDao;
 
@@ -45,17 +47,20 @@ public class PostscriptController {
     @Autowired
     PostscriptSearchDao postscriptSearchDao;
 
+    @Autowired
+    CommentDao commentDao;
+
     @GetMapping("/postscript/List")
     @ApiOperation(value = "입양후기 리스트")
     public Object postscriptList() {
-        
+
         ResponseEntity response = null;
         final BasicResponse result = new BasicResponse();
 
         List<Postscript> postscriptList = postscriptDao.findAll();
-    
+
         try {
-            if(!postscriptList.isEmpty()) {
+            if (!postscriptList.isEmpty()) {
                 result.object = postscriptList;
                 result.status = true;
                 result.data = "success";
@@ -76,7 +81,7 @@ public class PostscriptController {
             response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
         }
         return response;
-    }   
+    }
 
     @PostMapping("/postscript/Add")
     @ApiOperation(value = "입양후기 등록")
@@ -91,9 +96,9 @@ public class PostscriptController {
         String checksido = request.getSido();
         String checkgugun = request.getGugun();
         String checkkind = request.getKind();
-      
+
         final BasicResponse result = new BasicResponse();
-        
+
         try {
 
             Postscript postscript = new Postscript();
@@ -105,7 +110,7 @@ public class PostscriptController {
             postscript.setGugun(checkgugun);
             postscript.setKind(checkkind);
             postscriptDao.save(postscript);
-                        
+
             result.status = true;
             result.data = "success";
             response = new ResponseEntity<>(result, HttpStatus.OK);
@@ -122,50 +127,48 @@ public class PostscriptController {
 
     @DeleteMapping("/postscript/Delete")
     @ApiOperation(value = "입양후기 게시글 삭제")
-    public Object postscriptDelete(@RequestParam(required = true) final Integer postscriptno) {
+    public Object postscriptDelete(@RequestParam(required = true) final int postscriptno) {
 
         ResponseEntity response = null;
         final BasicResponse result = new BasicResponse();
 
         Optional<Postscript> postscriptOpt = postscriptDao.findByPostscriptno(postscriptno);
 
-        if(postscriptOpt.isPresent()) {
+        System.out.println(postscriptOpt);
 
-                postscriptDao.deleteByPostscriptno(postscriptno);
+        if (postscriptOpt.isPresent()) {
+            postscriptDao.deleteByPostscriptno(postscriptno);
+            result.status = true;
+            result.data = "success";
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+        }
 
-                result.status = true;
-                result.data = "success";
-                
-                response = new ResponseEntity<>(result, HttpStatus.OK);
-            }
-
-         else {
+        else {
             result.status = false;
             result.data = "fail";
             response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
-         }
+        }
 
         return response;
     }
 
-    
     @GetMapping("/postscript/Search")
     @ApiOperation(value = "입양후기 조회")
     public Object postscriptSearch(@RequestParam(required = true) final String category,
-    @RequestParam(required = true) final String searchText) {
+            @RequestParam(required = true) final String searchText) {
 
         ResponseEntity response = null;
         List<Postscript> postscriptList = null;
         final BasicResponse result = new BasicResponse();
 
-        if(category.equals("uid")) {
+        if (category.equals("uid")) {
             postscriptList = postscriptSearchDao.findByUidContainingOrderByPostscriptnoDesc(searchText);
-        } else if(category.equals("title")) {
+        } else if (category.equals("title")) {
             postscriptList = postscriptSearchDao.findByTitleContainingOrderByPostscriptnoDesc(searchText);
         }
-        
+
         try {
-            if(!postscriptList.isEmpty()){
+            if (!postscriptList.isEmpty()) {
                 result.data = "success";
                 result.status = true;
                 result.object = postscriptList;
@@ -175,8 +178,8 @@ public class PostscriptController {
                 result.status = false;
                 response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
             }
-        } catch(Exception e) {
-            
+        } catch (Exception e) {
+
             result.status = false;
             result.data = "fail";
 
@@ -187,14 +190,14 @@ public class PostscriptController {
 
     @PutMapping("/postscript/Modify")
     @ApiOperation(value = "입양 후기 게시판 글 수정")
-    public Object postscriptModify (@Valid @RequestBody PostscriptRequest request) {
+    public Object postscriptModify(@Valid @RequestBody PostscriptRequest request) {
 
         Postscript postscript = postscriptDao.getPostscriptByPostscriptno(request.getPostscriptno());
         ResponseEntity response = null;
-        
+
         final BasicResponse result = new BasicResponse();
 
-        try{
+        try {
 
             postscript.setTitle(request.getTitle());
             postscript.setContent(request.getContent());
@@ -206,12 +209,12 @@ public class PostscriptController {
             result.data = "success";
 
             response = new ResponseEntity<>(result, HttpStatus.OK);
-        } catch(Exception e) {
+        } catch (Exception e) {
 
             result.data = "success";
             result.status = false;
 
-            response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);           
+            response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
         }
         return response;
     }

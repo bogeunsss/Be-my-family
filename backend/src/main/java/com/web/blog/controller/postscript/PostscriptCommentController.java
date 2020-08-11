@@ -33,11 +33,10 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-
 @ApiResponses(value = { @ApiResponse(code = 401, message = "Unauthorized", response = BasicResponse.class),
-        @ApiResponse(code = 403, message = "Forbidden", response = BasicResponse.class),
-        @ApiResponse(code = 404, message = "Not Found", response = BasicResponse.class),
-        @ApiResponse(code = 500, message = "Failure", response = BasicResponse.class) })
+                @ApiResponse(code = 403, message = "Forbidden", response = BasicResponse.class),
+                @ApiResponse(code = 404, message = "Not Found", response = BasicResponse.class),
+                @ApiResponse(code = 500, message = "Failure", response = BasicResponse.class) })
 
 @CrossOrigin(origins = { "http://localhost:3000" })
 @RestController
@@ -49,7 +48,7 @@ public class PostscriptCommentController {
         @PostMapping("/comment/add")
         @ApiOperation(value = "댓글 등록")
         public Object commentAdd(@RequestBody CommentRequest request) {
-                
+
                 ResponseEntity response = null;
                 final BasicResponse result = new BasicResponse();
 
@@ -62,7 +61,7 @@ public class PostscriptCommentController {
                         result.data = "success";
                         result.status = true;
                         response = new ResponseEntity<>(result, HttpStatus.OK);
-                } catch(Exception e) {
+                } catch (Exception e) {
                         result.data = "fail";
                         result.status = false;
                         response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
@@ -73,7 +72,7 @@ public class PostscriptCommentController {
         @PutMapping("/comment/modify")
         @ApiOperation(value = "댓글 수정")
         public Object commentModify(@RequestBody CommentRequest request) {
-                
+
                 ResponseEntity response = null;
                 final BasicResponse result = new BasicResponse();
 
@@ -84,7 +83,7 @@ public class PostscriptCommentController {
                         result.data = "success";
                         result.status = true;
                         response = new ResponseEntity<>(result, HttpStatus.OK);
-                } catch(Exception e) {
+                } catch (Exception e) {
                         result.data = "fail";
                         result.status = false;
                         response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
