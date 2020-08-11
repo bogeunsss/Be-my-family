@@ -126,9 +126,7 @@ public class PostscriptController {
 
         ResponseEntity response = null;
         final BasicResponse result = new BasicResponse();
-
         Optional<Postscript> postscriptOpt = postscriptDao.findByPostscriptno(postscriptno);
-
         if(postscriptOpt.isPresent()) {
 
                 postscriptDao.deleteByPostscriptno(postscriptno);

@@ -24,7 +24,7 @@
 
         <v-card-actions class="d-flex justify-end mb-3">
           <v-btn icon large>
-            <v-icon large color="pink">mdi-heart</v-icon>
+            <v-icon large>mdi-heart</v-icon>
           </v-btn>
           <v-btn icon large>
             <v-icon large>mdi-share-variant</v-icon>
@@ -48,10 +48,9 @@
       </v-card>
 
 
-      <v-card class="mx-auto mt-5" max-width="100%" min-height="3rem" outlined style="border-top:none; border-right:none; border-left:none;">
-        <div style="line-height:3rem;">
-          <span class="mb-1 mr-5" style="font-weight:bold;">작성자</span>
-          <span>댓글 내용</span>
+      <v-card v-for="comment in comments" :key="comment.commentno" class="mx-auto mt-5" max-width="100%" min-height="3rem" outlined style="border-top:none; border-right:none; border-left:none;">
+        <div style="line-height:3rem;"> 
+          <p> {{comment.uid}} : {{comment.content}}</p>
         </div>
       </v-card>
 
@@ -62,10 +61,11 @@
           outlined
           rows="1"
           row-height="15"
+          v-model="commentData.content"
         ></v-textarea>
         <!-- <v-textarea class="mx-2" label="Comment" rows="1"></v-textarea> -->
-        <v-btn class="ma-2 mt-0" outlined medium fab color="indigo" style="border:none;">
-          <v-icon medium>mdi-comment</v-icon>
+        <v-btn class="ma-2 mt-0" outlined medium fab color="indigo" style="border:none;" @click="createComment">
+          <v-icon medium >mdi-comment</v-icon>
         </v-btn>
       </div>
 
@@ -79,12 +79,15 @@
 <script>
 import constants from "@/lib/constants";
 import axios from 'axios'
+import { mapState,  mapActions} from 'vuex'
 
 export default {
   created(){
     this.adoptdetail()
+    this.commentData.postscriptno = this.$route.params.ID
   },
   computed:{
+    ...mapState(['profileData','loginData', ]),
     param()
     {
       return this.$route.params.ID
@@ -98,16 +101,18 @@ export default {
       axios.get("http://localhost:8080/postscript/detail?postscriptno="+this.$route.params.ID)
       .then((res) =>{
         this.Adoptdata = res.data.object
-        console.log(this.Adoptdata)
+        this.comments = res.data.comments
+        // console.log(this.Adoptdata)
+        // console.log(this.comments)
       })
       .catch((error) =>{
         console.log(error)
       })
     },
     postdelete(){
-      console.log(this.postscriptno)
+      
       axios.delete(`http://localhost:8080/postscript/Delete?postscriptno=`+this.$route.params.ID)
-      .then(()=>{
+      .then((response)=>{
          this.adoptlist()
       })
       .catch((error)=>{
@@ -116,13 +121,33 @@ export default {
     },
     postupdate(){
       this.$router.push( {name: constants.URL_TYPE.ADOPTIONPOST.ADOPTUPDATE , params:{ ID: this.$route.params.ID}})
-    }
+    },
+    createComment(){
+      this.commentData.uid = this.profileData.nickName
+      axios.post("http://localhost:8080/comment/add", this.commentData)
+      .then((res)=>{
+        console.log(this.commentData)
+        this.commentData.content = "";
+        alert("댓글이 등록되었습니다.")
+        this.$router.go()
+      })
+      .catch((error) =>{
+        console.log(error)
+      })
+
+    },
+
 
   },
   data() {
     return {
       Adoptdata: {},
-      
+      comments: [],
+      commentData:{
+        uid:"",
+        postscriptno:"",
+        content:""
+      },
     };
   },
 };
