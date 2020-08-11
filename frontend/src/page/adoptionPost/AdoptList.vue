@@ -1,127 +1,162 @@
 <template>
-    <v-container>
+  <v-container>
     <v-col cols="10" style="margin:0 auto;">
-    <div class="d-flex mb-5">
-    <i class="fas fa-dog" style="font-size:30px"></i><h2 class="ml-3">입양후기</h2>
-    </div> 
+      <div class="d-flex mb-5">
+        <i class="fas fa-dog" style="font-size:30px"></i>
+        <h2 class="ml-3">입양후기</h2>
+      </div>
 
-
-    <v-row align="center">
+      <v-row align="center">
         <v-col cols="12" sm="4"></v-col>
         <v-col cols="12" sm="3" class="mt-5">
-            <v-select
-                v-model="category"
-                :items="items"
-                label="카테고리"
-                item-text="state"
-                item-value="abbr"
-                solo
-                class="ml-5"
-                style="margin-left:auto;"
-            ></v-select>
+          <v-select
+            v-model="category"
+            :items="items"
+            label="카테고리"
+            item-text="state"
+            item-value="abbr"
+            solo
+            class="ml-5"
+            style="margin-left:auto;"
+          ></v-select>
         </v-col>
-        
+
         <v-col cols="12" sm="5">
-            <v-text-field
-                v-model="search"
-                append-icon="mdi-magnify"
-                label="Search"
-                single-line
-                hide-details
-                class="mb-5"
-                style="width:300px; margin-left: auto;"
-            ></v-text-field>
+          <v-text-field
+            v-model="searchText"
+            @keypress.enter="search"
+            append-icon="mdi-magnify"
+            label="Search"
+            single-line
+            hide-details
+            class="mb-5"
+            style="width:400px; margin-left: auto;"
+          ></v-text-field>
         </v-col>
-    </v-row>
+      </v-row>
 
-    <div class="d-flex">
-    <!-- <v-btn @click="create" class="mt-5" style="margin-left:auto">후기작성</v-btn> -->
-    <v-btn @click="create"  style="margin-left:auto" outlined color="blue">
-      <v-icon left>mdi-pencil</v-icon> 후기작성
-    </v-btn>
-    </div>
-    
+      <div class="d-flex">
+        <!-- <v-btn @click="create" class="mt-5" style="margin-left:auto">후기작성</v-btn> -->
+        <v-btn @click="create" style="margin-left:auto" outlined color="blue">
+          <v-icon left>mdi-pencil</v-icon>후기작성
+        </v-btn>
+      </div>
 
-     <v-simple-table fixed-header height="300px" 
-        class="mt-5"
-        page.sync="page" 
-        >
+      <v-simple-table 
+        class="mt-5" 
+        page.sync="page">
+
         <template v-slot:default>
-        <thead>
+          <thead>
             <tr>
-                <th class="text-left">No.</th>
-                <th class="text-left">Title</th>
-                <th class="text-left">Writer</th>
-                <th class="text-left">Data</th>
+              <th class="text-left">No.</th>
+              <th class="text-left">Title</th>
+              <th class="text-left">Writer</th>
+              <th class="text-left">Data</th>
             </tr>
-        </thead>
-        <tbody>
-            <!-- <tr v-for="item in desserts" :key="item.name">
-            <td>{{ item.name }}</td>
-            <td>{{ item.calories }}</td>
-            </tr> -->
-            <tr>
-                <th scope="row">1</th>
-                <td>입양 후기</td>
-                <td>jin</td>
-                <td>2020-08-6</td>
+          </thead>
+          <tbody>
+            <tr v-for="(adopt, index) in adoptData" :key="index" @click="adoptdetail(adopt.postscriptno)">
+              <th scope="row">{{ adopt.postscriptno }}</th>
+              <td>{{ adopt.title }}</td>
+              <td>{{ adopt.uid}}</td>
+              <td>{{ nowdate(adopt.createdate)}}</td>
             </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td>우리 강아지 입양후기</td>
-                <td>park</td>
-                <td>2020-08-6</td>
-            </tr>
-            <tr>
-                <th scope="row">3</th>
-                <td>잘 키우고 있습니다!!</td>
-                <td>jon</td>
-                <td>2020-08-6</td>
-            </tr>
-            <tr>
-                <th scope="row">4</th>
-                <td>입양 하길 너무 잘한거 같아요 ㅠㅠㅠ</td>
-                <td>maria</td>
-                <td>2020-08-6</td>
-            </tr>
-            <tr>
-                <th scope="row">5</th>
-                <td>여러분 입양하세요~</td>
-                <td>sora</td>
-                <td>2020-08-6</td>
-            </tr>
-        </tbody>
+          </tbody>
         </template>
-    </v-simple-table>
+      </v-simple-table>
 
-    <v-pagination v-model="page" :length="pageCount"></v-pagination>
-
+      <v-pagination v-model="page" :length="pageCount"  :total-visible="5" circle class="mt-5"></v-pagination>
     </v-col>
-    </v-container>
+  </v-container>
 </template>
 
 <script>
 import constants from "@/lib/constants";
+import axios from "axios";
+
+import { mapState, mapActions } from "vuex";
 
 export default {
-    data(){
-        return{
-            page: 1,
-            pageCount: 1,
-            items: ['글제목', '작성자'],
-        }
-    },
-    methods:{
-        create(){
-            this.$router
-            .push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTCREATE })
-        }
-    }
+  name: "Adoptlist",
+  computed:{
 
-}
+  },
+  created() {
+    this.adoptList();
+
+  },
+  data() {
+    return {
+      page: 1,
+      pageCount: 15,
+  
+      items: [                
+          { state: '글제목', abbr: 'title' },
+          { state: '작성자', abbr: 'uid' }],
+      category: {},
+      searchText: '',
+
+      adoptData: {
+        postscriptno: "",
+        uid: "",
+        title: "",
+        content: "",
+        image: "",
+        sido: "",
+        gugun: "",
+        kind: "",
+        createdate: "",
+      },
+    };
+  },
+  methods: {
+    adoptList(){
+      axios
+          .get("http://localhost:8080/postscript/List")
+          .then((res) =>{
+            this.adoptData = res.data.object
+            console.log(this.adoptData)
+          })
+          .catch((err)=>{
+            console.log(err)
+          })
+    },
+    create() {
+      if(!this.$cookies.isKey("auth-token")){
+            alert('로그인해주세요')
+        }else{
+        this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTCREATE })}
+    },
+    adoptdetail(postscriptno) {
+      this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTDETAIL, params:{ ID: postscriptno} })
+    },
+    nowdate(createdate){
+        var nowdate = createdate+""
+        return nowdate.substring(0,10)
+    },
+    search(){
+        console.log(this.category)
+        console.log(this.searchText)
+        if(this.searchText === ""){
+                this.adoptList()
+        }else{
+            axios.get(`http://localhost:8080/postscript/postsearch?category=${this.category}&searchText=${this.searchText}`)
+            .then((response) =>{
+                this.adoptData = response.data.object
+                this.searchText = ""
+                console.log(response)
+
+            })
+            .catch(() =>{
+                alert("올바른 값을 입력하세요")
+            })
+        }
+
+    },
+  },
+};
 </script>
 
 <style scoped>
-
-
 </style>
