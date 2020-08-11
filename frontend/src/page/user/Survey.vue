@@ -481,15 +481,18 @@ export default {
     },
     mounted() {
       setTimeout(() => {
-          axios.get("http://localhost:8080/care/survey?uid="+this.profileData.nickName)
-          .then((response) =>{
+        console.log(this.profileData.nickName)
+        axios.get("http://localhost:8080/care/survey?uid="+this.profileData.nickName)
+        .then((response) =>{
+          if(response.data.data !== 'uid not exist'){
             this.survey = response.data.object
-            console.log(this.survey);
-          })
-        }, 100);
+          }
+          console.log(response);
+        })
+      }, 100);
     },
     computed: {
-      ...mapState(['profileData', 'loginData']),
+      ...mapState(['profileData', 'loginData', 'sido_states', 'gugun_states']),
 
     },
     methods: {

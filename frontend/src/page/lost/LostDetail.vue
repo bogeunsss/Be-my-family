@@ -162,11 +162,53 @@
               <v-btn v-if="isWriter" @click="deleteLost" color="red">삭제</v-btn>
               <v-btn @click="goList">목록</v-btn>
             </v-card-actions>
+            <div style="position: relative">
+                <v-subheader class="font-weight-black">댓글</v-subheader>
+                <v-textarea
+                    v-model="comment"
+                    :label="comment.length+'/100'"
+                    auto-grow
+                    outlined
+                    rows="3"
+                    row-height="30"
+                    shaped
+                >
+                </v-textarea>
+                <v-btn color="indigo" outlined class="write-btn">
+                    작성
+                </v-btn>
+
+            </div>
+            <v-list>
+                <v-list-item>
+                    
+                </v-list-item>
+            </v-list>
           </v-card>
       </v-container>
     <div class="float-window">
-        <v-card>
-            <v-card-title>이 강아지를 찾으시나요?</v-card-title>
+        <v-card id="create">
+            <v-speed-dial
+            :direction="direction"
+            :open-on-hover="hover"
+            :transition="transition"
+            >
+            <template v-slot:activator>
+                <v-btn
+                color="blue darken-2"
+                large
+                dark
+                >
+                <div class="d-flex flex-column">
+                    <p class="ma-0 pa-0"><v-icon small>mdi-magnify</v-icon>이 강아지를</p>
+                    <p class="ma-0 pa-0">찾으셨나요?</p>
+                </div>
+                </v-btn>
+            </template>
+            <div v-for="(m, i) in matched" :key="i">
+                <v-img src="http://www.animal.go.kr/files/shelter/2014/02/201403010903285_s.jpg" @click="goDetail(m.lostno)"></v-img>
+            </div>
+            </v-speed-dial>
         </v-card>
     </div>
   </div>
@@ -182,7 +224,7 @@ export default {
         console.log(this.$route.params.articleNo)
         axios.get(`http://localhost:8080/lost/detail?lostno=${this.lostno}`)
             .then(response => {
-                console.log(response)
+                // console.log(response)
                 let result = response.data.object
                 this.subContents.견종 = result.lostbreed
                 this.subContents.성별 = result.lostsex
@@ -222,7 +264,9 @@ export default {
         axios.get(`http://localhost:8080/lost/match?lostno=${this.lostno}`)
             .then(response => {
                 console.log(response)
-                this.matched = response.data.match
+                if(response.data.match.length){
+                    this.matched = response.data.match
+                }
             }).catch(error => {
                 console.log(error)
             })
@@ -292,6 +336,10 @@ export default {
             lostTags: [],
             madeTags: [],
             matched: [],
+            direction: 'bottom',
+            hover: true,
+            transition: 'scale-transition',
+            comment: '',
         }
     },
     methods:{
@@ -306,6 +354,10 @@ export default {
         },
         goList(){
             this.$router.push({name: constants.URL_TYPE.LOST.LOSTLIST})
+        },
+        goDetail(No){
+            this.$router.push({name: constants.URL_TYPE.LOST.LOSTDETAIL, params: {articleNo: No}})
+            this.$router.go()
         },
         closeDialog(){
             this.dialog = false
@@ -383,8 +435,21 @@ export default {
 
 <style>
 .float-window {
-  position: fixed;
-  bottom: 30vw;
-  right: 5vw;
+    position: fixed;
+    bottom: 40vw;
+    right: 5vw;
+}
+.write-btn {
+    position: absolute;
+    bottom: 60px;
+    right: 10px;
+}
+.comment-header {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    bottom: 3px;
+    width: 100%;
 }
 </style>
