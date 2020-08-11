@@ -49,7 +49,7 @@ export default new Router({
       component: Profile,
       props: true,
       beforeEnter(to, from, next){
-        if(Store.state.isLoggedIn){
+        if($cookies.get('auth-token').uid || $cookies.get('auth-token').mid){
           next()
         }else{
           alert('로그인이 필요합니다.')
@@ -61,7 +61,7 @@ export default new Router({
       name: constants.URL_TYPE.USER.UPDATE,
       component: Update,
       beforeEnter(to, from, next){
-        if(Store.state.isLoggedIn){
+        if($cookies.get('auth-token').uid || $cookies.get('auth-token').mid){
           next()
         }else{
           alert('로그인이 필요합니다.')
@@ -110,7 +110,7 @@ export default new Router({
       name: constants.URL_TYPE.USER.SURVEY,
       component: Survey,
       beforeEnter(to, from, next){
-        if(Store.state.isLoggedIn){
+        if($cookies.get('auth-token').uid){
           next()
         }else{
           alert('로그인이 필요합니다.')
