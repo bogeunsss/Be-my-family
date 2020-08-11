@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
-import com.web.blog.dao.care.AdoptionDao;
+import com.web.blog.dao.adoption.AdoptionDao;
 import com.web.blog.dao.care.CaredetailDao;
 import com.web.blog.dao.care.InterestDao;
 import com.web.blog.dao.user.UserDao;

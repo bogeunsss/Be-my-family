@@ -1,11 +1,14 @@
 package com.web.blog.controller.account;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
 
+import com.web.blog.dao.adoption.AdoptionDao;
 import com.web.blog.dao.user.UserDao;
 import com.web.blog.model.BasicResponse;
+import com.web.blog.model.adoption.Adoption;
 import com.web.blog.model.user.SignupRequest;
 import com.web.blog.model.user.User;
 import com.web.blog.security.JwtAuthenticationResult;
@@ -39,6 +42,9 @@ public class AccountController {
 
     @Autowired
     UserDao userDao;
+
+    @Autowired
+    AdoptionDao adoptionDao;
 
     @Autowired
     MailService mailService;
@@ -85,8 +91,6 @@ public class AccountController {
     @ApiOperation(value = "가입하기")
 
     public Object signup(@Valid @RequestBody SignupRequest request) {
-        // 이메일, 닉네임 중복처리 필수
-        // 회원가입단을 생성해 보세요.
 
         String nickName = request.getUid();
         String email = request.getEmail();
@@ -152,34 +156,45 @@ public class AccountController {
         return response;
     }
 
-    // 조회
     @GetMapping("/account/find")
     @ApiOperation(value = "조회하기")
     public Object find(String email) {
 
-        // userid로 확인
-        // String findUserid = request.getUid();
         ResponseEntity response = null;
+        final BasicResponse result = new BasicResponse();
 
         User newUser = userDao.getUserByEmail(email);
+
+        List<Adoption> adoptionList = null;
+
+        try{
+
+            adoptionList = adoptionDao.findByUid(newUser.getUid());
+            
+            result.status = true;
+            result.data = "success";
+            result.object = newUser;
+            result.adoptions = adoptionList;
+            result.name = newUser.getName();
+
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+  
+        }  catch(Exception e) {
+
+            result.status = false;
+            result.data = "not fount user";
+            
+            response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
         
-        final BasicResponse result = new BasicResponse();
-        
-        result.status = true;
-        result.data = "success";
-        result.object = newUser;
-        result.name = newUser.getName();
-        response = new ResponseEntity<>(result, HttpStatus.OK);
+        }
 
         return response;
     }
 
-    // 삭제
     @DeleteMapping("/account/delete")
     @ApiOperation(value = "삭제하기")
     public Object delete(String uid) {
 
-        // userid로 확인
         ResponseEntity response = null;
         userDao.deleteById(uid);
 

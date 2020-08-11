@@ -8,7 +8,6 @@
             <v-col cols="auto">
               <v-img height="300" width="300" src="https://picsum.photos/200/300" alt></v-img>
             </v-col>
-
             <v-col cols="auto" class="text-center pl-0">
               <v-row class="flex ma-0 fill-height" justify="center">
                 <div>UserID : {{ profileData.email }}</div>
@@ -37,7 +36,7 @@ import SERVER from "@/lib/constants";
 import { mapState, mapActions } from "vuex";
 import axios from "axios";
 import VueJwtDecode from "vue-jwt-decode";
-
+    
 export default {
   name: "profile",
   // props:{
@@ -45,7 +44,6 @@ export default {
   // },
   created() {
     // this.getUser()
-
     // this.isLoggedIn = this.$cookies.isKey('auth-token')
     var token = this.$cookies.get("auth-token");
     this.find(token.email);

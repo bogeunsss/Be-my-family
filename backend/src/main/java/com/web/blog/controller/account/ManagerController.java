@@ -1,26 +1,25 @@
 package com.web.blog.controller.account;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
 
+import com.web.blog.dao.adoption.AdoptionDao;
 import com.web.blog.dao.manager.ManagerDao;
-import com.web.blog.dao.user.UserDao;
 import com.web.blog.model.BasicResponse;
+import com.web.blog.model.ManagerResponse;
+import com.web.blog.model.adoption.Adoption;
 import com.web.blog.model.manager.Manager;
 import com.web.blog.model.manager.ManagerSignupRequest;
-import com.web.blog.model.user.SignupRequest;
-import com.web.blog.model.user.User;
 import com.web.blog.security.JwtAuthenticationResult;
 import com.web.blog.security.JwtTokenProvider;
 import com.web.blog.service.ManagerMailService;
-import com.web.blog.service.MailService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -45,10 +44,14 @@ public class ManagerController {
     ManagerDao managerDao;
 
     @Autowired
+    AdoptionDao adoptionDao;
+
+    @Autowired
     ManagerMailService managerMailService;
 
     @Autowired
     JwtTokenProvider tokenProvider;
+
 
     @PostMapping("/manager/login")
     @ApiOperation(value = "관리자 로그인")
@@ -58,7 +61,7 @@ public class ManagerController {
         ResponseEntity response = null;
         Optional<Manager> managerOpt = managerDao.findManagerByEmailAndPassword(email, password);
 
-        final BasicResponse result = new BasicResponse();
+        final ManagerResponse result = new ManagerResponse();
         if (managerOpt.isPresent()) {
             result.status = true;
             result.data = "success";
@@ -66,16 +69,15 @@ public class ManagerController {
             Manager manager = new Manager();
             manager.setMid(managerOpt.get().getMid());
             manager.setEmail(email);
-            manager.setPassword(password);
 
             String jwt = tokenProvider.managerToken(manager);
             result.object = new JwtAuthenticationResult(jwt);
             result.email = manager.getEmail();
-            result.uid = manager.getMid();
-            result.password = manager.getPassword();
+            result.mid = manager.getMid();
 
             response = new ResponseEntity<>(result, HttpStatus.OK);
         } else {
+            result.status = false;
             result.data = "fail";
             response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
         }
@@ -83,50 +85,80 @@ public class ManagerController {
         return response;
     }
 
-    @PostMapping("/manager/signup")
-    @ApiOperation(value = "관리자 가입하기")
-    public Object signup(@Valid @RequestBody ManagerSignupRequest request) {
-        // 이메일, 닉네임 중복처리 필수
-        // 회원가입단을 생성해 보세요.
+    @GetMapping("/manager/find")
+    @ApiOperation(value = "매니저 조회")
+    public Object find (String email) {
+        ResponseEntity response = null;
 
-        String mid = request.getMid();
-        String email = request.getEmail();
-        String password = request.getPassword();
-        String name = request.getName();
-        String phone = request.getPhone();
-        String job = request.getCareNM();
-
-        Manager emailCheck = managerDao.getManagerByEmail(email);
-        Manager midcheck = managerDao.getManagerByMid(mid);
-
-        final BasicResponse result = new BasicResponse();
-
-        if (emailCheck != null) {
-            result.status = true;
-            result.data = "emailexist";
-        } else if (midcheck != null) {
-            result.status = true;
-            result.data = "nicknameexist";
-        } else {
+        Manager checkmanager = managerDao.getManagerByEmail(email);
+        System.out.println(checkmanager);
+        final ManagerResponse result = new ManagerResponse();
+        
+        try {
             result.status = true;
             result.data = "success";
-            Manager manager = new Manager();
-            manager.setMid(mid);
-            manager.setEmail(email);
-            manager.setPassword(password);
-            manager.setName(name);
-            manager.setPhone(phone);
-            managerDao.save(manager);
-
-            if (managerMailService.managerMailSend(manager)) {
-                result.data = "emailsuccess";
-            } else {
-                result.data = "emailfail";
-            }
+            result.mid = checkmanager.getMid();
+            result.name = checkmanager.getName();
+            result.email = checkmanager.getEmail();
+            result.phone = checkmanager.getPhone();
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            result.data = "fail";
+            result.status = false;
+            response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(result, HttpStatus.OK);
+
+        return response;
+    }
+
+    @PutMapping("/manager/modify")
+    @ApiOperation(value = "매니저 정보 수정")
+    public Object modify(@Valid @RequestBody ManagerSignupRequest request) {
+        
+        ResponseEntity response = null;
+
+        Manager checkmanager = managerDao.getManagerByMid(request.getMid());
+        final ManagerResponse result = new ManagerResponse();
+        
+        try {
+            checkmanager.setEmail(request.getEmail());
+            checkmanager.setPassword(request.getPassword());
+            managerDao.save(checkmanager);
+            result.status = true;
+            result.data = "success";
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            result.data = "fail";
+            result.status = false;
+            response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+        }
+
+        return response;
     }
 
 
+    @GetMapping("/manager/adoptionList")
+    @ApiOperation(value = "입양신청목록 조회")
+    public Object adoptionList(String email) {
+        ResponseEntity response = null;
+
+        Manager checkmanager = managerDao.getManagerByEmail(email);
+        final ManagerResponse result = new ManagerResponse();
+        
+        try {
+            List<Adoption> adoptionList = adoptionDao.findByMid(checkmanager.getMid());
+            result.status = true;
+            result.data = "success";
+            result.mid = checkmanager.getMid();
+            result.adoptions = adoptionList;
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            result.data = "fail";
+            result.status = false;
+            response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+        }
+
+        return response;
+    }
 
 }
