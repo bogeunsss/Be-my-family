@@ -77,7 +77,7 @@ public class PostscriptDetailController {
                 result.status = true;
                 result.good = goodcount;
 
-                List<Comment> comment = commentDao.findByPostscriptnoOrderByPostscriptnoDesc(postscriptno);
+                List<Comment> comment = commentDao.findByPostscriptnoOrderByPostscriptno(postscriptno);
                 if(!comment.isEmpty()) {
                     result.comments = comment;
                 } else {
@@ -101,8 +101,5 @@ public class PostscriptDetailController {
         }
         return response;
     }
-
-
-
 
 }

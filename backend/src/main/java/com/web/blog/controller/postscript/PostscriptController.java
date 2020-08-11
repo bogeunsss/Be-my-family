@@ -51,7 +51,7 @@ public class PostscriptController {
     CommentDao commentDao;
 
     @GetMapping("/postscript/List")
-    @ApiOperation(value = "입양후기 리스트")
+    @ApiOperation(value = "입양후기 게시글 리스트")
     public Object postscriptList() {
 
         ResponseEntity response = null;
@@ -84,7 +84,7 @@ public class PostscriptController {
     }
 
     @PostMapping("/postscript/Add")
-    @ApiOperation(value = "입양후기 등록")
+    @ApiOperation(value = "입양후기 게시글 등록")
     public Object postscriptAdd(@RequestBody PostscriptRequest request) {
 
         ResponseEntity response = null;
@@ -153,7 +153,7 @@ public class PostscriptController {
     }
 
     @GetMapping("/postscript/Search")
-    @ApiOperation(value = "입양후기 조회")
+    @ApiOperation(value = "입양후기 게시글 검색")
     public Object postscriptSearch(@RequestParam(required = true) final String category,
             @RequestParam(required = true) final String searchText) {
 
@@ -162,9 +162,9 @@ public class PostscriptController {
         final BasicResponse result = new BasicResponse();
 
         if (category.equals("uid")) {
-            postscriptList = postscriptSearchDao.findByUidContainingOrderByPostscriptnoDesc(searchText);
+            postscriptList = postscriptSearchDao.findByUidContainingOrderByPostscriptno(searchText);
         } else if (category.equals("title")) {
-            postscriptList = postscriptSearchDao.findByTitleContainingOrderByPostscriptnoDesc(searchText);
+            postscriptList = postscriptSearchDao.findByTitleContainingOrderByPostscriptno(searchText);
         }
 
         try {
@@ -189,7 +189,7 @@ public class PostscriptController {
     }
 
     @PutMapping("/postscript/Modify")
-    @ApiOperation(value = "입양 후기 게시판 글 수정")
+    @ApiOperation(value = "입양후기 게시글 수정")
     public Object postscriptModify(@Valid @RequestBody PostscriptRequest request) {
 
         Postscript postscript = postscriptDao.getPostscriptByPostscriptno(request.getPostscriptno());
