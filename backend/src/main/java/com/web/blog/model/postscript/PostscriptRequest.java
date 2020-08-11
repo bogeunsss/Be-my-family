@@ -8,12 +8,16 @@ import lombok.Data;
 @Valid
 @Data
 public class PostscriptRequest {
+    
     @ApiModelProperty(required = true)
     String uid;
+    
     @ApiModelProperty(required = true)
     String title;
+    
     @ApiModelProperty(required = true)
     String content;
+   
     @ApiModelProperty(required = false)
     String image;
     String sido;

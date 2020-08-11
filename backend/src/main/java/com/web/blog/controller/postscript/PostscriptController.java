@@ -1,15 +1,18 @@
 package com.web.blog.controller.postscript;
 
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
 
 import com.web.blog.dao.postscript.CommentDao;
+import com.web.blog.dao.postscript.PostpicDao;
 import com.web.blog.dao.postscript.PostscriptDao;
 import com.web.blog.dao.postscript.PostscriptSearchDao;
 import com.web.blog.dao.user.UserDao;
 import com.web.blog.model.BasicResponse;
+import com.web.blog.model.postscript.Postpic;
 import com.web.blog.model.postscript.Postscript;
 import com.web.blog.model.postscript.PostscriptRequest;
 
@@ -23,7 +26,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -49,6 +54,9 @@ public class PostscriptController {
 
     @Autowired
     CommentDao commentDao;
+
+    @Autowired
+    PostpicDao postpicDao;
 
     @GetMapping("/postscript/List")
     @ApiOperation(value = "입양후기 게시글 리스트")
@@ -85,7 +93,7 @@ public class PostscriptController {
 
     @PostMapping("/postscript/Add")
     @ApiOperation(value = "입양후기 게시글 등록")
-    public Object postscriptAdd(@RequestBody PostscriptRequest request) {
+    public Object postscriptAdd(@RequestPart final List<MultipartFile> images, PostscriptRequest request) {
 
         ResponseEntity response = null;
 
@@ -110,7 +118,18 @@ public class PostscriptController {
             postscript.setGugun(checkgugun);
             postscript.setKind(checkkind);
             postscriptDao.save(postscript);
-
+            
+            for (MultipartFile file : images) {
+                final String originalfileName = file.getOriginalFilename();
+                final String filepath = "C:/Image/" + originalfileName;
+                final File dest = new File(filepath);
+                file.transferTo(dest);
+                Postpic postpic = new Postpic();
+                postpic.setPostscriptno(postscript.getPostscriptno());
+                postpic.setPostpath(filepath);
+                postpicDao.save(postpic);
+            }
+                
             result.status = true;
             result.data = "success";
             response = new ResponseEntity<>(result, HttpStatus.OK);
@@ -162,9 +181,9 @@ public class PostscriptController {
         final BasicResponse result = new BasicResponse();
 
         if (category.equals("uid")) {
-            postscriptList = postscriptSearchDao.findByUidContainingOrderByPostscriptno(searchText);
+            postscriptList = postscriptSearchDao.findByUidContainingOrderByPostscriptnoDesc(searchText);
         } else if (category.equals("title")) {
-            postscriptList = postscriptSearchDao.findByTitleContainingOrderByPostscriptno(searchText);
+            postscriptList = postscriptSearchDao.findByTitleContainingOrderByPostscriptnoDesc(searchText);
         }
 
         try {
@@ -190,7 +209,7 @@ public class PostscriptController {
 
     @PutMapping("/postscript/Modify")
     @ApiOperation(value = "입양후기 게시글 수정")
-    public Object postscriptModify(@Valid @RequestBody PostscriptRequest request) {
+    public Object postscriptModify(@RequestPart final List<MultipartFile> images, PostscriptRequest request) {
 
         Postscript postscript = postscriptDao.getPostscriptByPostscriptno(request.getPostscriptno());
         ResponseEntity response = null;
@@ -204,6 +223,19 @@ public class PostscriptController {
             postscript.setImage(request.getImage());
             postscript.setKind(request.getKind());
             postscriptDao.save(postscript);
+
+            postpicDao.deleteByPostscriptno(postscript.getPostscriptno());
+
+            for (MultipartFile file : images) {
+                final String originalfileName = file.getOriginalFilename();
+                final String filepath = "C:/Image/" + originalfileName;
+                final File dest = new File(filepath);
+                file.transferTo(dest);
+                Postpic postpic = new Postpic();
+                postpic.setPostscriptno(postscript.getPostscriptno());
+                postpic.setPostpath(filepath);
+                postpicDao.save(postpic);
+            }
 
             result.status = true;
             result.data = "success";
