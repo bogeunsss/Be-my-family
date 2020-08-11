@@ -22,6 +22,8 @@ import AdoptDetail from '@/page/adoptionPost/AdoptDetail.vue'
 import AdoptUpdate from '@/page/adoptionPost/AdoptUpdate.vue'
 import LostList from '@/page/lost/LostList.vue'
 import LostDetail from '@/page/lost/LostDetail.vue'
+import Manager from '@/page/user/Manager.vue'
+import AdoptionDetail from '@/page/user/AdoptionDetail.vue'
 
 Vue.use(Router)
 Vue.use(Vuex)
@@ -108,7 +110,7 @@ export default new Router({
       name: constants.URL_TYPE.USER.LIKE,
       component: Like,
       beforeEnter(to, from, next){
-        if(Store.state.isLoggedIn){
+        if($cookies.get('auth-token').uid){
           next()
         }else{
           alert('로그인이 필요합니다.')
@@ -136,6 +138,16 @@ export default new Router({
       path: '/lost/:articleNo',
       name: constants.URL_TYPE.LOST.LOSTDETAIL,
       component: LostDetail
+    },
+    {
+      path: '/user/manager',
+      name: constants.URL_TYPE.USER.MANAGER,
+      component: Manager
+    },
+    {
+      path: '/user/adoption/:adoptionno',
+      name: constants.URL_TYPE.USER.ADOPTIONDETAIL,
+      component: AdoptionDetail
     },
     {
       path: '/params',
