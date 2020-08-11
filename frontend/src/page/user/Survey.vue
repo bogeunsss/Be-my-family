@@ -489,7 +489,7 @@ export default {
         }, 100);
     },
     computed: {
-      ...mapState(['profileData', 'loginData']),
+      ...mapState(['profileData', 'loginData', 'sido_states', 'gugun_states']),
 
     },
     methods: {

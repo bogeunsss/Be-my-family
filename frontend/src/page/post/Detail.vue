@@ -221,6 +221,7 @@ export default {
       // console.log(formData)
         // console.log(this.date + " " + st + " " + this.dogData.desertionno + " " + this.email)
         console.log(this.$cookies.get('auth-token').email)
+        console.log(this.$cookies.get('desertionno').desertionno)
         axios.post('http://localhost:8080/adoption/Application', formData 
           // desertionno : this.$cookies.get('desertionno').desertionno,
           // email : this.$cookies.get('auth-token').email

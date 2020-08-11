@@ -141,7 +141,7 @@ export default {
         if(this.searchText === ""){
                 this.adoptList()
         }else{
-            axios.get(`http://localhost:8080/postscript/postsearch?category=${this.category}&searchText=${this.searchText}`)
+            axios.get(`http://localhost:8080/postscript/Search?category=${this.category}&searchText=${this.searchText}`)
             .then((response) =>{
                 this.adoptData = response.data.object
                 this.searchText = ""
