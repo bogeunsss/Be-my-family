@@ -6,4 +6,5 @@ public class PostscriptResponse {
     public Object object;
     public int good;
     public Object comments;
+	public boolean isGood;
 }
