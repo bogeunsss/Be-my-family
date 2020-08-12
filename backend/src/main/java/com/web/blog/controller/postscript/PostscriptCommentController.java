@@ -38,10 +38,9 @@ import io.swagger.annotations.ApiResponses;
                 @ApiResponse(code = 404, message = "Not Found", response = BasicResponse.class),
                 @ApiResponse(code = 500, message = "Failure", response = BasicResponse.class) })
 
-@CrossOrigin(origins = { "http://localhost:3000" })
 @RestController
 public class PostscriptCommentController {
-        
+
         @Autowired
         CommentDao commentDao;
 
@@ -77,9 +76,10 @@ public class PostscriptCommentController {
                 final BasicResponse result = new BasicResponse();
 
                 try {
-                        Optional<Comment> commentExist = commentDao.findByCommentnoAndUid(request.getCommentno(), request.getUid());
+                        Optional<Comment> commentExist = commentDao.findByCommentnoAndUid(request.getCommentno(),
+                                        request.getUid());
 
-                        if(commentExist.isPresent()) {
+                        if (commentExist.isPresent()) {
                                 Comment comment = new Comment();
                                 comment.setContent(request.getContent());
                                 comment.setCommentno(request.getCommentno());
@@ -98,7 +98,7 @@ public class PostscriptCommentController {
                         result.status = false;
                         response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
                 }
-                
+
                 return response;
         }
 
@@ -108,24 +108,24 @@ public class PostscriptCommentController {
 
                 ResponseEntity response = null;
                 final BasicResponse result = new BasicResponse();
-        
+
                 try {
-                    Optional<Comment> comment = commentDao.findByCommentnoAndUid(commentno, uid);
-                    if(comment.isPresent()) {
-                        commentDao.deleteByCommentnoAndUid(commentno, uid);
-                        result.data = "success";
-                    } else {
-                        result.data = "comment not exist";
-                    }
-                    result.status = true;
-                    response = new ResponseEntity<>(result, HttpStatus.OK);
+                        Optional<Comment> comment = commentDao.findByCommentnoAndUid(commentno, uid);
+                        if (comment.isPresent()) {
+                                commentDao.deleteByCommentnoAndUid(commentno, uid);
+                                result.data = "success";
+                        } else {
+                                result.data = "comment not exist";
+                        }
+                        result.status = true;
+                        response = new ResponseEntity<>(result, HttpStatus.OK);
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    result.status = false;
-                    result.data = "fail";
-                    response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+                        e.printStackTrace();
+                        result.status = false;
+                        result.data = "fail";
+                        response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
                 }
-        
+
                 return response;
         }
 }
