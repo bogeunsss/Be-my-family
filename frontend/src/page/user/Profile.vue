@@ -113,7 +113,7 @@ export default {
       this.$router.push({name:constants.URL_TYPE.POST.DETAIL})
     },
     getManagerFind() {
-      axios.get('http://i3b201.p.ssafy.io/api/manager/find', {params : {
+      axios.get(constants.SERVER_URL + '/manager/find', {params : {
         email : this.$cookies.get('auth-token').email
       }})
       .then((res) => {

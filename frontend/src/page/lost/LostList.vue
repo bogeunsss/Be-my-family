@@ -250,7 +250,7 @@ export default {
   },
   methods: {
     getList(){
-      axios.get('http://i3b201.p.ssafy.io/api/lost/list')
+      axios.get(constants.SERVER_URL + '/lost/list')
       .then(response => {
         // console.log(response.data.object[0].lostpic1)
         this.cards = response.data.object
@@ -301,7 +301,7 @@ export default {
       // FormData.entries()를 이용하여 key : value 쌍을 뽑아야 함.
       
       console.log(this.images)
-      axios.post('http://i3b201.p.ssafy.io/api/lost/add', formData, {
+      axios.post(constants.SERVER_URL + '/lost/add', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -344,7 +344,7 @@ export default {
       }
     },
     search(){
-      axios.get('http://i3b201.p.ssafy.io/api/lost/search?tags='+this.searchTags)
+      axios.get(constants.SERVER_URL + '/lost/search?tags='+this.searchTags)
         .then(response => {
           var temp = []
           for(var x in response.data.object){

@@ -107,7 +107,7 @@ export default {
             if(this.searchText === ""){
                     this.mainList()
             }else{
-                axios.get(`http://i3b201.p.ssafy.io/api/care/search?category=${this.category}&searchText=${this.searchText}`)
+                axios.get(constants.SERVER_URL + `/care/search?category=${this.category}&searchText=${this.searchText}`)
                 .then((response) =>{
                     this.setSearchDogs(response.data.object)
                     if(!this.dogData){this.isSearched=true}

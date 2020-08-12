@@ -80,7 +80,7 @@ export default {
     ...mapActions(['find' ,"isLoggedInChecker"]),
     getInterest() {
       axios
-        .get(`http://i3b201.p.ssafy.io/api/care/interestList`, {
+        .get(constants.SERVER_URL + `/care/interestList`, {
           params: {
             uid: this.$cookies.get('auth-token').uid,
           },
@@ -96,7 +96,7 @@ export default {
     getInformation(desertionno_no) {
       console.log(desertionno_no)
       axios
-        .get(`http://i3b201.p.ssafy.io/api/care/detailUser`, {
+        .get(constants.SERVER_URL + `/care/detailUser`, {
           params: {
             desertionno: desertionno_no,
             uid: this.profileData.nickName,
@@ -125,7 +125,7 @@ export default {
       // console.log(formData)
       const uidd = this.$store.state.profileData.nickName
       axios
-        .delete(`http://i3b201.p.ssafy.io/api/care/interestDelete`, { params:{
+        .delete(constants.SERVER_URL + `/care/interestDelete`, { params:{
           uid: uidd,
           desertionno: index.desertionno,
         }})
