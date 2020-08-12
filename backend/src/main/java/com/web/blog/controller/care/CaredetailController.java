@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
-import com.web.blog.dao.care.AdoptionDao;
+import com.web.blog.dao.adoption.AdoptionDao;
 import com.web.blog.dao.care.CaredetailDao;
 import com.web.blog.dao.care.InterestDao;
 import com.web.blog.dao.user.UserDao;
@@ -40,7 +40,7 @@ import io.swagger.annotations.ApiResponses;
         @ApiResponse(code = 404, message = "Not Found", response = BasicResponse.class),
         @ApiResponse(code = 500, message = "Failure", response = BasicResponse.class) })
 
-@CrossOrigin(origins = { "http://localhost:3000" })
+@CrossOrigin(origins = { "http://i3b201.p.ssafy.io" })
 @RestController
 public class CaredetailController {
     @Autowired

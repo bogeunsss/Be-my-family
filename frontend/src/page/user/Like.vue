@@ -72,22 +72,17 @@ export default {
     ...mapState(["profileData"]),
   },
   created() {
-    this.getInterest()
-    // this.getInformation()
+    if(this.$cookies.isKey('auth-token')){
+      this.getInterest()
+    }
   },
   methods: {
-    ...mapActions(['find']),
+    ...mapActions(['find' ,"isLoggedInChecker"]),
     getInterest() {
-      if(this.$cookies.isKey("auth-token")){
-        var token = this.$cookies.get('auth-token')
-        this.email = token.email
-        this.find(this.email)
-      }
       axios
-        .get(`http://localhost:8080/care/interestList`, {
+        .get(`http://i3b201.p.ssafy.io/api/care/interestList`, {
           params: {
-            // uid: this.$store.state.profileData.nickName,
-            uid: this.$cookies.get('nickName'),
+            uid: this.$cookies.get('auth-token').uid,
           },
         })
         .then((response) => {
@@ -101,7 +96,7 @@ export default {
     getInformation(desertionno_no) {
       console.log(desertionno_no)
       axios
-        .get(`http://localhost:8080/care/detailUser`, {
+        .get(`http://i3b201.p.ssafy.io/api/care/detailUser`, {
           params: {
             desertionno: desertionno_no,
             uid: this.profileData.nickName,
@@ -130,7 +125,7 @@ export default {
       // console.log(formData)
       const uidd = this.$store.state.profileData.nickName
       axios
-        .delete(`http://localhost:8080/care/interestDelete`, { params:{
+        .delete(`http://i3b201.p.ssafy.io/api/care/interestDelete`, { params:{
           uid: uidd,
           desertionno: index.desertionno,
         }})

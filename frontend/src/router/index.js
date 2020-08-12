@@ -18,8 +18,12 @@ import List from '@/page/post/List.vue'
 import Detail from '@/page/post/Detail.vue'
 import AdoptList from '@/page/adoptionPost/AdoptList.vue'
 import AdoptCreate from '@/page/adoptionPost/AdoptCreate.vue'
+import AdoptDetail from '@/page/adoptionPost/AdoptDetail.vue'
+import AdoptUpdate from '@/page/adoptionPost/AdoptUpdate.vue'
 import LostList from '@/page/lost/LostList.vue'
 import LostDetail from '@/page/lost/LostDetail.vue'
+import Manager from '@/page/user/Manager.vue'
+import AdoptionDetail from '@/page/user/AdoptionDetail.vue'
 
 Vue.use(Router)
 Vue.use(Vuex)
@@ -47,7 +51,7 @@ export default new Router({
       component: Profile,
       props: true,
       beforeEnter(to, from, next){
-        if(Store.state.isLoggedIn){
+        if($cookies.get('auth-token').uid || $cookies.get('auth-token').mid){
           next()
         }else{
           alert('로그인이 필요합니다.')
@@ -59,7 +63,7 @@ export default new Router({
       name: constants.URL_TYPE.USER.UPDATE,
       component: Update,
       beforeEnter(to, from, next){
-        if(Store.state.isLoggedIn){
+        if($cookies.get('auth-token').uid || $cookies.get('auth-token').mid){
           next()
         }else{
           alert('로그인이 필요합니다.')
@@ -87,6 +91,16 @@ export default new Router({
       component: AdoptCreate
     },
     {
+      path: '/AdoptDetail/:ID/AdoptUpdate',
+      name: constants.URL_TYPE.ADOPTIONPOST.ADOPTUPDATE,
+      component: AdoptUpdate
+    },
+    {
+      path: '/AdoptDetail/:ID',
+      name: constants.URL_TYPE.ADOPTIONPOST.ADOPTDETAIL,
+      component: AdoptDetail
+    },
+    {
       path: '/detail',
       name: constants.URL_TYPE.POST.DETAIL,
       component: Detail
@@ -96,7 +110,7 @@ export default new Router({
       name: constants.URL_TYPE.USER.LIKE,
       component: Like,
       beforeEnter(to, from, next){
-        if(Store.state.isLoggedIn){
+        if($cookies.isKey('auth-token')){
           next()
         }else{
           alert('로그인이 필요합니다.')
@@ -108,7 +122,7 @@ export default new Router({
       name: constants.URL_TYPE.USER.SURVEY,
       component: Survey,
       beforeEnter(to, from, next){
-        if(Store.state.isLoggedIn){
+        if($cookies.get('auth-token').uid){
           next()
         }else{
           alert('로그인이 필요합니다.')
@@ -124,6 +138,16 @@ export default new Router({
       path: '/lost/:articleNo',
       name: constants.URL_TYPE.LOST.LOSTDETAIL,
       component: LostDetail
+    },
+    {
+      path: '/user/manager',
+      name: constants.URL_TYPE.USER.MANAGER,
+      component: Manager
+    },
+    {
+      path: '/user/adoption/:adoptionno',
+      name: constants.URL_TYPE.USER.ADOPTIONDETAIL,
+      component: AdoptionDetail
     },
     {
       path: '/params',

@@ -35,7 +35,8 @@ export default new Vuex.Store({
     loginData: {
       token:'',
       email: null,
-      password: null
+      password: null,
+      isManager:null,
     },
     profileData: {
       email: null,
@@ -49,6 +50,7 @@ export default new Vuex.Store({
       birthdate:null,
     },
     dogData: [],
+
     sido_states: [
       '서울특별시', '부산광역시', '인천광역시', '대전광역시',
       '대구광역시', '울산광역시', '광주광역시', '세종특별자치시',
@@ -163,6 +165,10 @@ export default new Vuex.Store({
     },
     checkLoggedIn(state, check){
       state.isLoggedIn = check
+    },
+
+    getProfileData(state){
+      return state.profileData
     }
 
     // isLoggedInChanged(state){
@@ -230,6 +236,7 @@ export default new Vuex.Store({
       }
     },
     login({ commit, state }, loginData){
+      console.log(loginData)
       let formData = new FormData()
       formData.append('email', loginData.email)
       formData.append('password', loginData.password)
@@ -243,6 +250,7 @@ export default new Vuex.Store({
         alert("이메일 형식을 확인하세요");
       }
       else {
+        if(loginData.isManager=='radio-1'){
       axios.post(SERVER.SERVER_URL +'/account/login ', formData)
       .then(response => {
         if(response.status == 200){
@@ -254,9 +262,36 @@ export default new Vuex.Store({
             alert("로그인 성공");
             state.dialog = false
             state.isLoggedIn = true
+            // state.isManager = false
             cookies.set('auth-token', {
               token:response.data.object.accessToken,
-              email:response.data.email
+              email:response.data.email,
+              uid:response.data.uid
+            })
+            state.authToken = cookies.get('auth-token')
+            // router.push({name:constants.URL_TYPE.POST.MAIN})
+            router.go()
+          }
+        })
+        .catch((error)=>{
+          alert("로그인 실패");
+          console.log(error)
+          state.dialog = false;
+        })
+      }else{
+        axios.post(SERVER.SERVER_URL +'/manager/login ', formData)
+      .then(response => {
+        if(response.status == 200){
+            state.dialog = true
+            console.log(response)
+            alert("로그인 성공");
+            state.dialog = false
+            state.isLoggedIn = true
+            cookies.set('auth-token', {
+              token:response.data.object.accessToken,
+              email:response.data.email,
+              uid:response.data.uid,
+              mid:response.data.mid
             })
             state.authToken = cookies.get('auth-token')
             router.push({name:constants.URL_TYPE.POST.MAIN})
@@ -267,9 +302,9 @@ export default new Vuex.Store({
           alert("로그인 실패");
           console.log(error)
           state.dialog = false;
-          // router.push({name: 'Params', params: {name: error.response.status}});
         })
-      } 
+      }
+    }
     },
     logout({ commit, state }){
       state.authToken = null
@@ -278,11 +313,10 @@ export default new Vuex.Store({
     },
     // 데이터 조회할때 유저 null 값 나옴
     find({commit, state}, email){
-      // console.log(loginData)
       axios.get(SERVER.SERVER_URL + '/account/find?email=' + email)
       .then(response=>{
         state.profileData.email = response.data.object.email
-        state.profileData.name = response.data.object.name
+        state.profileData.name = response.data.name
         state.profileData.job = response.data.object.job
         state.profileData.phone = response.data.object.phone
         if(response.data.object.marriaged){
@@ -308,7 +342,6 @@ export default new Vuex.Store({
         
         state.profileData.nickName = response.data.object.uid
         state.profileData.password = response.data.object.password
-        // console.log(response)
       })
       .catch(err=>console.log(err))
     },
@@ -324,7 +357,7 @@ export default new Vuex.Store({
     },
     userUpdate({commit}, userData){
       console.log(userData)
-      axios.put(`http://localhost:8080/account/update`,{
+      axios.put(`http://i3b201.p.ssafy.io/api/account/update`,{
           uid:userData.nickName,
           email:userData.email,
           password:userData.password
@@ -337,7 +370,7 @@ export default new Vuex.Store({
     },
     mainList({commit, state}){
       axios
-        .get("http://localhost:8080/care/list")
+        .get("http://i3b201.p.ssafy.io/api/care/list")
         .then((res) =>{
             state.dogData = res.data.object
             // state.dogData = res.data.object
@@ -350,9 +383,19 @@ export default new Vuex.Store({
     setSearchDogs({commit}, payload){
       commit('setSearchDogs', payload)
     },
+
     isLoggedInChecker({commit}, payload){
       commit('checkLoggedIn', payload)
     },
+    isManagerChecker({commit}, payload){
+      commit('checkManager', payload)
+    },
+    getProfile({commit}){
+      let pro = commit('getProfileData')
+      console.log("액션에서 ")
+      console.log(pro)
+      return commit('getProfileData')
+    }
   },
 
   modules: {

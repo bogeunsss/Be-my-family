@@ -27,7 +27,7 @@ import io.swagger.annotations.ApiResponses;
         @ApiResponse(code = 404, message = "Not Found", response = BasicResponse.class),
         @ApiResponse(code = 500, message = "Failure", response = BasicResponse.class) })
 
-@CrossOrigin(origins = { "http://localhost:3000" })
+@CrossOrigin(origins = { "http://i3b201.p.ssafy.io" })
 @RestController
 public class InterestController {
    
@@ -44,7 +44,7 @@ public class InterestController {
         final BasicResponse result = new BasicResponse();
         interestlist = interestDao.findByUid(uid);
 
-        if(interestlist!=null) {
+        if(!interestlist.isEmpty()) {
             result.status = true;
             result.data = "success";
             result.object = interestlist;

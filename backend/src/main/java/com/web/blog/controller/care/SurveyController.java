@@ -28,7 +28,7 @@ import io.swagger.annotations.ApiResponses;
         @ApiResponse(code = 404, message = "Not Found", response = BasicResponse.class),
         @ApiResponse(code = 500, message = "Failure", response = BasicResponse.class) })
 
-@CrossOrigin(origins = { "http://localhost:3000" })
+@CrossOrigin(origins = { "http://i3b201.p.ssafy.io" })
 @RestController
 
 public class SurveyController {
@@ -66,9 +66,10 @@ public class SurveyController {
 
         ResponseEntity response = null;
         final BasicResponse result = new BasicResponse();
-
+        System.out.println(uid);
         try {
             Optional<Survey> mySurvey = surveyDao.findByUid(uid);
+            System.out.println(mySurvey);
             if(mySurvey.isPresent()) {
                 result.status = true;
                 result.data = "success";

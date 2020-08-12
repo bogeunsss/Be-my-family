@@ -1,6 +1,6 @@
 export default {
     TITLE: 'SSAFY 유기견입양 블로그',
-    SERVER_URL : "http://localhost:8080",
+    SERVER_URL : "http://i3b201.p.ssafy.io/api",
     URL_TYPE: {
         MAIN : "main",
         USER: {
@@ -11,6 +11,8 @@ export default {
             JOINSUCCESS: 'joinSuccess',
             LIKE : 'like',
             SURVEY : 'survey',
+            MANAGER : 'manager',
+            ADOPTIONDETAIL:'adoptiondetail'
         },
         POST: {
             LIST:"list",
@@ -18,7 +20,9 @@ export default {
         },
         ADOPTIONPOST:{
             ADOPTLIST: "AdoptList",
-            ADOPTCREATE: "AdoptCreate"
+            ADOPTCREATE: "AdoptCreate",
+            ADOPTDETAIL: "AdoptDetail",
+            ADOPTUPDATE: "AdoptUpdate"
         },
         LOST: {
             LOSTLIST:'lostList',

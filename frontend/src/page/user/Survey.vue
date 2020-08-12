@@ -5,10 +5,9 @@
     <i class="fas fa-pencil-alt" style="font-size:30px"></i><h2 class="ml-3">설문을 작성해주세요.</h2>
       </div> 
     <form>
-    1. 신청인 성명: {{ profileData.name }}
+    1. 신청인 성명: 
     <v-text-field
-      v-model="name"
-      label="Name"
+      v-model="profileData.name"
     ></v-text-field>
     2. 성별: 
     <v-text-field
@@ -471,7 +470,7 @@
 import constants from "../../lib/constants";
 import SERVER from "@/lib/constants";
 import axios from "axios";
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 import VueJwtDecode from 'vue-jwt-decode'
 
 export default {
@@ -479,25 +478,31 @@ export default {
     created(){
       var token = this.$cookies.get('auth-token')
       this.find(token.email)
-      axios.get("http://localhost:8080/care/survey?uid="+this.profileData.nickName)
-      .then((response) =>{
-        if(response.data.object !== null){
-          this.survey = response.data.object
-        }
-        console.log(response)
-      })
+    },
+    mounted() {
+      setTimeout(() => {
+        console.log(this.profileData.nickName)
+        axios.get("http://i3b201.p.ssafy.io/api/care/survey?uid="+this.profileData.nickName)
+        .then((response) =>{
+          if(response.data.data !== 'uid not exist'){
+            this.survey = response.data.object
+          }
+          console.log(response);
+        })
+      }, 100);
     },
     computed: {
       ...mapState(['profileData', 'loginData', 'sido_states', 'gugun_states']),
+
     },
     methods: {
-        ...mapActions(['find']),
+      ...mapActions(['find', 'getProfile']),
         submit(){
           if(this.checkbox) {
             console.log('된다')
             this.survey.uid = this.profileData.nickName
             axios
-              .post("http://localhost:8080/care/surveyAdd", this.survey)
+              .post("http://i3b201.p.ssafy.io/api/care/surveyAdd", this.survey)
               .then((response) =>{
                 console.log(response.data);
               }).catch((error) =>{
@@ -507,6 +512,9 @@ export default {
             alert('동의해주세요!')
             console.log('자자')
           }
+        },
+        getProfileData(){
+          this.getProfile()
         }
     },
     data(){
