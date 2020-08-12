@@ -56,7 +56,7 @@
       <div v-if="!$cookies.get('auth-token').mid">
         <h2>유기견 신청 목록</h2>
 
-        <v-row class="mb-5">
+        <!-- <v-row class="mb-5">
           <v-col v-for="adoption in adoptionList" :key="adoption.id">
             <v-card @click="goDetail">
               <v-card-text class="d-flex">
@@ -68,7 +68,7 @@
               </v-card-text>
             </v-card>
           </v-col>
-        </v-row>
+        </v-row> -->
       </div>
     </v-container>
   </div>
@@ -95,7 +95,7 @@ export default {
     var token = this.$cookies.get("auth-token");
     if(this.$cookies.get('auth-token').uid){
       this.find(token.email);
-      this.getAdoption();
+      // this.getAdoption();
     }else{
       this.getManagerFind(token.email)
     }
@@ -108,19 +108,6 @@ export default {
     userAccountDelete() {
       this.userDelete(this.profileData.nickName);
       this.logout();
-    },
-    getAdoption() {
-      if(this.$cookies.get('auth-token').uid){
-        axios
-        .get("http://localhost:8080/account/adoptionList", {
-          params: { email: this.$cookies.get("auth-token").email },
-        })
-        .then((res) => {
-          console.log(res.data.object);
-          this.adoptionList = res.data.object;
-        })
-        .catch((err) => console.log(err));
-      }
     },
     goDetail(){
       this.$router.push({name:constants.URL_TYPE.POST.DETAIL})

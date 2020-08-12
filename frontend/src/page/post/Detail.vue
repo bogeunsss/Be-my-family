@@ -351,11 +351,15 @@ export default {
         var formData = new FormData()
         formData.append('fixdate', this.date)
         formData.append('fixtime', st)
-        formData.append('survey', this.survey)
-        formData.append('user', this.user)
+        formData.append('uid', this.profileData.uid)
+        formData.append('desertionno', this.$cookies.get('auth-token').desertionno)
 
-        axios.post('http://localhost:8080/adoption/Success')
-        
+        axios.post('http://localhost:8080/adoption/Success', formData)
+          .then(response => {
+
+          }).catch(error => {
+
+          })
         this.dialog = false
       },
     likeDog() {
