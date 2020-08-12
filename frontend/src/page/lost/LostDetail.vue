@@ -259,7 +259,7 @@ import { mapState } from 'vuex'
 export default {
     created(){
         console.log(this.$route.params.articleNo)
-        axios.get(`http://localhost:8080/lost/detail?lostno=${this.lostno}`)
+        axios.get(`http://i3b201.p.ssafy.io/api/lost/detail?lostno=${this.lostno}`)
             .then(response => {
                 console.log(response)
                 let result = response.data.object
@@ -306,7 +306,7 @@ export default {
             }).catch(error => {
                 console.log(error)
             })
-        axios.get(`http://localhost:8080/lost/match?lostno=${this.lostno}`)
+        axios.get(`http://i3b201.p.ssafy.io/api/lost/match?lostno=${this.lostno}`)
             .then(response => {
                 // console.log(response)
                 if(response.data.match.length){
@@ -394,7 +394,7 @@ export default {
     },
     methods:{
         deleteLost(){
-            axios.delete(`http://localhost:8080/lost/delete?lostno=${this.$route.params.articleNo}&uid=${this.writer}`)
+            axios.delete(`http://i3b201.p.ssafy.io/api/lost/delete?lostno=${this.$route.params.articleNo}&uid=${this.writer}`)
                 .then(response => {
                     alert('삭제되었습니다.')
                     this.$router.push({name: constants.URL_TYPE.LOST.LOSTLIST})
@@ -461,7 +461,7 @@ export default {
             // FormData.entries()를 이용하여 key : value 쌍을 뽑아야 함.
             
             console.log(this.images)
-            axios.post('http://localhost:8080/lost/add', formData, {
+            axios.post('http://i3b201.p.ssafy.io/api/lost/add', formData, {
                 headers: {
                 'Content-Type': 'multipart/form-data'
                 }
@@ -480,7 +480,7 @@ export default {
             console.log(this.lostTags)
         },
         getCommentList(){
-            axios.get(`http://localhost:8080/lost/detail?lostno=${this.lostno}`)
+            axios.get(`http://i3b201.p.ssafy.io/api/lost/detail?lostno=${this.lostno}`)
                 .then(response => {
                     this.lostReplies = response.data.lostReply
                 }).catch(error => {
@@ -488,7 +488,7 @@ export default {
                 })
         },
         commentCreate(){
-            axios.post('http://localhost:8080/lost/reply/add', {
+            axios.post('http://i3b201.p.ssafy.io/api/lost/reply/add', {
                 uid: this.profileData.nickName,
                 lostno: this.$route.params.articleNo,
                 lostcontent: this.comment,
@@ -502,7 +502,7 @@ export default {
                 this.comment = ''
         },
         commentModify(content, contentNo){
-            axios.post('http://localhost:8080/lost/reply/add', {
+            axios.post('http://i3b201.p.ssafy.io/api/lost/reply/add', {
                 uid: this.profileData.nickName,
                 lostno: this.$route.params.articleNo,
                 lostcontent: content,
@@ -517,7 +517,7 @@ export default {
                 })
         },
         commentDelete(replyno){
-            axios.delete(`http://localhost:8080/lost/reply/delete?lostreplyno=${replyno}&uid=${this.profileData.nickName}`)
+            axios.delete(`http://i3b201.p.ssafy.io/api/lost/reply/delete?lostreplyno=${replyno}&uid=${this.profileData.nickName}`)
                 .then(response => {
                     if(response.data.data === 'success'){
                         this.getCommentList()
