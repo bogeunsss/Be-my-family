@@ -196,6 +196,15 @@
                             <v-text-field v-model="modifiedComment" @keyup.enter="commentCreate"></v-text-field>
                         </v-tooltip> -->
                         <v-col cols="1" class="d-flex">
+                            <v-menu top :close-on-content-click="closeOnContentClick">
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-icon v-bind="attrs" v-on="on">mdi-pencil-circle-outline</v-icon>
+                                </template>
+                                <v-card class="d-flex">
+                                    <input type="text" v-model="lostReply.lostreplycontent">
+                                    <v-chip label @click="commentModify(lostReply.lostreplycontent, lostReply.lostreplyno)">수정</v-chip>
+                                </v-card>
+                            </v-menu>
                             <!-- <v-speed-dial direction="top" open-on-hover="false" transition="scale-transition">
                                 <template v-slot:activator>
                                     <v-icon>mdi-pencil-circle-outline</v-icon>
@@ -203,7 +212,7 @@
                                 <v-text-field v-model="modifiedComment" @keyup.enter="commentCreate"></v-text-field>
                             </v-speed-dial> -->
 
-                            
+
                             <!-- 수정 간지나는거 찾아보기 -->
                             <v-icon @click="commentDelete(lostReply.lostreplyno)" v-if="lostReply.uid === profileData.nickName" color="red">mdi-close-circle-outline</v-icon>
                         </v-col>
@@ -238,6 +247,7 @@
             </v-speed-dial>
         </v-card>
     </div>
+    <v-snackbar v-model="snackbar" timeout="2000">수정되었습니다.</v-snackbar>
   </div>
 </template>
 
@@ -266,18 +276,23 @@ export default {
                 this.lostPlace = result.lostplace
                 this.lostSex = result.lostsex
                 this.lostAge = result.lostage
+                this.lostTags = []
                 this.madeTags = []
                 var temp = []
                 for(var x=0;x<response.data.madetag.length;x++){
                     temp.push(response.data.madetag[x].tagname)
                 }
                 this.madeTags = temp
-                this.lostTags = []
                 var temp2 = []
+                var temp3 = []
                 for(var x=0;x<response.data.tag.length;x++){
-                    temp2.push(response.data.tag[x].tagname)
+                    if(this.madeTags.indexOf(response.data.tag[x].tagname) < 0){
+                        temp2.push(response.data.tag[x].tagname)
+                    }
+                    temp3.push(response.data.tag[x].tagname)
                 }
-                this.lostTags = temp2
+                this.madeTags = temp2
+                this.lostTags = temp3
                 this.images = result.lostpic1
                 this.content = result.lostcontent
                 this.writer = result.uid
@@ -286,6 +301,8 @@ export default {
                         this.isWriter = true
                     }
                 }
+                console.log(this.lostTags)
+                console.log(this.madeTags)
             }).catch(error => {
                 console.log(error)
             })
@@ -369,8 +386,10 @@ export default {
             transition: 'scale-transition',
             comment: '',
             lostReplies: [],
-            modifyTooltip: false,
+            modifyDialog: false,
             modifiedComment: '',
+            closeOnContentClick: false,
+            snackbar: false,
         }
     },
     methods:{
@@ -469,9 +488,6 @@ export default {
                 })
         },
         commentCreate(){
-            if(this.modifiedComment !== ''){
-                this.comment = this.modifiedComment
-            }
             axios.post('http://localhost:8080/lost/reply/add', {
                 uid: this.profileData.nickName,
                 lostno: this.$route.params.articleNo,
@@ -484,7 +500,21 @@ export default {
                     console.log(error)
                 })
                 this.comment = ''
-                this.modifiedComment = ''
+        },
+        commentModify(content, contentNo){
+            axios.post('http://localhost:8080/lost/reply/add', {
+                uid: this.profileData.nickName,
+                lostno: this.$route.params.articleNo,
+                lostcontent: content,
+                lostreplyno: contentNo,
+                }).then(response => {
+                    if(response.data.data === 'success'){
+                        this.getCommentList()
+                    }
+                    this.snackbar = !this.snackbar
+                }).catch(error => {
+                    console.log(error)
+                })
         },
         commentDelete(replyno){
             axios.delete(`http://localhost:8080/lost/reply/delete?lostreplyno=${replyno}&uid=${this.profileData.nickName}`)

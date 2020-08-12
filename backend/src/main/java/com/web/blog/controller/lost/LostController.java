@@ -125,8 +125,7 @@ public class LostController {
                 Losttag tag = new Losttag();
                 tag.setLostno(lost.getLostno());
                 tag.setTagname(tagname);
-                tag.setFlag(0);
-                System.out.println("tag =======>" + tag);
+                tag.setFlag(1);
                 losttagDao.save(tag);
             }
 
