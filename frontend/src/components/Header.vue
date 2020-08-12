@@ -206,7 +206,7 @@ export default {
       this.$store.state.loginData.isManager = radios
       // console.log()
       this.login(this.$store.state.loginData);
-      this.$router.push({ name: constants.URL_TYPE.MAIN });
+      // this.$router.push({ name: constants.URL_TYPE.MAIN });
     },
     Logout() {
       this.logout();

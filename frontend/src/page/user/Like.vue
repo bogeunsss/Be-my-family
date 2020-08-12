@@ -72,7 +72,9 @@ export default {
     ...mapState(["profileData"]),
   },
   created() {
-    this.getInterest()
+    if(this.$cookies.isKey('auth-token')){
+      this.getInterest()
+    }
   },
   methods: {
     ...mapActions(['find' ,"isLoggedInChecker"]),

@@ -109,7 +109,7 @@
             </v-card-text>
             <v-card-actions>
               <!-- @click 에다가 신청서 보내는 비동기 요청 함수 달기. -->
-              <v-btn color="primary" text @click="requestComplete">신청완료</v-btn>
+              <v-btn color="primary" text>신청완료</v-btn>
               <v-btn color="primary" text @click="dialog = false">취소</v-btn>
             </v-card-actions>
           </v-card>
@@ -182,101 +182,101 @@ export default {
         formData.append('desertionno', this.$cookies.get('desertionno').desertionno)
         console.log(this.$cookies.get('auth-token').email)
         console.log(this.$cookies.get('desertionno').desertionno)
-        axios.post('http://localhost:8080/adoption/Application', formData)
-          .then(response => {
-            console.log(response)  
-            this.user = response.data.user
-            this.survey = response.data.survey
-            if(response.data.user.sex){
-              this.user.sex = '여자'
-            }else{
-              this.user.sex = '남자'
-            }
+        // axios.post('http://localhost:8080/adoption/Application', formData)
+        //   .then(response => {
+        //     console.log(response)  
+        //     this.user = response.data.user
+        //     this.survey = response.data.survey
+        //     if(response.data.user.sex){
+        //       this.user.sex = '여자'
+        //     }else{
+        //       this.user.sex = '남자'
+        //     }
 
-            if(response.data.user.marriaged){
-              this.user.marriaged = '기혼'
-            }else{
-              this.user.marriaged = '미혼'
-            }
+        //     if(response.data.user.marriaged){
+        //       this.user.marriaged = '기혼'
+        //     }else{
+        //       this.user.marriaged = '미혼'
+        //     }
 
-            var data = new Date();
-            var year = data.getFullYear();
-            var count = new Date(response.data.user.birthdate);
-            var year2 = count.getFullYear();
-            var result = year - year2 + 1
-            this.userAge = result.toString()
+        //     var data = new Date();
+        //     var year = data.getFullYear();
+        //     var count = new Date(response.data.user.birthdate);
+        //     var year2 = count.getFullYear();
+        //     var result = year - year2 + 1
+        //     this.userAge = result.toString()
 
-            if(response.data.survey.nation === 'korea'){
-              this.survey.nation = '한국'
-            }else{
-              this.survey.nation = '외국'
-            }
+        //     if(response.data.survey.nation === 'korea'){
+        //       this.survey.nation = '한국'
+        //     }else{
+        //       this.survey.nation = '외국'
+        //     }
 
-            if(response.data.survey.place === 'home'){
-              this.survey.place = '가정 집 안'
-            }else if(response.data.survey.place === 'garden_o'){
-              this.survey.place = '마당(펜스 O)'
-            }else if(response.data.survey.place === 'garden_x'){
-              this.survey.place = '마당(펜스 X)'
-            }else{
-              this.survey.place = '그 외 사업장'
-            }
+        //     if(response.data.survey.place === 'home'){
+        //       this.survey.place = '가정 집 안'
+        //     }else if(response.data.survey.place === 'garden_o'){
+        //       this.survey.place = '마당(펜스 O)'
+        //     }else if(response.data.survey.place === 'garden_x'){
+        //       this.survey.place = '마당(펜스 X)'
+        //     }else{
+        //       this.survey.place = '그 외 사업장'
+        //     }
 
-            if(response.data.survey.beforeover){
-              this.survey.beforeover = '예'
-            }else{
-              this.survey.beforeover = '아니오'
-            }
+        //     if(response.data.survey.beforeover){
+        //       this.survey.beforeover = '예'
+        //     }else{
+        //       this.survey.beforeover = '아니오'
+        //     }
 
-            if(response.data.survey.beforeadopt){
-              this.survey.beforeadopt = '예'
-            }else{
-              this.survey.beforeadopt = '아니오'
-            }
+        //     if(response.data.survey.beforeadopt){
+        //       this.survey.beforeadopt = '예'
+        //     }else{
+        //       this.survey.beforeadopt = '아니오'
+        //     }
 
-            if(response.data.survey.familyagree){
-              this.survey.familyagree = '예'
-            }else{
-              this.survey.familyagree = '아니오'
-            }
+        //     if(response.data.survey.familyagree){
+        //       this.survey.familyagree = '예'
+        //     }else{
+        //       this.survey.familyagree = '아니오'
+        //     }
 
-            if(response.data.survey.dissolution === 1){
-              this.survey.dissolution = '1회'
-            }else if(response.data.survey.dissolution === 2){
-              this.survey.dissolution = '2회 이상'
-            }else{
-              this.survey.dissolution = '없음'
-            }
+        //     if(response.data.survey.dissolution === 1){
+        //       this.survey.dissolution = '1회'
+        //     }else if(response.data.survey.dissolution === 2){
+        //       this.survey.dissolution = '2회 이상'
+        //     }else{
+        //       this.survey.dissolution = '없음'
+        //     }
 
-            if(response.data.survey.sickness){
-              this.survey.sickness = '예'
-            }else{
-              this.survey.sickness = '아니오'
-            }
+        //     if(response.data.survey.sickness){
+        //       this.survey.sickness = '예'
+        //     }else{
+        //       this.survey.sickness = '아니오'
+        //     }
 
-            if(response.data.survey.temp === 'family'){
-              this.survey.temp = '가족'
-            }else if(response.data.survey.temp === 'hotel'){
-              this.survey.temp = '호텔'
-            }else if(response.data.survey.temp === 'friend'){
-              this.survey.temp = '지인'
-            }else{
-              this.survey.temp = '없음'
-            }
+        //     if(response.data.survey.temp === 'family'){
+        //       this.survey.temp = '가족'
+        //     }else if(response.data.survey.temp === 'hotel'){
+        //       this.survey.temp = '호텔'
+        //     }else if(response.data.survey.temp === 'friend'){
+        //       this.survey.temp = '지인'
+        //     }else{
+        //       this.survey.temp = '없음'
+        //     }
 
-            if(response.data.survey.house === 'room'){
-              this.survey.house = '원룸'
-            }else if(response.data.survey.house === 'housing'){
-              this.survey.house = '주택'
-            }else if(response.data.survey.house === 'apt'){
-              this.survey.house = '아파트'
-            }else{
-              this.survey.house = '다세대/빌라'
-            }
-          })
-          .catch(error => {
-              console.log(error)
-          })
+        //     if(response.data.survey.house === 'room'){
+        //       this.survey.house = '원룸'
+        //     }else if(response.data.survey.house === 'housing'){
+        //       this.survey.house = '주택'
+        //     }else if(response.data.survey.house === 'apt'){
+        //       this.survey.house = '아파트'
+        //     }else{
+        //       this.survey.house = '다세대/빌라'
+        //     }
+        //   })
+        //   .catch(error => {
+        //       console.log(error)
+        //   })
     },
     methods:{
       ...mapActions(['find']),
