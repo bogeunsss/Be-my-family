@@ -161,4 +161,27 @@ public class ManagerController {
         return response;
     }
 
+
+    //todo
+    @GetMapping("/manager/applicantInfo")
+    @ApiOperation(value = "입양 신청자 정보 확인")
+    public Object applicantInfo(@RequestParam Integer adoptionno) {
+        ResponseEntity response = null;
+
+        final BasicResponse result = new BasicResponse();
+        Optional<Adoption> adoptionOpt = adoptionDao.findByAdoptionno(adoptionno);
+        System.out.println(adoptionOpt);
+
+        // try{
+
+        // } catch (Exception e) {
+        //     result.data = "fail";
+        //     result.status = true;
+        // }
+        
+        
+        response = new ResponseEntity<>(result, HttpStatus.OK);
+        return response;
+    }
+
 }
