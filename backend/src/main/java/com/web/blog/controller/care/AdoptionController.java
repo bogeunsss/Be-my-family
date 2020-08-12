@@ -93,7 +93,7 @@ public class AdoptionController {
             result.checksurvey = false;
             result.user = userOpt;
             response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
-        } else if(!adoptionOpt.isEmpty()){
+        } else if(!adoptionOpt.isPresent()){
             result.status = false;
             result.data = "Already applied";
             result.checksurvey = true;
