@@ -168,18 +168,21 @@ public class ManagerController {
         ResponseEntity response = null;
 
         final BasicResponse result = new BasicResponse();
-        Optional<Adoption> adoptionOpt = adoptionDao.findByAdoptionno(adoptionno);
-        System.out.println(adoptionOpt);
-
-        // try{
-
-        // } catch (Exception e) {
-        //     result.data = "fail";
-        //     result.status = true;
-        // }
+        
+        try{
+            Optional<Adoption> adoptionOpt = adoptionDao.findByAdoptionno(adoptionno);
+            System.out.println(adoptionOpt);
+            result.object = adoptionOpt;
+            result.data = "success";
+            result.status = true;
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            result.data = "fail";
+            result.status = false;
+            response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+        }
         
         
-        response = new ResponseEntity<>(result, HttpStatus.OK);
         return response;
     }
 
