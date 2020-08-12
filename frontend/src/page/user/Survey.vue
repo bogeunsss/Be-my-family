@@ -481,15 +481,18 @@ export default {
     },
     mounted() {
       setTimeout(() => {
-          axios.get("http://localhost:8080/care/survey?uid="+this.profileData.nickName)
-          .then((response) =>{
+        console.log(this.profileData.nickName)
+        axios.get("http://i3b201.p.ssafy.io/api/care/survey?uid="+this.profileData.nickName)
+        .then((response) =>{
+          if(response.data.data !== 'uid not exist'){
             this.survey = response.data.object
-            console.log(this.survey);
-          })
-        }, 100);
+          }
+          console.log(response);
+        })
+      }, 100);
     },
     computed: {
-      ...mapState(['profileData', 'loginData']),
+      ...mapState(['profileData', 'loginData', 'sido_states', 'gugun_states']),
 
     },
     methods: {
@@ -499,7 +502,7 @@ export default {
             console.log('된다')
             this.survey.uid = this.profileData.nickName
             axios
-              .post("http://localhost:8080/care/surveyAdd", this.survey)
+              .post("http://i3b201.p.ssafy.io/api/care/surveyAdd", this.survey)
               .then((response) =>{
                 console.log(response.data);
               }).catch((error) =>{

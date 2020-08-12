@@ -13,8 +13,10 @@
             
           >
             <v-card style="width:350px" @click="goAdoptionDetail(adoption.adoptionno)">
+              <div class="d-flex inline">
               <v-card-title class="subheading font-weight-bold">i dont know what to do</v-card-title>
-
+              <v-btn class='my-auto'>승인대기</v-btn>
+              </div>
               <v-divider></v-divider>
 
               <v-list dense>
@@ -68,7 +70,7 @@ export default {
     methods: {
       getAdoptionList() {
         console.log(this.$cookies.get('auth-token').email)
-        axios.get('http://localhost:8080/manager/adoptionList', {params :{ 
+        axios.get('http://i3b201.p.ssafy.io/api/manager/adoptionList', {params :{ 
           email : this.$cookies.get('auth-token').email
         }}
       )

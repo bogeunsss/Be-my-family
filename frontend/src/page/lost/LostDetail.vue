@@ -162,13 +162,92 @@
               <v-btn v-if="isWriter" @click="deleteLost" color="red">삭제</v-btn>
               <v-btn @click="goList">목록</v-btn>
             </v-card-actions>
+            <div style="position: relative">
+                <v-subheader class="font-weight-black">댓글</v-subheader>
+                <v-textarea
+                    v-model="comment"
+                    :label="comment.length+'/100'"
+                    auto-grow
+                    outlined
+                    rows="3"
+                    row-height="30"
+                    shaped
+                >
+                </v-textarea>
+                <v-btn color="indigo" outlined class="write-btn" @click="commentCreate">
+                    작성
+                </v-btn>
+
+            </div>
+            <v-row class="px-4">
+                <v-col cols="1" class="text-center font-weight-black">번호</v-col>
+                <v-col cols="9" class="text-center font-weight-black">내용</v-col>
+                <v-col cols="1" class="text-end font-weight-black">작성자</v-col>
+                <v-col cols="1"></v-col>
+            </v-row>
+            <v-list v-for="(lostReply, i) in lostReplies" :key="i" class="pa-0">
+                <v-list-item>
+                    <v-row>
+                        <v-col cols="1" class="text-center">{{ i+1 }}</v-col>
+                        <v-col cols="9" class="pl-5">{{ lostReply.lostreplycontent }}</v-col>
+                        <v-col cols="1" class="text-end">{{ lostReply.uid }}</v-col>
+                        <!-- <v-col cols="1"><v-icon @click="modifyTooltip = !modifyTooltip">mdi-pencil-circle-outline</v-icon><v-icon @click="commentDelete(lostReply.lostreplyno)" v-if="lostReply.uid === profileData.nickName" color="red">mdi-close-circle-outline</v-icon></v-col>
+                        <v-tooltip v-model="modifyTooltip">
+                            <v-text-field v-model="modifiedComment" @keyup.enter="commentCreate"></v-text-field>
+                        </v-tooltip> -->
+                        <v-col cols="1" class="d-flex">
+                            <v-menu top :close-on-content-click="closeOnContentClick">
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-icon v-bind="attrs" v-on="on">mdi-pencil-circle-outline</v-icon>
+                                </template>
+                                <v-card class="d-flex">
+                                    <input type="text" v-model="lostReply.lostreplycontent">
+                                    <v-chip label @click="commentModify(lostReply.lostreplycontent, lostReply.lostreplyno)">수정</v-chip>
+                                </v-card>
+                            </v-menu>
+                            <!-- <v-speed-dial direction="top" open-on-hover="false" transition="scale-transition">
+                                <template v-slot:activator>
+                                    <v-icon>mdi-pencil-circle-outline</v-icon>
+                                </template>
+                                <v-text-field v-model="modifiedComment" @keyup.enter="commentCreate"></v-text-field>
+                            </v-speed-dial> -->
+
+
+                            <!-- 수정 간지나는거 찾아보기 -->
+                            <v-icon @click="commentDelete(lostReply.lostreplyno)" v-if="lostReply.uid === profileData.nickName" color="red">mdi-close-circle-outline</v-icon>
+                        </v-col>
+                    </v-row>
+                </v-list-item>
+                    <v-divider></v-divider>
+            </v-list>
           </v-card>
       </v-container>
     <div class="float-window">
-        <v-card>
-            <v-card-title>이 강아지를 찾으시나요?</v-card-title>
+        <v-card id="create">
+            <v-speed-dial
+            :direction="direction"
+            :open-on-hover="hover"
+            :transition="transition"
+            >
+            <template v-slot:activator>
+                <v-btn
+                color="blue darken-2"
+                large
+                dark
+                >
+                <div class="d-flex flex-column">
+                    <p class="ma-0 pa-0"><v-icon small>mdi-magnify</v-icon>이 강아지를</p>
+                    <p class="ma-0 pa-0">찾으셨나요?</p>
+                </div>
+                </v-btn>
+            </template>
+            <div v-for="(m, i) in matched" :key="i">
+                <v-img src="http://www.animal.go.kr/files/shelter/2014/02/201403010903285_s.jpg" @click="goDetail(m.lostno)"></v-img>
+            </div>
+            </v-speed-dial>
         </v-card>
     </div>
+    <v-snackbar v-model="snackbar" timeout="2000">수정되었습니다.</v-snackbar>
   </div>
 </template>
 
@@ -184,6 +263,7 @@ export default {
             .then(response => {
                 console.log(response)
                 let result = response.data.object
+                this.lostReplies = response.data.lostReply
                 this.subContents.견종 = result.lostbreed
                 this.subContents.성별 = result.lostsex
                 this.subContents.날짜 = result.lostdate
@@ -196,18 +276,23 @@ export default {
                 this.lostPlace = result.lostplace
                 this.lostSex = result.lostsex
                 this.lostAge = result.lostage
+                this.lostTags = []
                 this.madeTags = []
                 var temp = []
                 for(var x=0;x<response.data.madetag.length;x++){
                     temp.push(response.data.madetag[x].tagname)
                 }
                 this.madeTags = temp
-                this.lostTags = []
                 var temp2 = []
+                var temp3 = []
                 for(var x=0;x<response.data.tag.length;x++){
-                    temp2.push(response.data.tag[x].tagname)
+                    if(this.madeTags.indexOf(response.data.tag[x].tagname) < 0){
+                        temp2.push(response.data.tag[x].tagname)
+                    }
+                    temp3.push(response.data.tag[x].tagname)
                 }
-                this.lostTags = temp2
+                this.madeTags = temp2
+                this.lostTags = temp3
                 this.images = result.lostpic1
                 this.content = result.lostcontent
                 this.writer = result.uid
@@ -216,13 +301,17 @@ export default {
                         this.isWriter = true
                     }
                 }
+                console.log(this.lostTags)
+                console.log(this.madeTags)
             }).catch(error => {
                 console.log(error)
             })
         axios.get(`http://localhost:8080/lost/match?lostno=${this.lostno}`)
             .then(response => {
-                console.log(response)
-                this.matched = response.data.match
+                // console.log(response)
+                if(response.data.match.length){
+                    this.matched = response.data.match
+                }
             }).catch(error => {
                 console.log(error)
             })
@@ -292,6 +381,15 @@ export default {
             lostTags: [],
             madeTags: [],
             matched: [],
+            direction: 'bottom',
+            hover: true,
+            transition: 'scale-transition',
+            comment: '',
+            lostReplies: [],
+            modifyDialog: false,
+            modifiedComment: '',
+            closeOnContentClick: false,
+            snackbar: false,
         }
     },
     methods:{
@@ -306,6 +404,10 @@ export default {
         },
         goList(){
             this.$router.push({name: constants.URL_TYPE.LOST.LOSTLIST})
+        },
+        goDetail(No){
+            this.$router.push({name: constants.URL_TYPE.LOST.LOSTDETAIL, params: {articleNo: No}})
+            this.$router.go()
         },
         closeDialog(){
             this.dialog = false
@@ -376,6 +478,53 @@ export default {
         closeTag(index){
             this.madeTags.splice(index, 1)
             console.log(this.lostTags)
+        },
+        getCommentList(){
+            axios.get(`http://localhost:8080/lost/detail?lostno=${this.lostno}`)
+                .then(response => {
+                    this.lostReplies = response.data.lostReply
+                }).catch(error => {
+                    console.log(error)
+                })
+        },
+        commentCreate(){
+            axios.post('http://localhost:8080/lost/reply/add', {
+                uid: this.profileData.nickName,
+                lostno: this.$route.params.articleNo,
+                lostcontent: this.comment,
+                }).then(response => {
+                    if(response.data.data === 'success'){
+                        this.getCommentList()
+                    }
+                }).catch(error => {
+                    console.log(error)
+                })
+                this.comment = ''
+        },
+        commentModify(content, contentNo){
+            axios.post('http://localhost:8080/lost/reply/add', {
+                uid: this.profileData.nickName,
+                lostno: this.$route.params.articleNo,
+                lostcontent: content,
+                lostreplyno: contentNo,
+                }).then(response => {
+                    if(response.data.data === 'success'){
+                        this.getCommentList()
+                    }
+                    this.snackbar = !this.snackbar
+                }).catch(error => {
+                    console.log(error)
+                })
+        },
+        commentDelete(replyno){
+            axios.delete(`http://localhost:8080/lost/reply/delete?lostreplyno=${replyno}&uid=${this.profileData.nickName}`)
+                .then(response => {
+                    if(response.data.data === 'success'){
+                        this.getCommentList()
+                    }
+                }).catch(error => {
+                    console.log(error)
+                })
         }
     },
 }
@@ -383,8 +532,21 @@ export default {
 
 <style>
 .float-window {
-  position: fixed;
-  bottom: 30vw;
-  right: 5vw;
+    position: fixed;
+    bottom: 40vw;
+    right: 5vw;
+}
+.write-btn {
+    position: absolute;
+    bottom: 60px;
+    right: 10px;
+}
+.comment-header {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    bottom: 3px;
+    width: 100%;
 }
 </style>
