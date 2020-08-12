@@ -357,7 +357,7 @@ export default new Vuex.Store({
     },
     userUpdate({commit}, userData){
       console.log(userData)
-      axios.put(`http://localhost:8080/account/update`,{
+      axios.put(`http://i3b201.p.ssafy.io/api/account/update`,{
           uid:userData.nickName,
           email:userData.email,
           password:userData.password
@@ -370,7 +370,7 @@ export default new Vuex.Store({
     },
     mainList({commit, state}){
       axios
-        .get("http://localhost:8080/care/list")
+        .get("http://i3b201.p.ssafy.io/api/care/list")
         .then((res) =>{
             state.dogData = res.data.object
             // state.dogData = res.data.object

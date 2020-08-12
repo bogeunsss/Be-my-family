@@ -95,7 +95,7 @@ export default {
       this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTLIST });
     },
     adoptdetail(){
-      axios.get("http://localhost:8080/postscript/detail?postscriptno="+this.$route.params.ID)
+      axios.get("http://i3b201.p.ssafy.io/api/postscript/detail?postscriptno="+this.$route.params.ID)
       .then((res) =>{
         this.Adoptdata = res.data.object
         console.log(this.Adoptdata)
@@ -106,7 +106,7 @@ export default {
     },
     postdelete(){
       console.log(this.postscriptno)
-      axios.delete(`http://localhost:8080/postscript/Delete?postscriptno=`+this.$route.params.ID)
+      axios.delete(`http://i3b201.p.ssafy.io/api/postscript/Delete?postscriptno=`+this.$route.params.ID)
       .then(()=>{
          this.adoptlist()
       })

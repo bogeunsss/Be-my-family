@@ -119,7 +119,7 @@ export default {
             if(flag == 0){
                 this.adoptcreate.uid = this.profileData.nickName
                 axios
-                .post("http://localhost:8080/postscript/Add",this.adoptcreate)
+                .post("http://i3b201.p.ssafy.io/api/postscript/Add",this.adoptcreate)
                 .then((res) =>{
                     console.log(this.adoptcreates)
                     alert('작성이 완료됬습니다.')

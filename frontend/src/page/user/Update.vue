@@ -63,7 +63,7 @@ export default {
 
     getManagerFind() {
       axios
-        .get("http://localhost:8080/manager/find", {
+        .get("http://i3b201.p.ssafy.io/api/manager/find", {
           params: {
             email: this.$cookies.get("auth-token").email,
           },
@@ -79,7 +79,7 @@ export default {
     },
 
     managerDateUpdate() {
-        axios.put('http://localhost:8080/manager/modify', {
+        axios.put('http://i3b201.p.ssafy.io/api/manager/modify', {
             email : this.managerInfo.email,
             mid : this.managerInfo.mid,
             password : this.password

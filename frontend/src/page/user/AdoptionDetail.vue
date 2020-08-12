@@ -183,7 +183,7 @@ export default {
     getAdoptionList() {
       console.log(this.$cookies.get("auth-token").email);
       axios
-        .get("http://localhost:8080/manager/adoptionList", {
+        .get("http://i3b201.p.ssafy.io/api/manager/adoptionList", {
           params: {
             email: this.$cookies.get("auth-token").email,
           },
@@ -200,7 +200,7 @@ export default {
 
     getDetail() {
       axios
-        .get("http://localhost:8080/care/detailUser", {
+        .get("http://i3b201.p.ssafy.io/api/care/detailUser", {
           params: {
             desertionno: this.adoption[0].desertionno,
           },

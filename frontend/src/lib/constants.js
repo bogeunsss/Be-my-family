@@ -1,6 +1,6 @@
 export default {
     TITLE: 'SSAFY 유기견입양 블로그',
-    SERVER_URL : "http://localhost:8080",
+    SERVER_URL : "http://i3b201.p.ssafy.io/api",
     URL_TYPE: {
         MAIN : "main",
         USER: {

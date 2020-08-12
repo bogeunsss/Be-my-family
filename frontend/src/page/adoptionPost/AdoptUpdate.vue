@@ -96,7 +96,7 @@ export default {
     adoptdetail() {
       axios
         .get(
-          "http://localhost:8080/postscript/detail?postscriptno=" +this.$route.params.ID)
+          "http://i3b201.p.ssafy.io/api/postscript/detail?postscriptno=" +this.$route.params.ID)
         .then((res) => {
           this.Adoptupdate = res.data.object;
           console.log(this.Adoptupdate);
@@ -106,7 +106,7 @@ export default {
         });
     },
     submitupdate() {
-      axios.put("http://localhost:8080/postscript/Modify", this.Adoptupdate)
+      axios.put("http://i3b201.p.ssafy.io/api/postscript/Modify", this.Adoptupdate)
       .then(()=>{
           this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTDETAIL, params:{ ID: this.$route.params.ID} })
       })

@@ -70,7 +70,7 @@ export default {
     methods: {
       getAdoptionList() {
         console.log(this.$cookies.get('auth-token').email)
-        axios.get('http://localhost:8080/manager/adoptionList', {params :{ 
+        axios.get('http://i3b201.p.ssafy.io/api/manager/adoptionList', {params :{ 
           email : this.$cookies.get('auth-token').email
         }}
       )
