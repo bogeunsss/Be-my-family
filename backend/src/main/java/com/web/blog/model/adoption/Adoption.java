@@ -38,14 +38,14 @@ public class Adoption {
     private String sido;
     private String gugun;
     private String place;
-    private boolean beforeover;
-    private boolean beforeadopt;
+    private int beforeover;
+    private int beforeadopt;
     private int presentanimal;
     private int familyunder;
     private int familymiddle;
-    private boolean familyagree;
+    private int familyagree;
     private int dissolution;
-    private boolean sickness;
+    private int sickness;
     private int alone;
     private String temp;
     private String house;
