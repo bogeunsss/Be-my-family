@@ -29,22 +29,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-
-
-
 
 @ApiResponses(value = { @ApiResponse(code = 401, message = "Unauthorized", response = BasicResponse.class),
         @ApiResponse(code = 403, message = "Forbidden", response = BasicResponse.class),
         @ApiResponse(code = 404, message = "Not Found", response = BasicResponse.class),
         @ApiResponse(code = 500, message = "Failure", response = BasicResponse.class) })
 
-@CrossOrigin(origins = { "http://i3b201.p.ssafy.io" })
 @RestController
-public class PostscriptDetail {
-    
+public class PostscriptDetailController {
+
     @Autowired
     PostscriptDao postscriptDao;
 
@@ -59,31 +56,40 @@ public class PostscriptDetail {
 
     @GetMapping("/postscript/detail")
     @ApiOperation(value = "입양후기 상세페이지")
-    public Object postscriptDetail(@RequestParam(required = true) final Integer postscriptno) {
+    public Object postscriptDetail(@RequestParam(required = true) final Integer postscriptno,
+            @RequestParam(required = false) final String uid) {
 
         ResponseEntity response = null;
         final PostscriptResponse result = new PostscriptResponse();
 
-        
         try {
             Postscript postscript = new Postscript();
             postscript = postscriptDao.getPostscriptByPostscriptno(postscriptno);
-            
-            if(postscript != null) {
-                
+
+            if (postscript != null) {
+
+                Optional<Postscriptgood> checkGood = postscriptgoodDao.findByUidAndPostscriptno(uid, postscriptno);
                 Integer goodcount = postscriptgoodDao.countByPostscriptno(postscriptno);
+
+                if (checkGood.isPresent()) {
+                    result.isGood = true;
+                } else {
+                    result.isGood = false;
+                }
+
                 result.object = postscript;
                 result.data = "success";
                 result.status = true;
                 result.good = goodcount;
 
-                List<Comment> comment = commentDao.findByPostscriptnoOrderByPostscriptnoDesc(postscriptno);
-                if(!comment.isEmpty()) {
+                List<Comment> comment = commentDao.findByPostscriptnoOrderByPostscriptno(postscriptno);
+
+                if (!comment.isEmpty()) {
                     result.comments = comment;
                 } else {
                     result.data = "comment is empty";
                 }
-                
+
                 response = new ResponseEntity<>(result, HttpStatus.OK);
 
             } else {
@@ -102,7 +108,41 @@ public class PostscriptDetail {
         return response;
     }
 
+    @PostMapping("/postscript/good/add")
+    @ApiOperation(value = "입양후기 좋아요 등록/취소")
+    public Object postscriptGood(@RequestParam(required = true) final String uid,
+            @RequestParam(required = true) final int postscriptno) {
 
+        ResponseEntity response = null;
+        PostscriptResponse result = new PostscriptResponse();
 
+        try {
+
+            Optional<Postscriptgood> good = postscriptgoodDao.findByUidAndPostscriptno(uid, postscriptno);
+
+            if (good.isPresent()) {
+                postscriptgoodDao.delete(good.get());
+                result.data = "delete success";
+                result.isGood = false;
+            } else {
+                Postscriptgood newGood = new Postscriptgood();
+                newGood.setPostscriptno(postscriptno);
+                newGood.setUid(uid);
+                postscriptgoodDao.save(newGood);
+                result.data = "insert success";
+                result.isGood = true;
+            }
+
+            result.status = true;
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.status = false;
+            result.data = "fail";
+        }
+
+        return response;
+    }
 
 }
