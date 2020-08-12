@@ -61,11 +61,11 @@ public class CaredetailController {
             Optional<Interest> careinterestOpt = interestDao.findByUidAndDesertionno(uid, desertionno);
             final BasicResponse result = new BasicResponse();
             result.uid = uid;
-            if(!caredetailOpt.isEmpty()) {
+            if(!caredetailOpt.isPresent()) {
                 result.status = true;
                 result.data = "success";
                 result.object = caredetailOpt.get();
-                if(!careinterestOpt.isEmpty()) {
+                if(!careinterestOpt.isPresent()) {
                     result.interest = true;
                     System.out.println("true");
                 } else {
@@ -81,7 +81,7 @@ public class CaredetailController {
 
         } else {
             final BasicResponse result = new BasicResponse();
-            if(!caredetailOpt.isEmpty()) {
+            if(!caredetailOpt.isPresent()) {
                 result.status = true;
                 result.data = "success";
                 result.object = caredetailOpt.get();
