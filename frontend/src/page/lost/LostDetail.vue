@@ -174,15 +174,42 @@
                     shaped
                 >
                 </v-textarea>
-                <v-btn color="indigo" outlined class="write-btn">
+                <v-btn color="indigo" outlined class="write-btn" @click="commentCreate">
                     작성
                 </v-btn>
 
             </div>
-            <v-list>
+            <v-row class="px-4">
+                <v-col cols="1" class="text-center font-weight-black">번호</v-col>
+                <v-col cols="9" class="text-center font-weight-black">내용</v-col>
+                <v-col cols="1" class="text-end font-weight-black">작성자</v-col>
+                <v-col cols="1"></v-col>
+            </v-row>
+            <v-list v-for="(lostReply, i) in lostReplies" :key="i" class="pa-0">
                 <v-list-item>
-                    
+                    <v-row>
+                        <v-col cols="1" class="text-center">{{ i+1 }}</v-col>
+                        <v-col cols="9" class="pl-5">{{ lostReply.lostreplycontent }}</v-col>
+                        <v-col cols="1" class="text-end">{{ lostReply.uid }}</v-col>
+                        <!-- <v-col cols="1"><v-icon @click="modifyTooltip = !modifyTooltip">mdi-pencil-circle-outline</v-icon><v-icon @click="commentDelete(lostReply.lostreplyno)" v-if="lostReply.uid === profileData.nickName" color="red">mdi-close-circle-outline</v-icon></v-col>
+                        <v-tooltip v-model="modifyTooltip">
+                            <v-text-field v-model="modifiedComment" @keyup.enter="commentCreate"></v-text-field>
+                        </v-tooltip> -->
+                        <v-col cols="1" class="d-flex">
+                            <!-- <v-speed-dial direction="top" open-on-hover="false" transition="scale-transition">
+                                <template v-slot:activator>
+                                    <v-icon>mdi-pencil-circle-outline</v-icon>
+                                </template>
+                                <v-text-field v-model="modifiedComment" @keyup.enter="commentCreate"></v-text-field>
+                            </v-speed-dial> -->
+
+                            
+                            <!-- 수정 간지나는거 찾아보기 -->
+                            <v-icon @click="commentDelete(lostReply.lostreplyno)" v-if="lostReply.uid === profileData.nickName" color="red">mdi-close-circle-outline</v-icon>
+                        </v-col>
+                    </v-row>
                 </v-list-item>
+                    <v-divider></v-divider>
             </v-list>
           </v-card>
       </v-container>
@@ -224,8 +251,9 @@ export default {
         console.log(this.$route.params.articleNo)
         axios.get(`http://localhost:8080/lost/detail?lostno=${this.lostno}`)
             .then(response => {
-                // console.log(response)
+                console.log(response)
                 let result = response.data.object
+                this.lostReplies = response.data.lostReply
                 this.subContents.견종 = result.lostbreed
                 this.subContents.성별 = result.lostsex
                 this.subContents.날짜 = result.lostdate
@@ -263,7 +291,7 @@ export default {
             })
         axios.get(`http://localhost:8080/lost/match?lostno=${this.lostno}`)
             .then(response => {
-                console.log(response)
+                // console.log(response)
                 if(response.data.match.length){
                     this.matched = response.data.match
                 }
@@ -340,6 +368,9 @@ export default {
             hover: true,
             transition: 'scale-transition',
             comment: '',
+            lostReplies: [],
+            modifyTooltip: false,
+            modifiedComment: '',
         }
     },
     methods:{
@@ -428,6 +459,42 @@ export default {
         closeTag(index){
             this.madeTags.splice(index, 1)
             console.log(this.lostTags)
+        },
+        getCommentList(){
+            axios.get(`http://localhost:8080/lost/detail?lostno=${this.lostno}`)
+                .then(response => {
+                    this.lostReplies = response.data.lostReply
+                }).catch(error => {
+                    console.log(error)
+                })
+        },
+        commentCreate(){
+            if(this.modifiedComment !== ''){
+                this.comment = this.modifiedComment
+            }
+            axios.post('http://localhost:8080/lost/reply/add', {
+                uid: this.profileData.nickName,
+                lostno: this.$route.params.articleNo,
+                lostcontent: this.comment,
+                }).then(response => {
+                    if(response.data.data === 'success'){
+                        this.getCommentList()
+                    }
+                }).catch(error => {
+                    console.log(error)
+                })
+                this.comment = ''
+                this.modifiedComment = ''
+        },
+        commentDelete(replyno){
+            axios.delete(`http://localhost:8080/lost/reply/delete?lostreplyno=${replyno}&uid=${this.profileData.nickName}`)
+                .then(response => {
+                    if(response.data.data === 'success'){
+                        this.getCommentList()
+                    }
+                }).catch(error => {
+                    console.log(error)
+                })
         }
     },
 }
