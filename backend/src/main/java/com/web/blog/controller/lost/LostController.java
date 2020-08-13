@@ -266,7 +266,6 @@ public class LostController {
                     losttagDao.deleteByLostno(lostno);
                     lostDao.deleteByLostno(lostno);
                     result.data = "success";
-
                 } else {
                     result.data = "uid diff";
                 }

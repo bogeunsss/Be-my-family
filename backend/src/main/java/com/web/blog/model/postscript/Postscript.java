@@ -22,7 +22,7 @@ public class Postscript {
      
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="postscriptno", columnDefinition = "Int")
+    @Column(name="postscriptno", columnDefinition = "int")
     private int postscriptno;
 
     private String uid;
