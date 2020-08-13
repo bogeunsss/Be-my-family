@@ -66,53 +66,68 @@ public class AdoptionController {
         CareDao careDao;
 
 
-    //입양 신청
+            //입양 신청
     @PostMapping("/adoption/Application")
     @ApiOperation(value = "입양신청")
-    public Object adoptionLAplication(@RequestParam(required = true) final String email,
+    public Object adoptionLAplication(@Valid @RequestParam(required = true) final String email,
         @RequestParam(required = true) final String desertionno) { 
 
         ResponseEntity response = null;
         
-        User userOpt = userDao.getUserByEmail(email);
-        Optional<Survey> surveyOpt = surveydao.findByUid(userOpt.getUid());
-        Optional<Adoption> adoptionOpt = adoptionDao.findByUidAndDesertionno(userOpt.getUid(), desertionno);
-        Careboard careboard = careDao.findByDesertionno(desertionno);
-        String checkmid = careboard.getCarenm();
-        System.out.println(checkmid);
-        System.out.println(userOpt);
-        System.out.println(surveyOpt);
-        System.out.println(adoptionOpt);
-
         final AdoptionResponse result = new AdoptionResponse();
-
-        if(!surveyOpt.isPresent()) {
+        try{
+            Optional<User> userOpt = userDao.findByEmail(email);
+            if(userOpt.isPresent()) {
+                Optional<Survey> surveyOpt = surveydao.findByUid(userOpt.get().getUid());
+                if(surveyOpt.isPresent()) {
+                    Optional<Adoption> adoptionOpt = adoptionDao.findByUidAndDesertionno(userOpt.get().getUid(), desertionno);
+                    if(!adoptionOpt.isPresent()) {
+                        Careboard careboard = careDao.findByDesertionno(desertionno);
+                        String checkmid = careboard.getCarenm();
+                        System.out.println("success");
+                        result.status = true;
+                        result.data = "success";
+                        result.checksurvey = true;
+                        result.checkadoption = true;
+                        result.survey = surveyOpt;
+                        result.user = userOpt;
+                        result.mid = checkmid;
+                        result.desertionno = desertionno;
+                        response = new ResponseEntity<>(result, HttpStatus.OK);
+                    } else {
+                        System.out.println("Already apllication");
+                        result.status = false;
+                        result.data = "Already apllication";
+                        result.checksurvey = true;
+                        result.checkadoption = false;
+                        result.user = userOpt;
+                        response = new ResponseEntity<>(result, HttpStatus.OK);
+                    }
+                }else {
+                    System.out.println("It hasn't been surveyed yet.");
+                    result.status = false;
+                    result.data = "It hasn't been surveyed yet.";
+                    result.checksurvey = false;
+                    result.user = userOpt;
+                    response = new ResponseEntity<>(result, HttpStatus.OK);
+                }
+            }else {
+                System.out.println("not user");
+                result.status = false;
+                result.data = "not user";
+                result.user = null;
+                response = new ResponseEntity<>(result, HttpStatus.NON_AUTHORITATIVE_INFORMATION);
+            }
+        } catch(Exception e) {
+            result.data = "fail";
             result.status = false;
-            result.data = "It hasn't been surveyed yet.";
-            result.checksurvey = false;
-            result.user = userOpt;
             response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
-        } else if(!adoptionOpt.isPresent()){
-            result.status = false;
-            result.data = "Already applied";
-            result.checksurvey = true;
-            result.checkadoption = false;
-            result.user = userOpt;
-            response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
-        } else {
-            result.status = true;
-            result.data = "success";
-            result.checksurvey = true;
-            result.checkadoption = true;
-            result.survey = surveyOpt;
-            result.user = userOpt;
-            result.mid = checkmid;
-            result.desertionno = desertionno;
-            response = new ResponseEntity<>(result, HttpStatus.OK);
         }
-        return response;
+        
+            return response;
     }
 
+        
     //입양 신청
     @PostMapping("/adoption/Success")
     @ApiOperation(value = "입양신청완료")
@@ -132,7 +147,8 @@ public class AdoptionController {
         Adoption adoption = new Adoption();
         adoption.setUid(request.getUid());
         adoption.setName(request.getName());
-        // adoption.setEmail(request.getEmail());
+        //이메일 주석처리 되어있었는데 한번 확인 필요
+        adoption.setEmail(request.getEmail());
         adoption.setPhone(request.getPhone());
         adoption.setJob(request.getJob());
         adoption.setMarriaged(request.getMarriaged());
@@ -169,11 +185,11 @@ public class AdoptionController {
 
         BasicResponse result = new BasicResponse();
 
-        if(managerMailService.managerMailSend(manager)) {
-            result.data = "send email success";
-        } else {
-            result.data = "send email fail";
-        }
+        // if(managerMailService.managerMailSend(manager)) {
+        //     result.data = "send email success";
+        // } else {
+        //     result.data = "send email fail";
+        // }
 
         result.status = true;
 
@@ -195,6 +211,10 @@ public class AdoptionController {
                 result.status = true;
                 result.data = "success";
                 response = new ResponseEntity<>(result, HttpStatus.OK);
+            } else {
+                result.data = "not found";
+                result.status = false;
+                response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
             }
         }   catch(Exception e) {
             System.out.println(e.getMessage());
