@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import com.web.blog.dao.adoption.AdoptionDao;
 import com.web.blog.dao.care.CareDao;
+import com.web.blog.dao.care.CaredetailDao;
 import com.web.blog.dao.care.SurveyDao;
 import com.web.blog.dao.manager.ManagerDao;
 import com.web.blog.dao.user.UserDao;
@@ -17,6 +18,7 @@ import com.web.blog.model.adoption.ApplicationRequest;
 import com.web.blog.model.care.Careboard;
 import com.web.blog.model.care.Survey;
 import com.web.blog.model.manager.Manager;
+import com.web.blog.model.user.SignupRequest;
 import com.web.blog.model.user.User;
 import com.web.blog.service.MailService;
 import com.web.blog.service.ManagerMailService;
@@ -60,7 +62,6 @@ public class AdoptionController {
 
         @Autowired
         ManagerMailService managerMailService;
-
 
         @Autowired
         CareDao careDao;
@@ -131,60 +132,91 @@ public class AdoptionController {
     //입양 신청
     @PostMapping("/adoption/Success")
     @ApiOperation(value = "입양신청완료")
-        public Object adoptionLSuccess(@Valid @RequestBody ApplicationRequest request) { 
-                
+        // public Object adoptionLSuccess(@Valid @RequestBody ApplicationRequest request) { 
+         public Object adoptionLSuccess(@Valid @RequestParam String uid, @RequestParam String desertionno,
+        @RequestParam String fixdate, @RequestParam String fixtime) {        
+            
         ResponseEntity response = null;
         
+
+        Optional<User> checkuser = userDao.findByUid(uid);
+        System.out.println(checkuser);
+        
+        Careboard careboard = careDao.findByDesertionno(desertionno);
+        String mid = careboard.getCarenm();
+        Manager manager = managerDao.getManagerByMid(mid);
+        System.out.println(manager);
+
+        Optional<Survey> survey = surveydao.findById(uid);
+        System.out.println(survey);
+
         Adoption adoption = new Adoption();
-        adoption.setUid(request.getUid());
-        adoption.setName(request.getName());
-        // 이메일 주석처리 되어있었는데 한번 확인 필요
-        adoption.setEmail(request.getEmail());
-        adoption.setPhone(request.getPhone());
-        adoption.setJob(request.getJob());
-        adoption.setMarriaged(request.getMarriaged());
-        adoption.setSex(request.getSex());
-
-        adoption.setMid(request.getMid());
-
-        adoption.setNation(request.getNation());
-        adoption.setSido(request.getSido());
-        adoption.setGugun(request.getGugun());
-        adoption.setPlace(request.getPlace());
-        adoption.setBeforeover(request.isBeforeover());
-        adoption.setBeforeadopt(request.isBeforeadopt());
-        adoption.setPresentanimal(request.getPresentanimal());
-        adoption.setFamilyunder(request.getFamilyunder());
-        adoption.setFamilymiddle(request.getFamilymiddle());
-        adoption.setFamilyagree(request.isFamilyagree());
-        adoption.setDissolution(request.getDissolution());
-        adoption.setSickness(request.isSickness());
-        adoption.setAlone(request.getAlone());
-        adoption.setTemp(request.getTemp());
-        adoption.setHouse(request.getHouse());
-        adoption.setEatmoney(request.getEatmoney());
-        adoption.setCaremoney(request.getCaremoney());
-        adoption.setReason(request.getReason());
-        adoption.setThink(request.getThink());
-
-        adoption.setDesertionno(request.getDesertionno());
-
-        adoption.setFixdate(request.getFixdate());
-        adoption.setFixtime(request.getFixtime());
-        adoptionDao.save(adoption);
-
         BasicResponse result = new BasicResponse();
+        try {
 
-        // if(managerMailService.managerMailSend(manager)) {
-        //     result.data = "send email success";
-        // } else {
-        //     result.data = "send email fail";
-        // }
+            if(!checkuser.isPresent()) {
+                result.data = "not found user";
+                result.status = false;
+                response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+            } else if(!survey.isPresent()) {
+                result.data = "not found survey";
+                result.status = false;
+                response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+            } else {
+                adoption.setUid(checkuser.get().getUid());
+                adoption.setName(checkuser.get().getName());
+                adoption.setEmail(checkuser.get().getEmail());
+                adoption.setPhone(checkuser.get().getPhone());
+                adoption.setJob(checkuser.get().getJob());
+                adoption.setMarriaged(checkuser.get().getMarriaged());
+                adoption.setSex(checkuser.get().getSex());
 
-        result.status = true;
+                adoption.setMid(mid);
 
-        response = new ResponseEntity<>(result, HttpStatus.OK);
+                adoption.setNation(survey.get().getNation());
+                adoption.setSido(survey.get().getSido());
+                adoption.setGugun(survey.get().getGugun());
+                adoption.setPlace(survey.get().getPlace());
+                adoption.setBeforeover(survey.get().getBeforeover());
+                adoption.setBeforeadopt(survey.get().getBeforeadopt());
+                adoption.setPresentanimal(survey.get().getPresentanimal());
+                adoption.setFamilyunder(survey.get().getFamilyunder());
+                adoption.setFamilymiddle(survey.get().getFamilymiddle());
+                adoption.setFamilyagree(survey.get().getFamilyagree());
+                adoption.setDissolution(survey.get().getDissolution());
+                adoption.setSickness(survey.get().getSickness());
+                adoption.setAlone(survey.get().getAlone());
+                adoption.setTemp(survey.get().getTemp());
+                adoption.setHouse(survey.get().getHouse());
+                adoption.setEatmoney(survey.get().getEatmoney());
+                adoption.setCaremoney(survey.get().getCaremoney());
+                adoption.setReason(survey.get().getReason());
+                adoption.setThink(survey.get().getThink());
+
+                adoption.setDesertionno(desertionno);
+
+                adoption.setFixdate(fixdate);
+                adoption.setFixtime(fixtime);
+                
+                adoptionDao.save(adoption);
+
+                result.status = true;
+                result.data = "success";
+
+                response = new ResponseEntity<>(result, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            result.data = "fail";
+            response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+        }
+        
+                // if(managerMailService.managerMailSend(manager)) {
+                //     result.data = "send email success";
+                // } else {
+                //     result.data = "send email fail";
+                // }
         return response;
+
     }
 
     @DeleteMapping("/adoption/delete")
