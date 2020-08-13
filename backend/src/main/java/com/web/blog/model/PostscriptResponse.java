@@ -7,4 +7,9 @@ public class PostscriptResponse {
     public int good;
     public Object comments;
 	public boolean isGood;
+	public int totalPage;
+	public boolean hasNext;
+	public long totalData;
+	public int currentPage;
+	public int currentData;
 }

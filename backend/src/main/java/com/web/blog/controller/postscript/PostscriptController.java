@@ -4,27 +4,29 @@ import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
-import javax.validation.Valid;
-
+import com.mysql.cj.x.protobuf.MysqlxCrud.Order.Direction;
 import com.web.blog.dao.postscript.CommentDao;
 import com.web.blog.dao.postscript.PostpicDao;
 import com.web.blog.dao.postscript.PostscriptDao;
+import com.web.blog.dao.postscript.PostscriptPageDao;
 import com.web.blog.dao.postscript.PostscriptSearchDao;
 import com.web.blog.dao.user.UserDao;
 import com.web.blog.model.BasicResponse;
+import com.web.blog.model.PostscriptResponse;
 import com.web.blog.model.postscript.Postpic;
 import com.web.blog.model.postscript.Postscript;
 import com.web.blog.model.postscript.PostscriptRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,7 +43,7 @@ import io.swagger.annotations.ApiResponses;
 
 @RestController
 public class PostscriptController {
-    
+
     @Autowired
     PostscriptDao postscriptDao;
 
@@ -57,36 +59,50 @@ public class PostscriptController {
     @Autowired
     PostpicDao postpicDao;
 
+    @Autowired
+    PostscriptPageDao postscriptpageDao;
+
     @GetMapping("/postscript/List")
     @ApiOperation(value = "입양후기 게시글 리스트")
-    public Object postscriptList() {
+    public Object postscriptList(@RequestParam int pageno) {
 
         ResponseEntity response = null;
-        final BasicResponse result = new BasicResponse();
-
-        List<Postscript> postscriptList = postscriptDao.findAll();
+        final PostscriptResponse result = new PostscriptResponse();
 
         try {
-            if (!postscriptList.isEmpty()) {
-                result.object = postscriptList;
-                result.status = true;
+            Page<Postscript> post = postscriptpageDao
+                    .findAll(PageRequest.of(pageno - 1, 15, Sort.Direction.DESC, "postscriptno"));
+
+            List<Postscript> postList = post.getContent();
+            int totalPage = post.getTotalPages();
+            boolean hasNext = post.hasNext();
+            long totalData = post.getTotalElements();
+            boolean isData = post.hasContent();
+            int currentPage = post.getNumber();
+            int currentData = post.getNumberOfElements(); 
+
+            result.object = postList;
+            result.totalPage = totalPage;
+            result.hasNext = hasNext;
+            result.totalData = totalData;
+            result.currentPage = currentPage + 1;
+            result.currentData = currentData;
+            
+            if(isData) {
                 result.data = "success";
-
-                response = new ResponseEntity<>(result, HttpStatus.OK);
             } else {
-                result.status = false;
-                result.data = "no List";
-                response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+                result.data = "no data";
             }
-        } catch (final Exception e) {
+            result.status = true;
+            response = new ResponseEntity<>(result, HttpStatus.OK);
 
+        } catch (Exception e) {
             e.printStackTrace();
-
-            result.status = false;
             result.data = "fail";
-
-            response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+            result.status = false;
+            response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
         }
+
         return response;
     }
 
@@ -117,7 +133,7 @@ public class PostscriptController {
             postscript.setGugun(checkgugun);
             postscript.setKind(checkkind);
             postscriptDao.save(postscript);
-            
+
             for (MultipartFile file : images) {
                 final String originalfileName = file.getOriginalFilename();
                 final String filepath = "C:/Image/" + originalfileName;
@@ -128,7 +144,7 @@ public class PostscriptController {
                 postpic.setPostpath(filepath);
                 postpicDao.save(postpic);
             }
-                
+
             result.status = true;
             result.data = "success";
             response = new ResponseEntity<>(result, HttpStatus.OK);
