@@ -18,6 +18,7 @@ public interface AdoptionDao extends JpaRepository<Adoption, String>{
     Optional<Adoption> findByDesertionno(String desertionno);
     Optional<Adoption> findByUidAndDesertionno(String uid, String desertionno);
     Optional<Adoption> findByAdoptionno(Integer adoptionno);
+    Adoption getByAdoptionno(Integer adoptionno);
     @Transactional
     void deleteByUidAndDesertionno(String uid, String desertionno);
     String getAdoptionByUid(String uid);
