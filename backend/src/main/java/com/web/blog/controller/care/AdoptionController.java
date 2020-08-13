@@ -183,7 +183,7 @@ public class AdoptionController {
 
     @DeleteMapping("/adoption/delete")
     @ApiOperation(value = "입양 신청 삭제")
-    public Object interestDelete(String uid, String desertionno) {
+    public Object adoptionDelete(String uid, String desertionno) {
         ResponseEntity response = null;
         
         final BasicResponse result = new BasicResponse();
