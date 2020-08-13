@@ -3,6 +3,7 @@ package com.web.blog.model.adoption;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.ToString;
 
+import javax.persistence.Id;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -13,6 +14,10 @@ public class ApplicationRequest {
 
 
     //사용자 정보
+    @Id
+    @NotNull
+    Integer adoptionno;
+
     @ApiModelProperty(required = true)
     @NotNull
     String uid;
@@ -72,6 +77,10 @@ public class ApplicationRequest {
     String fixdate;
     @NotNull
     String fixtime;
+
+    //입양상태
+    @NotNull
+    String state;
 
     public String getUid() {
         return uid;
@@ -311,6 +320,22 @@ public class ApplicationRequest {
 
     public void setFixtime(String fixtime) {
         this.fixtime = fixtime;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public Integer getAdoptionno() {
+        return adoptionno;
+    }
+
+    public void setAdoptionno(Integer adoptionno) {
+        this.adoptionno = adoptionno;
     }
     
 }

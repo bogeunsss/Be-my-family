@@ -61,4 +61,5 @@ public class Adoption {
     private String fixdate;
     private String fixtime;
 
+    private int state;
 }

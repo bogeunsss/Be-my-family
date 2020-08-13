@@ -10,6 +10,7 @@ import com.web.blog.dao.manager.ManagerDao;
 import com.web.blog.model.BasicResponse;
 import com.web.blog.model.ManagerResponse;
 import com.web.blog.model.adoption.Adoption;
+import com.web.blog.model.adoption.ApplicationRequest;
 import com.web.blog.model.manager.Manager;
 import com.web.blog.model.manager.ManagerSignupRequest;
 import com.web.blog.security.JwtAuthenticationResult;
@@ -20,7 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -160,6 +163,51 @@ public class ManagerController {
         return response;
     }
 
+    @PatchMapping("/manager/adoptionList/reject")
+    @ApiOperation(value = "입양신청 거절")
+    public Object adoptionReject(@Valid @RequestBody ApplicationRequest request) {
+       
+        ResponseEntity response = null;
+        final BasicResponse result = new BasicResponse();
+
+        try {
+            Adoption checkadoption = adoptionDao.getByAdoptionno(request.getAdoptionno());
+            checkadoption.setState(2);
+            adoptionDao.save(checkadoption);
+            result.data = "success";
+            result.status = true;
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            result.data = "fail";
+            result.status = false;
+            response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+        }
+        
+        return response;
+    }
+
+    @PatchMapping("/manager/adoptionList/approve")
+    @ApiOperation(value = "입양신청 승인")
+    public Object adoptionApprove(@Valid @RequestBody ApplicationRequest request) {
+       
+        ResponseEntity response = null;
+        final BasicResponse result = new BasicResponse();
+
+        try {
+            Adoption checkadoption = adoptionDao.getByAdoptionno(request.getAdoptionno());
+            checkadoption.setState(1);
+            adoptionDao.save(checkadoption);
+            result.data = "success";
+            result.status = true;
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            result.data = "fail";
+            result.status = false;
+            response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+        }
+        
+        return response;
+    }
 
     //todo
     @GetMapping("/manager/applicantInfo")
