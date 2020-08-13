@@ -144,6 +144,7 @@
 </template>
 
 <script>
+import constants from '@/lib/constants'
 import axios from 'axios'
 import { mapState, mapActions } from 'vuex'
 
@@ -177,11 +178,11 @@ export default {
     created(){
       this.getDetail()
 
-      let formData = new FormData();
-        formData.append('email', this.$cookies.get('auth-token').email)
-        formData.append('desertionno', this.$cookies.get('desertionno').desertionno)
-        console.log(this.$cookies.get('auth-token').email)
-        console.log(this.$cookies.get('desertionno').desertionno)
+      // let formData = new FormData();
+      //   formData.append('email', this.$cookies.get('auth-token').email)
+      //   formData.append('desertionno', this.$cookies.get('desertionno').desertionno)
+      //   console.log(this.$cookies.get('auth-token').email)
+      //   console.log(this.$cookies.get('desertionno').desertionno)
         // axios.post(constants.SERVER_URL + '/adoption/Application', formData)
         //   .then(response => {
         //     console.log(response)  
@@ -285,7 +286,7 @@ export default {
           var token = this.$cookies.get('auth-token')
           this.email = token.email
           this.isLoggedIn = true
-          if(this.$cookies.get('auth-token').mid == null){
+          if(this.$cookies.get('auth-token').mid === null){
               this.find(token.email)
               setTimeout(()=>{
                 axios.get(constants.SERVER_URL + '/care/detailUser', {
