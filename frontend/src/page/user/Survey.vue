@@ -482,7 +482,7 @@ export default {
     mounted() {
       setTimeout(() => {
         console.log(this.profileData.nickName)
-        axios.get("http://i3b201.p.ssafy.io/api/care/survey?uid="+this.profileData.nickName)
+        axios.get(constants.SERVER_URL + "/care/survey?uid="+this.profileData.nickName)
         .then((response) =>{
           if(response.data.data !== 'uid not exist'){
             this.survey = response.data.object
@@ -502,7 +502,7 @@ export default {
             console.log('된다')
             this.survey.uid = this.profileData.nickName
             axios
-              .post("http://i3b201.p.ssafy.io/api/care/surveyAdd", this.survey)
+              .post(constants.SERVER_URL + "/care/surveyAdd", this.survey)
               .then((response) =>{
                 console.log(response.data);
               }).catch((error) =>{

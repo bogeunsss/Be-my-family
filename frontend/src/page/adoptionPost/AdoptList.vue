@@ -113,7 +113,7 @@ export default {
   methods: {
     adoptList(){
       axios
-          .get("http://i3b201.p.ssafy.io/api/postscript/List")
+          .get(constants.SERVER_URL + "/postscript/List")
           .then((res) =>{
             this.adoptData = res.data.object
             console.log(this.adoptData)
@@ -141,7 +141,7 @@ export default {
         if(this.searchText === ""){
                 this.adoptList()
         }else{
-            axios.get(`http://i3b201.p.ssafy.io/api/postscript/Search?category=${this.category}&searchText=${this.searchText}`)
+            axios.get(constants.SERVER_URL + `/postscript/Search?category=${this.category}&searchText=${this.searchText}`)
             .then((response) =>{
                 this.adoptData = response.data.object
                 this.searchText = ""

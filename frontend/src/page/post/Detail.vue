@@ -144,6 +144,7 @@
 </template>
 
 <script>
+import constants from '@/lib/constants'
 import axios from 'axios'
 import { mapState, mapActions } from 'vuex'
 
@@ -177,12 +178,12 @@ export default {
     created(){
       this.getDetail()
 
-      let formData = new FormData();
-        formData.append('email', this.$cookies.get('auth-token').email)
-        formData.append('desertionno', this.$cookies.get('desertionno').desertionno)
-        console.log(this.$cookies.get('auth-token').email)
-        console.log(this.$cookies.get('desertionno').desertionno)
-        // axios.post('http://i3b201.p.ssafy.io/api/adoption/Application', formData)
+      // let formData = new FormData();
+      //   formData.append('email', this.$cookies.get('auth-token').email)
+      //   formData.append('desertionno', this.$cookies.get('desertionno').desertionno)
+      //   console.log(this.$cookies.get('auth-token').email)
+      //   console.log(this.$cookies.get('desertionno').desertionno)
+        // axios.post(constants.SERVER_URL + '/adoption/Application', formData)
         //   .then(response => {
         //     console.log(response)  
         //     this.user = response.data.user
@@ -285,10 +286,10 @@ export default {
           var token = this.$cookies.get('auth-token')
           this.email = token.email
           this.isLoggedIn = true
-          if(this.$cookies.get('auth-token').mid == null){
+          if(this.$cookies.get('auth-token').mid === null){
               this.find(token.email)
               setTimeout(()=>{
-                axios.get('http://i3b201.p.ssafy.io/api/care/detailUser', {
+                axios.get(constants.SERVER_URL + '/care/detailUser', {
                   params: {
                     desertionno: this.$cookies.get('desertionno').desertionno,
                     uid: this.profileData.nickName
@@ -310,7 +311,7 @@ export default {
       
           }else{
               this.isManager = true
-              axios.get('http://i3b201.p.ssafy.io/api/care/detailUser', {
+              axios.get(constants.SERVER_URL + '/care/detailUser', {
                 params: {
                   desertionno: this.$cookies.get('desertionno').desertionno,
                 }
@@ -325,7 +326,7 @@ export default {
              }
             }
         else{
-          axios.get('http://i3b201.p.ssafy.io/api/care/detailUser', {
+          axios.get(constants.SERVER_URL + '/care/detailUser', {
                 params: {
                   desertionno: this.$cookies.get('desertionno').desertionno,
                 }
@@ -354,7 +355,7 @@ export default {
         formData.append('uid', this.profileData.uid)
         formData.append('desertionno', this.$cookies.get('auth-token').desertionno)
 
-        axios.post('http://i3b201.p.ssafy.io/api/adoption/Success', formData)
+        axios.post(constants.SERVER_URL + '/adoption/Success', formData)
           .then(response => {
 
           }).catch(error => {
@@ -368,7 +369,7 @@ export default {
       formData.append("desertionno", this.dogData.desertionno);
       console.log(this.$store.state.profileData.nickName);
       axios
-        .post("http://i3b201.p.ssafy.io/api/care/interestAdd", formData)
+        .post(constants.SERVER_URL + "/care/interestAdd", formData)
         .then((response) => {
           console.log(response.data);
           console.log(response.data.interest)
@@ -383,7 +384,7 @@ export default {
     console.log(this.$store.state.profileData.nickName);
     console.log(this.$cookies.get('nickName'))
     axios
-      .delete(`http://i3b201.p.ssafy.io/api/care/interestDelete`, { params:{
+      .delete(constants.SERVER_URL + `/care/interestDelete`, { params:{
         // uid: this.$cookies.get('nickName'),
         uid : this.$store.state.profileData.nickName,
         desertionno: this.$cookies.get('desertionno').desertionno
