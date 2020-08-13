@@ -135,19 +135,10 @@ public class AdoptionController {
                 
         ResponseEntity response = null;
         
-        Optional<User> checkuser = userDao.findById(request.getUid());
-        System.out.println(checkuser);
-        
-        Optional<Manager> checkmanager = managerDao.findById(request.getMid());
-        System.out.println(checkmanager);
-
-        Manager manager = managerDao.getManagerByMid(request.getMid());
-        System.out.println(manager);
-
         Adoption adoption = new Adoption();
         adoption.setUid(request.getUid());
         adoption.setName(request.getName());
-        //이메일 주석처리 되어있었는데 한번 확인 필요
+        // 이메일 주석처리 되어있었는데 한번 확인 필요
         adoption.setEmail(request.getEmail());
         adoption.setPhone(request.getPhone());
         adoption.setJob(request.getJob());
@@ -180,7 +171,6 @@ public class AdoptionController {
 
         adoption.setFixdate(request.getFixdate());
         adoption.setFixtime(request.getFixtime());
-        
         adoptionDao.save(adoption);
 
         BasicResponse result = new BasicResponse();

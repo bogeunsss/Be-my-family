@@ -15,7 +15,6 @@ public class ApplicationRequest {
 
     //사용자 정보
     @Id
-    @NotNull
     Integer adoptionno;
 
     @ApiModelProperty(required = true)
@@ -79,8 +78,7 @@ public class ApplicationRequest {
     String fixtime;
 
     //입양상태
-    @NotNull
-    String state;
+    int state;
 
     public String getUid() {
         return uid;
@@ -96,14 +94,6 @@ public class ApplicationRequest {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getPhone() {
@@ -322,13 +312,6 @@ public class ApplicationRequest {
         this.fixtime = fixtime;
     }
 
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
 
     public Integer getAdoptionno() {
         return adoptionno;
@@ -337,5 +320,22 @@ public class ApplicationRequest {
     public void setAdoptionno(Integer adoptionno) {
         this.adoptionno = adoptionno;
     }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
+
     
 }
