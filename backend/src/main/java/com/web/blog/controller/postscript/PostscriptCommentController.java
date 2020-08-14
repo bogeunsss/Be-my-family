@@ -33,23 +33,21 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-
 @ApiResponses(value = { @ApiResponse(code = 401, message = "Unauthorized", response = BasicResponse.class),
-        @ApiResponse(code = 403, message = "Forbidden", response = BasicResponse.class),
-        @ApiResponse(code = 404, message = "Not Found", response = BasicResponse.class),
-        @ApiResponse(code = 500, message = "Failure", response = BasicResponse.class) })
+                @ApiResponse(code = 403, message = "Forbidden", response = BasicResponse.class),
+                @ApiResponse(code = 404, message = "Not Found", response = BasicResponse.class),
+                @ApiResponse(code = 500, message = "Failure", response = BasicResponse.class) })
 
-@CrossOrigin(origins = { "http://localhost:3000" })
 @RestController
 public class PostscriptCommentController {
-        
+
         @Autowired
         CommentDao commentDao;
 
         @PostMapping("/comment/add")
-        @ApiOperation(value = "댓글 등록")
+        @ApiOperation(value = "입양후기 댓글 등록")
         public Object commentAdd(@RequestBody CommentRequest request) {
-                
+
                 ResponseEntity response = null;
                 final BasicResponse result = new BasicResponse();
 
@@ -62,7 +60,7 @@ public class PostscriptCommentController {
                         result.data = "success";
                         result.status = true;
                         response = new ResponseEntity<>(result, HttpStatus.OK);
-                } catch(Exception e) {
+                } catch (Exception e) {
                         result.data = "fail";
                         result.status = false;
                         response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
@@ -71,25 +69,63 @@ public class PostscriptCommentController {
         }
 
         @PutMapping("/comment/modify")
-        @ApiOperation(value = "댓글 수정")
+        @ApiOperation(value = "입양후기 댓글 수정")
         public Object commentModify(@RequestBody CommentRequest request) {
-                
+
                 ResponseEntity response = null;
                 final BasicResponse result = new BasicResponse();
 
                 try {
-                        Comment comment = new Comment();
-                        comment.setContent(request.getContent());
-                        commentDao.save(comment);
-                        result.data = "success";
+                        Optional<Comment> commentExist = commentDao.findByCommentnoAndUid(request.getCommentno(),
+                                        request.getUid());
+
+                        if (commentExist.isPresent()) {
+                                Comment comment = new Comment();
+                                comment.setContent(request.getContent());
+                                comment.setCommentno(request.getCommentno());
+                                comment.setPostscriptno(request.getPostscriptno());
+                                comment.setUid(request.getUid());
+                                commentDao.save(comment);
+                                result.data = "success";
+                        } else {
+                                result.data = "comment not exist";
+                        }
+
                         result.status = true;
                         response = new ResponseEntity<>(result, HttpStatus.OK);
-                } catch(Exception e) {
+                } catch (Exception e) {
                         result.data = "fail";
                         result.status = false;
                         response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
                 }
+
                 return response;
         }
 
+        @DeleteMapping("/comment/delete")
+        @ApiOperation(value = "입양후기 댓글 삭제")
+        public Object lostReplyDelete(@RequestParam final int commentno, @RequestParam final String uid) {
+
+                ResponseEntity response = null;
+                final BasicResponse result = new BasicResponse();
+
+                try {
+                        Optional<Comment> comment = commentDao.findByCommentnoAndUid(commentno, uid);
+                        if (comment.isPresent()) {
+                                commentDao.deleteByCommentnoAndUid(commentno, uid);
+                                result.data = "success";
+                        } else {
+                                result.data = "comment not exist";
+                        }
+                        result.status = true;
+                        response = new ResponseEntity<>(result, HttpStatus.OK);
+                } catch (Exception e) {
+                        e.printStackTrace();
+                        result.status = false;
+                        result.data = "fail";
+                        response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+                }
+
+                return response;
+        }
 }
