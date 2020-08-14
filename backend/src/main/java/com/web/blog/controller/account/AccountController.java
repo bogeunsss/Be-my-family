@@ -125,6 +125,7 @@ public class AccountController {
             user.setMarriaged(marriaged);
             user.setSex(sex);
             user.setBirthdate(birthdate);
+            user.setFlag(0);
             userDao.save(user);
 
             if (mailService.mailSend(user)) {
