@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 
 @Entity
@@ -26,4 +27,8 @@ public class Manager {
     private String password;
     private String email;
     private String phone;
+    
+    @Column(insertable = false, updatable = false)
+    private Date createdate;
+
 }

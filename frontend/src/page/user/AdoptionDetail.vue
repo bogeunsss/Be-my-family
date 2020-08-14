@@ -3,9 +3,9 @@
     <!-- <h3>어돕션디테이이이이일</h3>
     <div class='card border' style="border:1px solid red;">
         <h3>hashah</h3>
-    {{adoption}}
-    {{dogData}}
     </div>-->
+    <!-- {{adoption}}
+    {{dogData}} -->
 
     <v-card class="mx-auto" style="width:80%;">
       <v-card-text class="d-flex">
@@ -53,7 +53,7 @@
       <v-list-item two-line>
         <v-list-item-content>
           <v-list-item-title class="headline">입양희망자 상세정보</v-list-item-title>
-          <v-list-item-subtitle>보호소 No : {{ adoption[0].mid}}</v-list-item-subtitle>
+          <v-list-item-subtitle>보호소 No : {{mid}}</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
 
@@ -79,7 +79,7 @@
             </v-col>
             <v-col>
               <v-list-item-title>Nation :</v-list-item-title>
-              <v-list-item-subtitle class="text-right">{{ adoption[0].nation}}t</v-list-item-subtitle>
+              <v-list-item-subtitle class="text-right">{{ adoption[0].nation}}</v-list-item-subtitle>
             </v-col>
           </v-row>
         </v-list-item>
@@ -163,8 +163,8 @@
 
       <v-card-actions>
         <!-- <div class="d-flex float-right mr-3"> -->
-        <v-btn v-if="!isApproval" @click="dogApproval" class="float-right">승인대기</v-btn>
-        <v-btn v-if="isApproval" @click="dogApproval" class="float-right">승인취소</v-btn>
+        <v-btn @click="dogApproval" class="float-right">승인완료</v-btn>
+        <v-btn @click="dogApproval" class="float-right">승인거절</v-btn>
       </v-card-actions>
     </v-card>
   </div>
@@ -189,10 +189,13 @@ export default {
           },
         })
         .then((response) => {
+          console.log(response)
           this.adoption = response.data.adoptions.filter(
             (item) => item.adoptionno == this.$route.params.adoptionno
           );
           console.log(this.adoption);
+          this.mid = this.adoption[0].mid
+          console.log(this.mid)
           this.getDetail();
         })
         .catch((err) => console.log(err));
@@ -210,6 +213,7 @@ export default {
           this.dogData = response.data.object;
           console.log(this.dogData);
           console.log(this.adoption[0]);
+          console.log(this.adoption[0].mid);
         })
         .catch((error) => {
           console.log(error);
@@ -221,9 +225,10 @@ export default {
   },
   data() {
     return {
-      adoption: [],
+      adoption: Object,
       dogData: [],
       isApproval:false,
+      mid: ''
     };
   },
 };

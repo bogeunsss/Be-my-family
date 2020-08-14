@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import com.web.blog.dao.adoption.AdoptionDao;
 import com.web.blog.dao.care.CareDao;
+import com.web.blog.dao.care.CaredetailDao;
 import com.web.blog.dao.care.SurveyDao;
 import com.web.blog.dao.manager.ManagerDao;
 import com.web.blog.dao.user.UserDao;
@@ -17,6 +18,7 @@ import com.web.blog.model.adoption.ApplicationRequest;
 import com.web.blog.model.care.Careboard;
 import com.web.blog.model.care.Survey;
 import com.web.blog.model.manager.Manager;
+import com.web.blog.model.user.SignupRequest;
 import com.web.blog.model.user.User;
 import com.web.blog.service.MailService;
 import com.web.blog.service.ManagerMailService;
@@ -61,129 +63,165 @@ public class AdoptionController {
         @Autowired
         ManagerMailService managerMailService;
 
-
         @Autowired
         CareDao careDao;
 
 
-    //입양 신청
+            //입양 신청
     @PostMapping("/adoption/Application")
     @ApiOperation(value = "입양신청")
-    public Object adoptionLAplication(@RequestParam(required = true) final String email,
+    public Object adoptionLAplication(@Valid @RequestParam(required = true) final String email,
         @RequestParam(required = true) final String desertionno) { 
 
         ResponseEntity response = null;
         
-        User userOpt = userDao.getUserByEmail(email);
-        Optional<Survey> surveyOpt = surveydao.findByUid(userOpt.getUid());
-        Optional<Adoption> adoptionOpt = adoptionDao.findByUidAndDesertionno(userOpt.getUid(), desertionno);
-        Careboard careboard = careDao.findByDesertionno(desertionno);
-        String checkmid = careboard.getCarenm();
-        System.out.println(checkmid);
-        System.out.println(userOpt);
-        System.out.println(surveyOpt);
-        System.out.println(adoptionOpt);
-
         final AdoptionResponse result = new AdoptionResponse();
-
-        if(!surveyOpt.isPresent()) {
+        try{
+            Optional<User> userOpt = userDao.findByEmail(email);
+            if(userOpt.isPresent()) {
+                Optional<Survey> surveyOpt = surveydao.findByUid(userOpt.get().getUid());
+                if(surveyOpt.isPresent()) {
+                    Optional<Adoption> adoptionOpt = adoptionDao.findByUidAndDesertionno(userOpt.get().getUid(), desertionno);
+                    if(!adoptionOpt.isPresent()) {
+                        Careboard careboard = careDao.findByDesertionno(desertionno);
+                        String checkmid = careboard.getCarenm();
+                        System.out.println("success");
+                        result.status = true;
+                        result.data = "success";
+                        result.checksurvey = true;
+                        result.checkadoption = true;
+                        result.survey = surveyOpt;
+                        result.user = userOpt;
+                        result.mid = checkmid;
+                        result.desertionno = desertionno;
+                        response = new ResponseEntity<>(result, HttpStatus.OK);
+                    } else {
+                        System.out.println("Already apllication");
+                        result.status = false;
+                        result.data = "Already apllication";
+                        result.checksurvey = true;
+                        result.checkadoption = false;
+                        result.user = userOpt;
+                        response = new ResponseEntity<>(result, HttpStatus.OK);
+                    }
+                }else {
+                    System.out.println("It hasn't been surveyed yet.");
+                    result.status = false;
+                    result.data = "It hasn't been surveyed yet.";
+                    result.checksurvey = false;
+                    result.user = userOpt;
+                    response = new ResponseEntity<>(result, HttpStatus.OK);
+                }
+            }else {
+                System.out.println("not user");
+                result.status = false;
+                result.data = "not user";
+                result.user = null;
+                response = new ResponseEntity<>(result, HttpStatus.NON_AUTHORITATIVE_INFORMATION);
+            }
+        } catch(Exception e) {
+            result.data = "fail";
             result.status = false;
-            result.data = "It hasn't been surveyed yet.";
-            result.checksurvey = false;
-            result.user = userOpt;
             response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
-        } else if(!adoptionOpt.isPresent()){
-            result.status = false;
-            result.data = "Already applied";
-            result.checksurvey = true;
-            result.checkadoption = false;
-            result.user = userOpt;
-            response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
-        } else {
-            result.status = true;
-            result.data = "success";
-            result.checksurvey = true;
-            result.checkadoption = true;
-            result.survey = surveyOpt;
-            result.user = userOpt;
-            result.mid = checkmid;
-            result.desertionno = desertionno;
-            response = new ResponseEntity<>(result, HttpStatus.OK);
         }
-        return response;
+        
+            return response;
     }
 
+        
     //입양 신청
     @PostMapping("/adoption/Success")
     @ApiOperation(value = "입양신청완료")
-        public Object adoptionLSuccess(@Valid @RequestBody ApplicationRequest request) { 
-                
+        // public Object adoptionLSuccess(@Valid @RequestBody ApplicationRequest request) { 
+         public Object adoptionLSuccess(@Valid @RequestParam String uid, @RequestParam String desertionno,
+        @RequestParam String fixdate, @RequestParam String fixtime) {        
+            
         ResponseEntity response = null;
         
-        Optional<User> checkuser = userDao.findById(request.getUid());
+
+        Optional<User> checkuser = userDao.findByUid(uid);
         System.out.println(checkuser);
         
-        Optional<Manager> checkmanager = managerDao.findById(request.getMid());
-        System.out.println(checkmanager);
-
-        Manager manager = managerDao.getManagerByMid(request.getMid());
+        Careboard careboard = careDao.findByDesertionno(desertionno);
+        String mid = careboard.getCarenm();
+        Manager manager = managerDao.getManagerByMid(mid);
         System.out.println(manager);
 
+        Optional<Survey> survey = surveydao.findById(uid);
+        System.out.println(survey);
+
         Adoption adoption = new Adoption();
-        adoption.setUid(request.getUid());
-        adoption.setName(request.getName());
-        // adoption.setEmail(request.getEmail());
-        adoption.setPhone(request.getPhone());
-        adoption.setJob(request.getJob());
-        adoption.setMarriaged(request.getMarriaged());
-        adoption.setSex(request.getSex());
-
-        adoption.setMid(request.getMid());
-
-        adoption.setNation(request.getNation());
-        adoption.setSido(request.getSido());
-        adoption.setGugun(request.getGugun());
-        adoption.setPlace(request.getPlace());
-        adoption.setBeforeover(request.isBeforeover());
-        adoption.setBeforeadopt(request.isBeforeadopt());
-        adoption.setPresentanimal(request.getPresentanimal());
-        adoption.setFamilyunder(request.getFamilyunder());
-        adoption.setFamilymiddle(request.getFamilymiddle());
-        adoption.setFamilyagree(request.isFamilyagree());
-        adoption.setDissolution(request.getDissolution());
-        adoption.setSickness(request.isSickness());
-        adoption.setAlone(request.getAlone());
-        adoption.setTemp(request.getTemp());
-        adoption.setHouse(request.getHouse());
-        adoption.setEatmoney(request.getEatmoney());
-        adoption.setCaremoney(request.getCaremoney());
-        adoption.setReason(request.getReason());
-        adoption.setThink(request.getThink());
-
-        adoption.setDesertionno(request.getDesertionno());
-
-        adoption.setFixdate(request.getFixdate());
-        adoption.setFixtime(request.getFixtime());
-        
-        adoptionDao.save(adoption);
-
         BasicResponse result = new BasicResponse();
+        try {
 
-        if(managerMailService.managerMailSend(manager)) {
-            result.data = "send email success";
-        } else {
-            result.data = "send email fail";
+            if(!checkuser.isPresent()) {
+                result.data = "not found user";
+                result.status = false;
+                response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+            } else if(!survey.isPresent()) {
+                result.data = "not found survey";
+                result.status = false;
+                response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+            } else {
+                adoption.setUid(checkuser.get().getUid());
+                adoption.setName(checkuser.get().getName());
+                adoption.setEmail(checkuser.get().getEmail());
+                adoption.setPhone(checkuser.get().getPhone());
+                adoption.setJob(checkuser.get().getJob());
+                adoption.setMarriaged(checkuser.get().getMarriaged());
+                adoption.setSex(checkuser.get().getSex());
+
+                adoption.setMid(mid);
+
+                adoption.setNation(survey.get().getNation());
+                adoption.setSido(survey.get().getSido());
+                adoption.setGugun(survey.get().getGugun());
+                adoption.setPlace(survey.get().getPlace());
+                adoption.setBeforeover(survey.get().getBeforeover());
+                adoption.setBeforeadopt(survey.get().getBeforeadopt());
+                adoption.setPresentanimal(survey.get().getPresentanimal());
+                adoption.setFamilyunder(survey.get().getFamilyunder());
+                adoption.setFamilymiddle(survey.get().getFamilymiddle());
+                adoption.setFamilyagree(survey.get().getFamilyagree());
+                adoption.setDissolution(survey.get().getDissolution());
+                adoption.setSickness(survey.get().getSickness());
+                adoption.setAlone(survey.get().getAlone());
+                adoption.setTemp(survey.get().getTemp());
+                adoption.setHouse(survey.get().getHouse());
+                adoption.setEatmoney(survey.get().getEatmoney());
+                adoption.setCaremoney(survey.get().getCaremoney());
+                adoption.setReason(survey.get().getReason());
+                adoption.setThink(survey.get().getThink());
+
+                adoption.setDesertionno(desertionno);
+
+                adoption.setFixdate(fixdate);
+                adoption.setFixtime(fixtime);
+                
+                adoptionDao.save(adoption);
+
+                result.status = true;
+                result.data = "success";
+
+                response = new ResponseEntity<>(result, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            result.data = "fail";
+            response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
         }
-
-        result.status = true;
-
-        response = new ResponseEntity<>(result, HttpStatus.OK);
+        
+                // if(managerMailService.managerMailSend(manager)) {
+                //     result.data = "send email success";
+                // } else {
+                //     result.data = "send email fail";
+                // }
         return response;
+
     }
 
     @DeleteMapping("/adoption/delete")
     @ApiOperation(value = "입양 신청 삭제")
-    public Object interestDelete(String uid, String desertionno) {
+    public Object adoptionDelete(String uid, String desertionno) {
         ResponseEntity response = null;
         
         final BasicResponse result = new BasicResponse();
@@ -195,6 +233,10 @@ public class AdoptionController {
                 result.status = true;
                 result.data = "success";
                 response = new ResponseEntity<>(result, HttpStatus.OK);
+            } else {
+                result.data = "not found";
+                result.status = false;
+                response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
             }
         }   catch(Exception e) {
             System.out.println(e.getMessage());
@@ -204,5 +246,8 @@ public class AdoptionController {
         }
         return response;
     }
+
+
+
 }
 
