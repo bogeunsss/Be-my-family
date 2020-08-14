@@ -47,7 +47,8 @@
         <div v-if="isLoggedIn  && !isManager">
         <v-btn color="success" depressed v-if="!isLikeDog" @click="likeDog">관심이써여~</v-btn>
         <v-btn color="success" depressed v-if="isLikeDog" @click="deleteLike">관심업서여</v-btn>
-        <v-btn color="primary" class="ma-2" dark @click="dialog = true">입양신청</v-btn>
+        <v-btn color="primary" class="ma-2" v-if="!isAdoption" dark @click="goModal(dialog = true)">입양신청</v-btn>
+        <v-btn color="primary" class="ma-2" dark v-if="isAdoption">신청대기중</v-btn>
         </div>
         <!-- total 보내야 할 데이터 : email, 상담날짜, 상담시간, 강아지id, url: /account/adoptionList -->
         <v-dialog v-model="dialog" max-width="500px">
@@ -167,17 +168,158 @@ export default {
           isLikeDog: false,
           isLoggedIn: false,
           isManager: false,
+          isAdoption:false,
           user: Object,
           userAge: 0,
           survey: Object,
         }
     },
     computed:{
-      ...mapState(['profileData','loginData'])
+      ...mapState(['profileData','loginData','adoptionData'])
     },
     created(){
       this.getDetail()
 
+    },
+    methods:{
+      ...mapActions(['find']),
+      getDetail(){
+        if(this.$cookies.isKey("auth-token")){
+          var token = this.$cookies.get('auth-token')
+          this.email = token.email
+          this.isLoggedIn = true
+
+          console.log(this.$cookies.get('auth-token').mid)
+          if(this.$cookies.get('auth-token').mid == null){
+              this.find(token.email)
+              setTimeout(()=>{
+
+                axios.get(constants.SERVER_URL + '/care/detailUser', {
+                  params: {
+                    desertionno: this.$cookies.get('desertionno').desertionno,
+                    uid: this.profileData.nickName
+                  }
+                })
+                .then( response => {
+                    console.log(response)
+                    console.log(response.data.object.carenm)
+                    this.dogData = response.data.object
+                    console.log(this.adoptionData)
+                    for (var i = 0; i < this.adoptionData.length; i++){
+                      if(this.adoptionData[i].desertionno ==  this.$cookies.get('desertionno').desertionno){
+                        this.isAdoption = true
+                      }
+                    }
+                    if(this.$route.params.uuid === undefined){
+                      this.isLikeDog = response.data.interest
+                    }else{
+                      this.isLikeDog = true
+                    }
+                })
+                .catch( error => {
+                    console.log(error)
+                })
+              }, 100)
+      
+          }else{
+              this.isManager = true
+              axios.get(constants.SERVER_URL + '/care/detailUser', {
+                params: {
+                  desertionno: this.$cookies.get('desertionno').desertionno,
+                }
+              })
+              .then( response => {
+                  console.log(response)
+                  this.dogData = response.data.object
+              })
+              .catch( error => {
+                  console.log(error)
+              })
+             }
+            }
+        else{
+          axios.get(constants.SERVER_URL + '/care/detailUser', {
+                params: {
+                  desertionno: this.$cookies.get('desertionno').desertionno,
+                }
+              })
+              .then( response => {
+                  console.log(response)
+                  this.dogData = response.data.object
+              })
+              .catch( error => {
+                  console.log(error)
+              })
+             }
+          
+      },
+
+      requestComplete(){
+        let st = ""
+        if(this.selectedTime.length > 2){
+          st = this.selectedTime.slice(0,2)
+        }else{
+          st = this.selectedTime.slice(0,1)
+        }
+        var formData = new FormData()
+        formData.append('fixdate', this.date)
+        formData.append('fixtime', st)
+        formData.append('uid', this.profileData.nickName)
+        formData.append('desertionno', this.$cookies.get('desertionno').desertionno)
+        // formData.append('mid',this.survey.carenm)
+
+        axios.post(constants.SERVER_URL + '/adoption/Success', formData)
+          .then(response => {
+            console.log(response)
+            // this.$cookies.set('isadoption')
+            this.isAdoption = true
+            alert('성공')
+
+          }).catch(error => {
+            console.log('실패')
+
+          })
+        this.dialog = false
+      },
+    likeDog() {
+      let formData = new FormData();
+      formData.append("uid", this.$store.state.profileData.nickName);
+      formData.append("desertionno", this.dogData.desertionno);
+      console.log(this.$store.state.profileData.nickName);
+      axios
+        .post(constants.SERVER_URL + "/care/interestAdd", formData)
+        .then((response) => {
+          console.log(response.data);
+          console.log(response.data.interest)
+          this.isLikeDog = response.data.interest;
+          // this.dogData = response.data.object;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    deleteLike() {
+    console.log(this.$store.state.profileData.nickName);
+    console.log(this.$cookies.get('nickName'))
+    axios
+      .delete(constants.SERVER_URL + `/care/interestDelete`, { params:{
+        // uid: this.$cookies.get('nickName'),
+        uid : this.$store.state.profileData.nickName,
+        desertionno: this.$cookies.get('desertionno').desertionno
+      }})
+      .then((response) => {
+        console.log(response);
+        console.log("성공");
+        // index.desertionno = null;
+        this.isLikeDog = false
+        // this.getInterest()
+        // console.log(index.desertionno)
+      })
+      .catch((error) => {
+        console.log("실패");
+      });
+    },
+    getSurvey() {
       let formData = new FormData();
         formData.append('email', this.$cookies.get('auth-token').email)
         formData.append('desertionno', this.$cookies.get('desertionno').desertionno)
@@ -185,7 +327,7 @@ export default {
         console.log(this.$cookies.get('desertionno').desertionno)
         axios.post(constants.SERVER_URL + '/adoption/Application', formData)
           .then(response => {
-            console.log(response)  
+            console.log(response.data)  
             this.user = response.data.user
             this.survey = response.data.survey
             if(response.data.user.sex){
@@ -279,134 +421,8 @@ export default {
               console.log(error)
           })
     },
-    methods:{
-      ...mapActions(['find']),
-      getDetail(){
-        if(this.$cookies.isKey("auth-token")){
-          var token = this.$cookies.get('auth-token')
-          this.email = token.email
-          this.isLoggedIn = true
-
-          console.log(this.$cookies.get('auth-token').mid)
-          if(this.$cookies.get('auth-token').mid == null){
-              this.find(token.email)
-              setTimeout(()=>{
-                axios.get(constants.SERVER_URL + '/care/detailUser', {
-                  params: {
-                    desertionno: this.$cookies.get('desertionno').desertionno,
-                    uid: this.profileData.nickName
-                  }
-                })
-                .then( response => {
-                    console.log(response)
-                    console.log(this.isManager)
-                    console.log(response.data.object.carenm)
-                    this.dogData = response.data.object
-                    if(this.$route.params.uuid === undefined){
-                      this.isLikeDog = response.data.interest
-                    }else{
-                      this.isLikeDog = true
-                    }
-                })
-                .catch( error => {
-                    console.log(error)
-                })
-              }, 100)
-      
-          }else{
-              this.isManager = true
-              axios.get(constants.SERVER_URL + '/care/detailUser', {
-                params: {
-                  desertionno: this.$cookies.get('desertionno').desertionno,
-                }
-              })
-              .then( response => {
-                  console.log(response)
-                  this.dogData = response.data.object
-              })
-              .catch( error => {
-                  console.log(error)
-              })
-             }
-            }
-        else{
-          axios.get(constants.SERVER_URL + '/care/detailUser', {
-                params: {
-                  desertionno: this.$cookies.get('desertionno').desertionno,
-                }
-              })
-              .then( response => {
-                  console.log(response)
-                  this.dogData = response.data.object
-              })
-              .catch( error => {
-                  console.log(error)
-              })
-             }
-          
-      },
-
-      requestComplete(){
-        let st = ""
-        if(this.selectedTime.length > 2){
-          st = this.selectedTime.slice(0,2)
-        }else{
-          st = this.selectedTime.slice(0,1)
-        }
-        var formData = new FormData()
-        formData.append('fixdate', this.date)
-        formData.append('fixtime', st)
-        formData.append('uid', this.profileData.uid)
-        formData.append('desertionno', this.$cookies.get('auth-token').desertionno)
-
-        axios.post(constants.SERVER_URL + '/adoption/Success', formData)
-          .then(response => {
-            console.log(response)
-            alert('성공')
-
-          }).catch(error => {
-            console.log('astsdtad')
-
-          })
-        this.dialog = false
-      },
-    likeDog() {
-      let formData = new FormData();
-      formData.append("uid", this.$store.state.profileData.nickName);
-      formData.append("desertionno", this.dogData.desertionno);
-      console.log(this.$store.state.profileData.nickName);
-      axios
-        .post(constants.SERVER_URL + "/care/interestAdd", formData)
-        .then((response) => {
-          console.log(response.data);
-          console.log(response.data.interest)
-          this.isLikeDog = response.data.interest;
-          // this.dogData = response.data.object;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
-    deleteLike() {
-    console.log(this.$store.state.profileData.nickName);
-    console.log(this.$cookies.get('nickName'))
-    axios
-      .delete(constants.SERVER_URL + `/care/interestDelete`, { params:{
-        // uid: this.$cookies.get('nickName'),
-        uid : this.$store.state.profileData.nickName,
-        desertionno: this.$cookies.get('desertionno').desertionno
-      }})
-      .then((response) => {
-        console.log(response);
-        console.log("성공");
-        // index.desertionno = null;
-        this.isLikeDog = false
-        // this.getInterest()
-        // console.log(index.desertionno)
-      })
-      .catch((error) => {
-        console.log("실패");
-      });
+    goModal() {
+      this.getSurvey()
     },
     destroyed(){
       this.$cookies.remove('desertionno')

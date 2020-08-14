@@ -19,35 +19,38 @@
               </v-col>
 
               <v-col class="text-center pl-0">
-                  <div class="w-100" v-if="!managerInfo.mid">
+                <div v-if="!managerInfo.mid">
+                  <div class="w-100">
                   <h3 class='my-3'>UserID : {{ profileData.email }}</h3>
                   </div>
                   <br>
-                  <div class="w-100" v-if="!managerInfo.mid">
+                  <div class="w-100">
                   <h3 class='my-3'>NickName : {{ profileData.nickName }}</h3>
                   </div>
-                  <br>
-                  <div class="w-100" v-if="!managerInfo.mid">
+                  <br>  
+                  <div class="w-100">
                   <h3 class='my-3'>Phone : {{ profileData.phone }}</h3>
                   </div>
                   <br>
-                  <div class="w-100" v-if="!managerInfo.mid">
+                  <div class="w-100">
                   <h3 class='my-3'>Job : {{ profileData.job }}</h3>
                   </div>
-                  <div class="w-100" v-if="!profileData">
+                </div>
+                
+                <div v-if="managerInfo.mid">
+                  <div class="w-100">
                   <h3 class='my-3'>보호소 Name : {{ managerInfo.mid }}</h3>
                   </div>
                   <br>
-                  <div class="w-100" v-if="!profileData">
+                  <div class="w-100">
                   <h3 class='my-3'>Manager ID : {{ managerInfo.email }}</h3>
                   </div>
                   <br>
-                  <div class="w-100" v-if="!profileData">
+                  <div class="w-100">
                   <h3 class='my-3'>Name : {{ managerInfo.name }}</h3>
                   </div>
-                  <br>
+                </div>
                   <!-- <button @click="test">aaa</button> -->
-
               </v-col>
             </v-row>
           </v-container>
@@ -55,9 +58,9 @@
       </div>
       <div v-if="!$cookies.get('auth-token').mid">
         <h2>유기견 신청 목록</h2>
-
-        <!-- <v-row class="mb-5">
+        <v-row class="mb-5">
           <v-col v-for="adoption in adoptionList" :key="adoption.id">
+              <v-btn @click="deleteAdoption(adoption.desertionno)">x</v-btn>
             <v-card @click="goDetail">
               <v-card-text class="d-flex">
                 <div>유기견 번호 : {{adoption.desertionno}}</div>
@@ -68,7 +71,7 @@
               </v-card-text>
             </v-card>
           </v-col>
-        </v-row> -->
+        </v-row>
       </div>
     </v-container>
   </div>
@@ -79,7 +82,7 @@
 import constants from "../../lib/constants";
 import SERVER from "@/lib/constants";
 
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 import axios from "axios";
 import VueJwtDecode from "vue-jwt-decode";
 
@@ -95,16 +98,21 @@ export default {
     var token = this.$cookies.get("auth-token");
     if(this.$cookies.get('auth-token').uid){
       this.find(token.email);
+      this.getAdoptionList()
+      // this.getAdoptionList()
+      console.log(this.adoptionData)
       // this.getAdoption();
     }else{
       this.getManagerFind(token.email)
     }
   },
   computed: {
-    ...mapState(["profileData", "loginData"]),
+    ...mapState(["profileData", "loginData","adoptionData"]),
+    // ...mapMutations(["adoptionDataList"])
   },
   methods: {
     ...mapActions(["find", "userDelete", "logout"]),
+    // ...mapMutations(["adoptionDataList"]),
     userAccountDelete() {
       this.userDelete(this.profileData.nickName);
       this.logout();
@@ -125,6 +133,29 @@ export default {
         console.log(err)
       }) 
     },
+    deleteAdoption(desertion_no) {
+      console.log(desertion_no)
+      axios.delete(constants.SERVER_URL + '/adoption/delete', { params :{
+        uid : this.profileData.nickName,
+        desertionno : desertion_no
+      }
+      }).then(res=>{console.log(res)
+        this.getAdoptionList()
+        console.log(this.adoptionList)
+        console.log(this.adoptionData)
+      })
+      .catch(err=>console.log(err))
+    },
+  getAdoptionList() {
+      axios
+        .get(constants.SERVER_URL + `/account/find`, { params: {
+          email : this.$cookies.get('auth-token').email}
+        })
+        .then((response) => {
+          this.adoptionList = response.data.adoptions;
+        })
+        .catch((err) => console.log(err));
+    },
   },
   data: function () {
     return {
@@ -133,7 +164,7 @@ export default {
       nickName: "",
       token: "",
       item: [],
-      adoptionList: [],
+      adoptionList: {},
       managerInfo:[],
       // profileData:{}
     };
