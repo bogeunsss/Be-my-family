@@ -20,7 +20,6 @@ public class Careboard {
     @Id
     private String desertionno;
 
-    @JsonIgnore
     private String noticeedt;
     private String popfile;
     private String processstate;
