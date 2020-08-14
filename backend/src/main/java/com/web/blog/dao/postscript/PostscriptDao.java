@@ -19,5 +19,5 @@ public interface PostscriptDao extends JpaRepository<Postscript, String> {
     @Modifying
     void deleteByPostscriptno(int postscriptno);
     
-    Postscript getPostscriptByPostscriptno(Integer postscriptno);
+    Postscript getPostscriptByPostscriptno(int postscriptno);
 }
