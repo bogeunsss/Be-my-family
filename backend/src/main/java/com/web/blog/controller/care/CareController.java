@@ -1,22 +1,18 @@
 package com.web.blog.controller.care;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.web.blog.dao.care.CareDao;
 import com.web.blog.model.BasicResponse;
-import com.web.blog.model.care.Care;
 import com.web.blog.model.care.Careboard;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,15 +34,15 @@ public class CareController {
     @GetMapping("/care/search")
     @ApiOperation(value = "보호소 유기견 검색")
     public Object careboardSearch(@RequestParam(required = true) final String category,
-            @RequestParam(required = true) final String searchText) {
+            @RequestParam(required = true) final String searchText, @RequestParam(required = true) int pageno) {
         
         ResponseEntity response = null;
-        List<Careboard> careOpt = null;
+        Page<Careboard> careOpt = null;
 
         if(category.equals("careAddr")) {
-            careOpt = careDao.findByCareaddrContainingOrderByNoticesdtDesc(searchText);
+            careOpt = careDao.findByCareaddrContaining(searchText, PageRequest.of(pageno, 12, Sort.Direction.DESC, "Noticesdt"));
         }else if (category.equals("kindCd")) {
-            careOpt = careDao.findBykindcdContainingOrderByNoticesdtDesc(searchText);
+            careOpt = careDao.findBykindcdContaining(searchText, PageRequest.of(pageno, 12, Sort.Direction.DESC, "Noticesdt"));
         }
          
         final BasicResponse result = new BasicResponse();
@@ -66,14 +62,14 @@ public class CareController {
 
     @GetMapping("/care/list")
     @ApiOperation(value = "보호소 유기견 조회")
-    public Object careboardList() {
+    public Object careboardList(@RequestParam(required = true) int pageno) {
         
         ResponseEntity response = null;
-        List<Careboard> careList = null;
+        Page<Careboard> careList = null;
          
         final BasicResponse result = new BasicResponse();
 
-        careList = careDao.findAll();
+        careList = careDao.findAll(PageRequest.of(pageno, 12, Sort.Direction.DESC, "Noticesdt"));
 
         if (careList != null) {
             result.status = true;
