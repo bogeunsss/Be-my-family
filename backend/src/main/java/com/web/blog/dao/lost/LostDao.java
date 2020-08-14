@@ -25,5 +25,5 @@ public interface LostDao extends JpaRepository<Lost, String> {
     
     @Transactional
     void deleteByLostno(int lostno);
-
+   
 }
