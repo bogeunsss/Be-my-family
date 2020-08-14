@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.mysql.cj.x.protobuf.MysqlxCrud.Order.Direction;
 import com.web.blog.dao.postscript.CommentDao;
 import com.web.blog.dao.postscript.PostpicDao;
 import com.web.blog.dao.postscript.PostscriptDao;
@@ -26,7 +25,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -81,7 +79,7 @@ public class PostscriptController {
             long totalData = post.getTotalElements();
             boolean isData = post.hasContent();
             int currentPage = post.getNumber();
-            int currentData = post.getNumberOfElements(); 
+            int currentData = post.getNumberOfElements();
 
             result.object = postList;
             result.totalPage = totalPage;
@@ -89,8 +87,8 @@ public class PostscriptController {
             result.totalData = totalData;
             result.currentPage = currentPage + 1;
             result.currentData = currentData;
-            
-            if(isData) {
+
+            if (isData) {
                 result.data = "success";
             } else {
                 result.data = "no data";
@@ -110,7 +108,8 @@ public class PostscriptController {
 
     @PostMapping("/postscript/Add")
     @ApiOperation(value = "입양후기 게시글 등록")
-    public Object postscriptAdd(@RequestPart(required = false) final List<MultipartFile> images, PostscriptRequest request) {
+    public Object postscriptAdd(@RequestPart(required = false) final List<MultipartFile> images,
+            PostscriptRequest request) {
 
         ResponseEntity response = null;
 
@@ -142,7 +141,7 @@ public class PostscriptController {
                 final String filepath = "C:/Image/" + originalfileName;
                 final File dest = new File(filepath);
                 file.transferTo(dest);
-                Postpic postpic = new Postpic(); 
+                Postpic postpic = new Postpic();
                 postpic.setPostscriptno(postscript.getPostscriptno());
                 postpic.setPostpath(filepath);
                 postpicList.add(postpic);
@@ -196,26 +195,41 @@ public class PostscriptController {
             @RequestParam(required = true) final String searchText, @RequestParam(required = true) int pageno) {
 
         ResponseEntity response = null;
-        Page<Postscript> postscriptList = null;
-        final BasicResponse result = new BasicResponse();
-
-        if (category.equals("uid")) {
-            postscriptList = postscriptSearchDao.findByUidContainingOrderByPostscriptnoDesc(searchText, PageRequest.of(pageno - 1, 2, Sort.Direction.DESC, "postscriptno"));
-        } else if (category.equals("title")) {
-            postscriptList = postscriptSearchDao.findByTitleContainingOrderByPostscriptnoDesc(searchText, PageRequest.of(pageno - 1, 2, Sort.Direction.DESC, "postscriptno"));
-        }
+        Page<Postscript> post = null;
+        final PostscriptResponse result = new PostscriptResponse();
 
         try {
-            if (!postscriptList.isEmpty()) {
-                result.data = "success";
-                result.status = true;
-                result.object = postscriptList;
-                response = new ResponseEntity<>(result, HttpStatus.OK);
-            } else {
-                result.data = "no search";
-                result.status = false;
-                response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+            if (category.equals("uid")) {
+                post = postscriptSearchDao.findByUidContainingOrderByPostscriptnoDesc(searchText,
+                        PageRequest.of(pageno - 1, 15, Sort.Direction.DESC, "postscriptno"));
+            } else if (category.equals("title")) {
+                post = postscriptSearchDao.findByTitleContainingOrderByPostscriptnoDesc(searchText,
+                        PageRequest.of(pageno - 1, 15, Sort.Direction.DESC, "postscriptno"));
             }
+
+            List<Postscript> postList = post.getContent();
+            int totalPage = post.getTotalPages();
+            boolean hasNext = post.hasNext();
+            long totalData = post.getTotalElements();
+            boolean isData = post.hasContent();
+            int currentPage = post.getNumber();
+            int currentData = post.getNumberOfElements();
+
+            result.object = postList;
+            result.totalPage = totalPage;
+            result.hasNext = hasNext;
+            result.totalData = totalData;
+            result.currentPage = currentPage + 1;
+            result.currentData = currentData;
+
+            if (isData) {
+                result.data = "success";
+            } else {
+                result.data = "no data";
+            }
+            result.status = true;
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+
         } catch (Exception e) {
 
             result.status = false;
@@ -228,7 +242,8 @@ public class PostscriptController {
 
     @PutMapping("/postscript/Modify")
     @ApiOperation(value = "입양후기 게시글 수정")
-    public Object postscriptModify(@RequestPart(required = false) final List<MultipartFile> images, PostscriptRequest request) {
+    public Object postscriptModify(@RequestPart(required = false) final List<MultipartFile> images,
+            PostscriptRequest request) {
 
         System.out.println(request.getPostscriptno());
         System.out.println(request.getContent());
@@ -255,7 +270,7 @@ public class PostscriptController {
                 final String filepath = "C:/Image/" + originalfileName;
                 final File dest = new File(filepath);
                 file.transferTo(dest);
-                Postpic postpic = new Postpic(); 
+                Postpic postpic = new Postpic();
                 postpic.setPostscriptno(postscript.getPostscriptno());
                 postpic.setPostpath(filepath);
                 postpicList.add(postpic);
