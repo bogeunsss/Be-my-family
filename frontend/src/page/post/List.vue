@@ -1,5 +1,5 @@
 <template>
-    <v-container fluid>
+    <v-container fluid id="scollDetect">
         <h1 v-if="isSearched">검색 결과가 없습니다.</h1>
         <div class="container">
         <form>
@@ -34,37 +34,41 @@
         <v-row>
             <v-col cols="12">
                 <v-row>
-                    <v-col col="6" md="3" v-for="(dog, i) in dogData" :key="i">
-                        <v-card @click="goDetail(i)">
+                    <v-col cols="12" v-for="(dogs, j) in dogData" :key="'dog'+j">
+                        <v-row>
+                            <v-col col="6" md="3" v-for="(dog, i) in dogs" :key="i">
+                                <v-card @click="goDetail(j,i)">
 
-                            <v-img
-                                class="white--text align-end"
-                                height="200px"
-                                :src="dog.popfile"
-                            >
-                            <v-card-title>{{ dog.carenm }}</v-card-title>
-                            </v-img>
+                                    <v-img
+                                        class="white--text align-end"
+                                        height="200px"
+                                        :src="dog.popfile"
+                                    >
+                                    <v-card-title>{{ dog.carenm }}</v-card-title>
+                                    </v-img>
 
-                            <v-card-subtitle class="pb-0">{{ dog.kindcd }}</v-card-subtitle>
+                                    <v-card-subtitle class="pb-0">{{ dog.kindcd }}</v-card-subtitle>
 
-                            <v-card-text class="text--primary">
+                                    <v-card-text class="text--primary">
 
-                            <div>{{ dog.careaddr }}</div>
-                            <br>
-                            <span class="date">2020-06-19ㆍ</span>  
-                            <span class="comment">댓글 0개</span>
-                            <br>
-                            <a>userID</a><span>ㆍ ♥ 2</span>
-                            </v-card-text>
+                                    <div>{{ dog.careaddr }}</div>
+                                    <br>
+                                    <span class="date">2020-06-19ㆍ</span>  
+                                    <span class="comment">댓글 0개</span>
+                                    <br>
+                                    <a>userID</a><span>ㆍ ♥ 2</span>
+                                    </v-card-text>
 
-                            <v-card-actions>
-                            <v-btn
-                                color="orange"
-                                text >
-                            Share
-                            </v-btn>
-                            </v-card-actions>
-                        </v-card>
+                                    <v-card-actions>
+                                    <v-btn
+                                        color="orange"
+                                        text >
+                                    Share
+                                    </v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-col>
+                        </v-row>
                     </v-col>
                 </v-row>
             </v-col>
@@ -87,18 +91,21 @@ export default {
     watch: {
     },
     computed:{
-        ...mapState(['dogData'])
+        ...mapState(['dogData', 'isLast'])
     },
     created() {
-        this.mainList()
-        console.log("여기=>")
+        this.mainList(this.pageno)
+        window.addEventListener('scroll', this.handleScroll)
         console.log(this.dogData)
+    },
+    beforeDestroy(){
+        window.removeEventListener('scroll', this.handleScroll)
     },
     methods: {
         ...mapActions(['mainList', 'setSearchDogs']),
-        goDetail(index){
+        goDetail(j,index){
             // this.$router.push({name:constants.URL_TYPE.POST.DETAIL, params: {desertionno:this.dogData.desertionno}})
-            this.$cookies.set('desertionno', {desertionno:this.dogData[index].desertionno})
+            this.$cookies.set('desertionno', {desertionno:this.dogData[j][index].desertionno})
             this.$router.push({name:constants.URL_TYPE.POST.DETAIL})
         },
         search(){
@@ -122,6 +129,14 @@ export default {
             }
 
         },
+        handleScroll(){
+            if(window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 1){
+                if(!this.isLast){
+                    this.pageno += 1
+                    this.mainList(this.pageno)
+                }
+            }
+        }
     },
     data: () => {
         return {   
@@ -133,6 +148,9 @@ export default {
             searchText: '',
             contacts: [],
             isSearched: false,
+            pageno: 0,
+            scrollY: 0,
+            timer: null,
         }
     }
 }

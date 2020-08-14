@@ -50,7 +50,7 @@ export default new Vuex.Store({
       birthdate:null,
     },
     dogData: [],
-
+    isLast: false,
     sido_states: [
       '서울특별시', '부산광역시', '인천광역시', '대전광역시',
       '대구광역시', '울산광역시', '광주광역시', '세종특별자치시',
@@ -368,13 +368,17 @@ export default new Vuex.Store({
           console.log(err)
       })
     },
-    mainList({commit, state}){
+    mainList({commit, state}, pageno){
+      if(pageno === 0){
+        state.dogData = []
+      }
       axios
-        .get(SERVER.SERVER_URL + "/care/list")
+        .get(SERVER.SERVER_URL + "/care/list?pageno=" + pageno)
         .then((res) =>{
-            state.dogData = res.data.object
-            // state.dogData = res.data.object
-            // console.log(state.dogData)
+            if(res.data.object.empty){
+              state.isLast = true
+            }
+            state.dogData.push(res.data.object.content)
         })
         .catch((err) =>{
             console.log(err)
