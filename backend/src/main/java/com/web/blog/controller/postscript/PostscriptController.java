@@ -258,6 +258,8 @@ public class PostscriptController {
             postscript.setContent(request.getContent());
             postscript.setImage(request.getImage());
             postscript.setKind(request.getKind());
+            postscript.setGugun(request.getGugun());
+            postscript.setSido(request.getSido());
 
             System.out.println(postscript);
             postscriptDao.save(postscript);
