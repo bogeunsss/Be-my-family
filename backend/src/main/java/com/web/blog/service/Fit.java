@@ -1,5 +1,8 @@
 package com.web.blog.service;
 
+import java.util.Optional;
+
+import com.web.blog.model.care.CareRecommend;
 import com.web.blog.model.care.Careboard;
 import com.web.blog.model.care.Survey;
 
@@ -36,24 +39,29 @@ public class Fit {
     }
 
     //  설문 적합 사용자 기반으로 강아지 추천 영역
-    public boolean recommend (Careboard dog, Survey survey) {
+    public static boolean recommend (CareRecommend careRecommend, Optional<Survey> survey) {
 
         boolean ok = true;
         boolean no = false;
         boolean result = false;
  
-        String house = survey.getHouse();
-        String kind = dog.getKindcd();
-        String weight = dog.getWeight();
-        int kg = Integer.parseInt(weight.replace("(Kg)", ""));
+        String house = survey.get().getHouse();
+        String kind = careRecommend.getKindcd();
+        String weight = careRecommend.getWeight();
+        double kg = Double.parseDouble(weight.replace("(Kg)", ""));
         
         if (house.equals("room") || house.equals("apt") || house.equals("villa")) {
             //종
             if(kind.contains("꼬똥 드 뚤레아") || kind.contains("말티즈") || kind.contains("퍼그") || kind.contains("토이 푸들") ||
-            kind.contains("포메라니안") || kind.contains("미니어쳐 푸들") || kind.contains("시츄") || kind.contains("요크셔 테리어") ||
+            kind.contains("포메라니안") || kind.contains("푸들") || kind.contains("시츄") || kind.contains("요크셔 테리어") ||
             kind.contains("치와와") || kind.contains("비숑 프리제")) {
                 result = ok;
             }
+
+            if(kg < 5) {
+                result = ok;
+            }
+
         } else {
 
         }
