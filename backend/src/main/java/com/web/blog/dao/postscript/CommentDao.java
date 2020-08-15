@@ -13,6 +13,7 @@ public interface CommentDao extends JpaRepository<Comment, String> {
         
         Comment save (Comment comment);
         List<Comment> findByPostscriptnoOrderByPostscriptno(Integer postscriptno);
+        @Transactional
         void deleteByCommentnoAndUid(int commentno, String Uid);
         Optional<Comment> findByCommentnoAndUid(int commentno, String Uid);
 
