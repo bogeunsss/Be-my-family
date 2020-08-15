@@ -112,7 +112,7 @@ export default {
             console.log(this.category)
             console.log(this.searchText)
             if(this.searchText === ""){
-                    this.mainList()
+                    this.mainList(-1)
             }else{
                 axios.get(constants.SERVER_URL + `/care/search?category=${this.category}&searchText=${this.searchText}`)
                 .then((response) =>{
