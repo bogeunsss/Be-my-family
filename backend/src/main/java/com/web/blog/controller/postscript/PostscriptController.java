@@ -16,6 +16,7 @@ import com.web.blog.model.PostscriptResponse;
 import com.web.blog.model.postscript.Postpic;
 import com.web.blog.model.postscript.Postscript;
 import com.web.blog.model.postscript.PostscriptRequest;
+import com.web.blog.model.user.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -164,25 +165,32 @@ public class PostscriptController {
 
     @DeleteMapping("/postscript/Delete")
     @ApiOperation(value = "입양후기 게시글 삭제")
-    public Object postscriptDelete(@RequestParam(required = true) final int postscriptno) {
+    public Object postscriptDelete(@RequestParam(required = true) final int postscriptno,
+    @RequestParam(required = true) final String Uid) {
 
         ResponseEntity response = null;
         final BasicResponse result = new BasicResponse();
-
-        Optional<Postscript> postscriptOpt = postscriptDao.findByPostscriptno(postscriptno);
-
-        System.out.println(postscriptOpt);
-
-        if (postscriptOpt.isPresent()) {
-            postscriptDao.deleteByPostscriptno(postscriptno);
-            result.status = true;
-            result.data = "success";
+        try {
+            Optional<Postscript> postscriptOpt = postscriptDao.findByPostscriptnoAndUid(postscriptno, Uid);
+            Optional<User> userOpt = userDao.findByUid(Uid);
+            System.out.println(postscriptOpt);
+            if(!userOpt.isPresent()) {
+                result.data = "not user";
+                result.status = true;
+            } else {
+                if (!postscriptOpt.isPresent()) {
+                    result.data = "Not your posting";
+                    result.status = true;
+                } else {
+                    postscriptDao.deleteByPostscriptno(postscriptno);
+                    result.data = "success";
+                    result.status = true;
+                }
+            }
             response = new ResponseEntity<>(result, HttpStatus.OK);
-        }
-
-        else {
-            result.status = false;
+        } catch (Exception e) {
             result.data = "fail";
+            result.status = false;
             response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
         }
 
