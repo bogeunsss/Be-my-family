@@ -43,7 +43,7 @@
 
         <v-card-actions class="d-flex justify-end">
           <v-btn text color="deep-purple accent-4" v-if="this.profileData.nickName == this.Adoptdata.uid" @click="postupdate">수정</v-btn>
-          <v-btn text color="red accent-4" v-if="this.profileData.nickName == this.Adoptdata.uid" @click="postdelete">삭제</v-btn>
+          <v-btn text color="red accent-4" v-if="this.profileData.nickName == this.Adoptdata.uid"  @click="postdelete">삭제</v-btn>
         </v-card-actions>
       </v-card>
 
@@ -123,7 +123,7 @@ export default {
       })
     },
     postdelete(){ 
-      axios.delete(`http://localhost:8080/postscript/Delete?postscriptno=`+this.Adoptdata.postscriptno)
+      axios.delete(`http://localhost:8080/postscript/Delete?postscriptno=${this.$route.params.ID}`)
       .then(()=>{
          this.adoptlist()
       })
