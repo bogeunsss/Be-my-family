@@ -8,6 +8,7 @@ import com.web.blog.dao.care.CareDao;
 import com.web.blog.dao.care.SurveyDao;
 import com.web.blog.dao.user.UserDao;
 import com.web.blog.model.BasicResponse;
+import com.web.blog.model.CareboardResponse;
 import com.web.blog.model.care.CareRecommend;
 import com.web.blog.model.care.Careboard;
 import com.web.blog.model.care.Survey;
@@ -85,7 +86,7 @@ public class CareController {
         Page<Careboard> careList = null;
         // Page<CareRecommend> careRecommendList = null;
         List<CareRecommend> careRecommends = new ArrayList<>();
-        final BasicResponse result = new BasicResponse();
+        final CareboardResponse result = new CareboardResponse();
         // 리스트랑 설문조사 객체 보내주기
         try {
             if (uid == null) {
@@ -131,6 +132,17 @@ public class CareController {
                 }
 
                 // careRecommendList = careList.get();
+                int totalPage = careList.getTotalPages();
+                boolean hasNext = careList.hasNext();
+                long totalData = careList.getTotalElements();
+                int currentPage = careList.getNumber();
+                int currentData = careList.getNumberOfElements();
+    
+                result.totalPage = totalPage;
+                result.hasNext = hasNext;
+                result.totalData = totalData;
+                result.currentPage = currentPage;
+                result.currentData = currentData;
                 result.object = careRecommends;
                 result.data = "recommend List";
                 result.status = true;
@@ -140,9 +152,22 @@ public class CareController {
                 careList = careDao.findAll(PageRequest.of(pageno, 12, Sort.Direction.DESC, "Noticesdt"));
 
                 if (careList != null) {
+                    
+                    int totalPage = careList.getTotalPages();
+                    boolean hasNext = careList.hasNext();
+                    long totalData = careList.getTotalElements();
+                    int currentPage = careList.getNumber();
+                    int currentData = careList.getNumberOfElements();
+    
+                    result.totalPage = totalPage;
+                    result.hasNext = hasNext;
+                    result.totalData = totalData;
+                    result.currentPage = currentPage;
+                    result.currentData = currentData;
+
                     result.status = true;
                     result.data = "not user or no survey";
-                    result.object = careList;
+                    result.object = careList.getContent();
                     response = new ResponseEntity<>(result, HttpStatus.OK);
                 } else {
                     result.status = true;
