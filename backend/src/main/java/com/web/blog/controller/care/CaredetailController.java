@@ -48,6 +48,9 @@ public class CaredetailController {
     @Autowired
     InterestDao interestDao;
 
+    @Autowired
+    UserDao userDao;
+
 
     @GetMapping("/care/detailUser")
     @ApiOperation(value = "유기견 상세 검색")
@@ -55,40 +58,34 @@ public class CaredetailController {
             @RequestParam(required = false) final String uid) {
 
         ResponseEntity response = null;
+        final BasicResponse result = new BasicResponse();
+
         Optional<Careboard> caredetailOpt = caredetailDao.findByDesertionno(desertionno);
-        if(uid!=null) {
-            Optional<Interest> careinterestOpt = interestDao.findByUidAndDesertionno(uid, desertionno);
-            final BasicResponse result = new BasicResponse();
-            result.uid = uid;
-            if(caredetailOpt.isPresent()) {
-                result.status = true;
-                result.data = "success";
-                result.object = caredetailOpt.get();
+        Optional<User> user = userDao.findByUid(uid);
+        
+        if(caredetailOpt.isPresent()) {
+            if(user.isPresent()) {
+                Optional<Interest> careinterestOpt = interestDao.findByUidAndDesertionno(uid, desertionno);
                 if(careinterestOpt.isPresent()) {
                     result.interest = true;
-                    System.out.println("true");
+                    result.data = "success";
                 } else {
                     result.interest = false;
-                    System.out.println("false");
+                    result.data = "no interest";
                 }
-                response = new ResponseEntity<>(result, HttpStatus.OK);
-
-            } else {
-                result.data = "fail";
-                response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
-            }
-
-        } else {
-            final BasicResponse result = new BasicResponse();
-            if(caredetailOpt.isPresent()) {
+                result.uid = uid;
                 result.status = true;
-                result.data = "success";
-                result.object = caredetailOpt.get();
-                response = new ResponseEntity<>(result, HttpStatus.OK);
+                result.recommend = user.get().getFlag();
             } else {
-                result.data = "fail";
-                response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+                result.data = "no user";
             }
+            result.object = caredetailOpt.get();
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+            
+        } else {
+            result.data = "fail";
+            result.status = false;
+            response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
         }
         return response;
     } 
