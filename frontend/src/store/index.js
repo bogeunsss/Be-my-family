@@ -51,6 +51,7 @@ export default new Vuex.Store({
     },
     dogData: [],
     isLast: false,
+    adoptionData:{},
     sido_states: [
       '서울특별시', '부산광역시', '인천광역시', '대전광역시',
       '대구광역시', '울산광역시', '광주광역시', '세종특별자치시',
@@ -166,6 +167,9 @@ export default new Vuex.Store({
     checkLoggedIn(state, check){
       state.isLoggedIn = check
     },
+    // adoptionDataList(state, adoptionData){
+    //   state.adoptionData = adoptionData
+    // },
 
     getProfileData(state){
       return state.profileData
@@ -339,9 +343,10 @@ export default new Vuex.Store({
         var year2 = count.getFullYear();
         var result = year - year2 + 1
         state.profileData.birthdate = result.toString()
-        
+        console.log(response.data.adoptions)
         state.profileData.nickName = response.data.object.uid
         state.profileData.password = response.data.object.password
+        state.adoptionData = response.data.adoptions
       })
       .catch(err=>console.log(err))
     },
