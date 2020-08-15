@@ -57,12 +57,11 @@ public class ManagerController {
 
     @PostMapping("/manager/login")
     @ApiOperation(value = "관리자 로그인")
-    public Object managerLogin(@RequestParam(required = true) final String email,
+    public Object managerLogin(@RequestParam(required = true) final String mid,
             @RequestParam(required = true) final String password) {
 
         ResponseEntity response = null;
-        Optional<Manager> managerOpt = managerDao.findManagerByEmailAndPassword(email, password);
-
+        Optional<Manager> managerOpt = managerDao.findByMidAndPassword(mid, password);
         final ManagerResponse result = new ManagerResponse();
         if (managerOpt.isPresent()) {
             result.status = true;
@@ -70,7 +69,7 @@ public class ManagerController {
 
             Manager manager = new Manager();
             manager.setMid(managerOpt.get().getMid());
-            manager.setEmail(email);
+            manager.setEmail(managerOpt.get().getEmail());
 
             String jwt = tokenProvider.managerToken(manager);
             result.object = new JwtAuthenticationResult(jwt);
