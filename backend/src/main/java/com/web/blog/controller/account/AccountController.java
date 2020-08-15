@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import com.mysql.cj.x.protobuf.MysqlxCrud.Find;
 import com.web.blog.dao.adoption.AdoptionDao;
 import com.web.blog.dao.user.UserDao;
 import com.web.blog.model.BasicResponse;
@@ -14,6 +15,7 @@ import com.web.blog.model.user.User;
 import com.web.blog.security.JwtAuthenticationResult;
 import com.web.blog.security.JwtTokenProvider;
 import com.web.blog.service.MailService;
+import com.web.blog.service.PasswordService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,6 +49,9 @@ public class AccountController {
 
     @Autowired
     MailService mailService;
+
+    @Autowired
+    PasswordService passwordService;
 
     @Autowired
     JwtTokenProvider tokenProvider;
@@ -87,8 +92,7 @@ public class AccountController {
     }
 
     @PostMapping("/account/signup")
-    @ApiOperation(value = "가입하기")
-
+    @ApiOperation(value = "가입요청")
     public Object signup(@Valid @RequestBody SignupRequest request) {
 
         String nickName = request.getUid();
@@ -113,8 +117,8 @@ public class AccountController {
             result.status = true;
             result.data = "nicknameexist";
         } else {
+
             result.status = true;
-            result.data = "success";
             User user = new User();
             user.setUid(nickName);
             user.setEmail(email);
@@ -125,11 +129,12 @@ public class AccountController {
             user.setMarriaged(marriaged);
             user.setSex(sex);
             user.setBirthdate(birthdate);
-            user.setFlag(0);
-            userDao.save(user);
 
-            if (mailService.mailSend(user)) {
-                result.data = "emailsuccess";
+            String key = mailService.makekey(6, 1);
+
+            if (mailService.mailSend(user, key)) {
+                result.data = key;
+                result.object = user;
             } else {
                 result.data = "emailfail";
             }
@@ -167,10 +172,10 @@ public class AccountController {
 
         List<Adoption> adoptionList = null;
 
-        try{
+        try {
 
             adoptionList = adoptionDao.findByUid(newUser.getUid());
-            
+
             result.status = true;
             result.data = "success";
             result.object = newUser;
@@ -178,14 +183,14 @@ public class AccountController {
             result.name = newUser.getName();
 
             response = new ResponseEntity<>(result, HttpStatus.OK);
-  
-        }  catch(Exception e) {
+
+        } catch (Exception e) {
 
             result.status = false;
             result.data = "not fount user";
-            
+
             response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
-        
+
         }
 
         return response;
@@ -204,6 +209,93 @@ public class AccountController {
         response = new ResponseEntity<>(result, HttpStatus.OK);
 
         return response;
+    }
+
+    @PostMapping("/account/emailkey")
+    @ApiOperation(value = "가입완료")
+    public Object emailKey(@Valid @RequestBody SignupRequest request) {
+
+        ResponseEntity response = null;
+        final BasicResponse result = new BasicResponse();
+
+        try {
+            String nickName = request.getUid();
+            String email = request.getEmail();
+            String password = request.getPassword();
+            String name = request.getName();
+            String phone = request.getPhone();
+            String job = request.getJob();
+            int marriaged = request.getMarriaged();
+            int sex = request.getSex();
+            String birthdate = request.getBirthdate();
+
+            User user = new User();
+            user.setUid(nickName);
+            user.setEmail(email);
+            user.setPassword(password);
+            user.setName(name);
+            user.setPhone(phone);
+            user.setJob(job);
+            user.setMarriaged(marriaged);
+            user.setSex(sex);
+            user.setBirthdate(birthdate);
+
+            userDao.save(user);
+
+            result.data = "success";
+            result.status = true;
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.data = "fail";
+            result.status = false;
+            response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+        }
+
+        return response;
+
+    }
+
+    @PostMapping("/account/findpassword")
+    @ApiOperation(value = "비밀번호찾기")
+    public Object findPassword(@RequestParam(required = true) final String email,
+            @RequestParam(required = true) final String uid) {
+
+        ResponseEntity response = null;
+        final BasicResponse result = new BasicResponse();
+
+        try {
+
+            Optional<User> user = userDao.findByUidAndEmail(uid, email);
+
+            if (user.isPresent()) {
+                String password = passwordService.makePassword(10);
+                user.get().setEmail(email);
+                user.get().setPassword(password);
+                user.get().setUid(uid);
+                userDao.save(user.get());
+
+                result.data = "success";
+                if (passwordService.mailSend(user, password)) {
+                    result.data = "success";
+                } else {
+                    result.data = "emailfail";
+                }
+            } else {
+                result.data = "no user";
+            }
+
+            result.status = true;
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.data = "fail";
+            result.status = false;
+            response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+        }
+
+        return response;
+
     }
 
 }
