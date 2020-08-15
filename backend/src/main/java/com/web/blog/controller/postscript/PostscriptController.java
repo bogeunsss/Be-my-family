@@ -265,15 +265,17 @@ public class PostscriptController {
             postpicDao.deleteByPostscriptno(postscript.getPostscriptno());
 
             List<Postpic> postpicList = new ArrayList<>();
-            for (MultipartFile file : images) {
-                final String originalfileName = file.getOriginalFilename();
-                final String filepath = "C:/Image/" + originalfileName;
-                final File dest = new File(filepath);
-                file.transferTo(dest);
-                Postpic postpic = new Postpic();
-                postpic.setPostscriptno(postscript.getPostscriptno());
-                postpic.setPostpath(filepath);
-                postpicList.add(postpic);
+            if(!postpicList.isEmpty()){
+                for (MultipartFile file : images) {
+                    final String originalfileName = file.getOriginalFilename();
+                    final String filepath = "C:/Image/" + originalfileName;
+                    final File dest = new File(filepath);
+                    file.transferTo(dest);
+                    Postpic postpic = new Postpic();
+                    postpic.setPostscriptno(postscript.getPostscriptno());
+                    postpic.setPostpath(filepath);
+                    postpicList.add(postpic);
+                }
             }
 
             postpicDao.saveAll(postpicList);
