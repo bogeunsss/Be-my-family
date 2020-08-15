@@ -75,7 +75,7 @@ public class CaredetailController {
                 }
                 result.uid = uid;
                 result.status = true;
-                result.recommend = user.get().getFlag();
+                result.fitness = user.get().getFlag();
             } else {
                 result.data = "no user";
             }
