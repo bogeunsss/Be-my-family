@@ -71,7 +71,7 @@
   </v-container>
 </template>
 
-<script>
+<script>  
 import constants from "@/lib/constants";
 import axios from "axios";
 
@@ -113,7 +113,7 @@ export default {
   methods: {
     adoptList(){
       axios
-          .get("http://localhost:8080/postscript/List")
+          .get("http://localhost:8080/postscript/List?pageno="+this.page)
           .then((res) =>{
             this.adoptData = res.data.object
             console.log(this.adoptData)

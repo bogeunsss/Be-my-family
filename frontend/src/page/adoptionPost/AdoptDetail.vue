@@ -42,15 +42,28 @@
         </v-card-text>
 
         <v-card-actions class="d-flex justify-end">
-          <v-btn text color="deep-purple accent-4" v-if="this.$cookies.isKey('auth-token')" @click="postupdate">수정</v-btn>
-          <v-btn text color="red accent-4" v-if="this.$cookies.isKey('auth-token')" @click="postdelete">삭제</v-btn>
+          <v-btn text color="deep-purple accent-4" v-if="this.profileData.nickName == this.Adoptdata.uid" @click="postupdate">수정</v-btn>
+          <v-btn text color="red accent-4" v-if="this.profileData.nickName == this.Adoptdata.uid" @click="postdelete">삭제</v-btn>
         </v-card-actions>
       </v-card>
 
 
       <v-card v-for="comment in comments" :key="comment.commentno" class="mx-auto mt-5" max-width="100%" min-height="3rem" outlined style="border-top:none; border-right:none; border-left:none;">
         <div style="line-height:3rem;"> 
-          <p> {{comment.uid}} : {{comment.content}}</p>
+           <span>{{comment.uid}} : {{comment.content}}</span>
+          <v-btn text color="deep-purple accent-4" v-if="profileData.nickName == comment.uid"  @click="changeupdate(comment.commentno)" >수정</v-btn>
+          <v-btn text color="red accent-4" v-if="profileData.nickName == comment.uid"  >삭제</v-btn>
+          <div class="d-flex justify-left" v-if="isupdate">
+          <v-textarea
+          v-if="comment.commentno == cid"
+          auto-grow
+          outlined
+          rows="1"
+          row-height="15"
+          v-model="updatecomment.content"
+        ></v-textarea>
+        <v-btn v-if="comment.commentno == cid" class="mt-2" text color="success accent-4" @click="commentupdate(updatecomment.content, updatecomment.commentno)">수정완료</v-btn>
+          </div>
         </div>
       </v-card>
 
@@ -109,10 +122,9 @@ export default {
         console.log(error)
       })
     },
-    postdelete(){
-      
-      axios.delete(`http://localhost:8080/postscript/Delete?postscriptno=`+this.$route.params.ID)
-      .then((response)=>{
+    postdelete(){ 
+      axios.delete(`http://localhost:8080/postscript/Delete?postscriptno=`+this.Adoptdata.postscriptno)
+      .then(()=>{
          this.adoptlist()
       })
       .catch((error)=>{
@@ -124,18 +136,48 @@ export default {
     },
     createComment(){
       this.commentData.uid = this.profileData.nickName
-      axios.post("http://localhost:8080/comment/add", this.commentData)
-      .then((res)=>{
-        console.log(this.commentData)
-        this.commentData.content = "";
-        alert("댓글이 등록되었습니다.")
-        this.$router.go()
-      })
-      .catch((error) =>{
-        console.log(error)
-      })
+      var flag = 0
+      if(this.commentData.content == ""){
+        alert("댓글을 입력해주세요.")
+        flag = 1
+      }
+      if(flag == 0){
+        axios.post("http://localhost:8080/comment/add", this.commentData)
+        .then((res)=>{
+          console.log(this.commentData)
+          this.commentData.content = "";
+          alert("댓글이 등록되었습니다.")
+          this.$router.go()
+        })
+        .catch((error) =>{
+          console.log(error)
+        })
+        }
 
     },
+    commentupdate(Content, Contentno){
+      axios.put("http://localhost:8080/comment/modify" ,{
+        uid: this.profileData.nickName,
+        postscriptno: this.$route.params.ID,
+        content: Content,
+        contentno: Contentno
+      })
+      .then(() =>{
+        alert("수정완료!")
+        this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTDETAIL, params:{ ID: this.$route.params.ID} })
+        this.$router.go()
+      })
+      .catch((error)=>{
+        console.log(error)
+      })
+    },
+
+    changeupdate(commentno){
+      this.isupdate = !this.isupdate
+      this.cid = commentno
+      console.log(this.cid)
+    },
+    
 
 
   },
@@ -143,10 +185,14 @@ export default {
     return {
       Adoptdata: {},
       comments: [],
+      updatecomment:{},
+      isupdate: false,
+      cid:"",
       commentData:{
         uid:"",
         postscriptno:"",
-        content:""
+        content:"",
+        commentno:""
       },
     };
   },

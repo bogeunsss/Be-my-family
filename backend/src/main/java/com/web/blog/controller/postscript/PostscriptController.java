@@ -14,6 +14,7 @@ import com.web.blog.dao.user.UserDao;
 import com.web.blog.model.BasicResponse;
 import com.web.blog.model.PostscriptResponse;
 import com.web.blog.model.postscript.Postpic;
+
 import com.web.blog.model.postscript.Postscript;
 import com.web.blog.model.postscript.PostscriptRequest;
 
@@ -41,6 +42,7 @@ import io.swagger.annotations.ApiResponses;
         @ApiResponse(code = 404, message = "Not Found", response = BasicResponse.class),
         @ApiResponse(code = 500, message = "Failure", response = BasicResponse.class) })
 
+    
 @RestController
 public class PostscriptController {
 
@@ -244,6 +246,7 @@ public class PostscriptController {
     @ApiOperation(value = "입양후기 게시글 수정")
     public Object postscriptModify(@RequestPart(required = false) final List<MultipartFile> images,
             PostscriptRequest request) {
+
 
         System.out.println(request.getPostscriptno());
         System.out.println(request.getContent());
