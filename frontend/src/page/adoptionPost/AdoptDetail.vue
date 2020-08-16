@@ -23,10 +23,10 @@
         </v-card-subtitle>
 
         <v-card-actions class="d-flex justify-end mb-3">
-          <v-btn icon large v-if="!this.Like" @click="like">
+          <v-btn icon large v-if="!this.likegood" @click="like">
             <v-icon large>mdi-heart</v-icon>
           </v-btn>
-          <v-btn icon large style="color:red;" v-if="this.Like" @click="like">
+          <v-btn icon large style="color:red;" v-if="this.likegood" @click="like">
             <v-icon large>mdi-heart</v-icon>
           </v-btn>
           <v-btn icon large>
@@ -111,21 +111,25 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['find']),
     adoptlist() {
       this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTLIST });
     },
     adoptdetail(){
-      axios.get("http://localhost:8080/postscript/detail?postscriptno="+this.$route.params.ID)
+      setTimeout(()=>{
+        axios.get(`http://localhost:8080/postscript/detail?postscriptno=${this.$route.params.ID}&uid=${this.profileData.nickName}`)
       .then((res) =>{
+      console.log(this.$route.params.ID, this.profileData.nickName)
         this.Adoptdata = res.data.object
         this.comments = res.data.comments
-        console.log(res.data.isGood)
+        this.likegood = res.data.isGood
+        console.log(this.likegood)
         // console.log(this.Adoptdata)
         // console.log(this.comments)
       })
       .catch((error) =>{
         console.log(error)
-      })
+      })},100)
     },
     postdelete(){ 
       axios.delete(`http://localhost:8080/postscript/Delete?postscriptno=${this.$route.params.ID}`)
@@ -196,13 +200,14 @@ export default {
     like(){
       axios.post(`http://localhost:8080/postscript/good/add?postscriptno=${this.$route.params.ID}&uid=${this.profileData.nickName}`)
       .then((res)=>{
-        // console.log(res.data.isGood)
+        console.log(res.data.isGood)
         // this.Like = res.data.isGood
-
         if(res.data.isGood == true){
-          this.Like = false
+          this.likegood = true
+          console.log(this.likegood)
         }else{
-          this.Like = true
+          this.likegood = false
+          console.log(this.likegood)
         }
         // console.log(this.Like)
       })
@@ -221,8 +226,7 @@ export default {
     return {
       Adoptdata: {},
       comments: [],
-      likegood:[],
-      Like:false,
+      likegood:'',
       updatecomment:{},
       isupdate: false,
       cid:"",
