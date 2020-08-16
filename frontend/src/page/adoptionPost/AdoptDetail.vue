@@ -52,7 +52,7 @@
         <div style="line-height:3rem;"> 
            <span>{{comment.uid}} : {{comment.content}}</span>
           <v-btn text color="deep-purple accent-4" v-if="profileData.nickName == comment.uid"  @click="changeupdate(comment.commentno)" >수정</v-btn>
-          <v-btn text color="red accent-4" v-if="profileData.nickName == comment.uid"  >삭제</v-btn>
+          <v-btn text color="red accent-4" v-if="profileData.nickName == comment.uid"  @click="commentdelete(comment.commentno)">삭제</v-btn>
           <div class="d-flex justify-left" v-if="isupdate">
           <v-textarea
           v-if="comment.commentno == cid"
@@ -168,6 +168,17 @@ export default {
         this.$router.go()
       })
       .catch((error)=>{
+        console.log(error)
+      })
+    },
+    commentdelete(Commentno){
+      axios.delete(`http://localhost:8080/comment/delete?commentno=${Commentno}&uid=${this.profileData.nickName}`)
+      .then(() => {
+        alert("삭제완료")
+        this.$router.go()
+
+      })
+      .catch((error) =>{
         console.log(error)
       })
     },
