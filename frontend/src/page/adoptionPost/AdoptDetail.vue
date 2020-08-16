@@ -23,7 +23,10 @@
         </v-card-subtitle>
 
         <v-card-actions class="d-flex justify-end mb-3">
-          <v-btn icon large>
+          <v-btn icon large v-if="!this.Like" @click="like">
+            <v-icon large>mdi-heart</v-icon>
+          </v-btn>
+          <v-btn icon large style="color:red;" v-if="this.Like" @click="like">
             <v-icon large>mdi-heart</v-icon>
           </v-btn>
           <v-btn icon large>
@@ -98,6 +101,7 @@ export default {
   created(){
     this.adoptdetail()
     this.commentData.postscriptno = this.$route.params.ID
+    // this.likecheck()
   },
   computed:{
     ...mapState(['profileData','loginData', ]),
@@ -115,6 +119,7 @@ export default {
       .then((res) =>{
         this.Adoptdata = res.data.object
         this.comments = res.data.comments
+        console.log(res.data.isGood)
         // console.log(this.Adoptdata)
         // console.log(this.comments)
       })
@@ -125,6 +130,7 @@ export default {
     postdelete(){ 
       axios.delete(`http://localhost:8080/postscript/Delete?postscriptno=${this.$route.params.ID}`)
       .then(()=>{
+        alert("삭제되었습니다.")
          this.adoptlist()
       })
       .catch((error)=>{
@@ -182,20 +188,41 @@ export default {
         console.log(error)
       })
     },
-
     changeupdate(commentno){
       this.isupdate = !this.isupdate
       this.cid = commentno
       console.log(this.cid)
     },
-    
+    like(){
+      axios.post(`http://localhost:8080/postscript/good/add?postscriptno=${this.$route.params.ID}&uid=${this.profileData.nickName}`)
+      .then((res)=>{
+        // console.log(res.data.isGood)
+        // this.Like = res.data.isGood
 
-
+        if(res.data.isGood == true){
+          this.Like = false
+        }else{
+          this.Like = true
+        }
+        // console.log(this.Like)
+      })
+      .catch((error)=>{
+        console.log(error)
+      })
+    },
+    // likecheck(){
+    //   axios.post(`http://localhost:8080/postscript/good/add?postscriptno=${this.$route.params.ID}&uid=${this.profileData.nickName}`)
+    //   .then((res)=>{
+    //     this.Like = res.data.isGood
+    //   })
+    // },
   },
   data() {
     return {
       Adoptdata: {},
       comments: [],
+      likegood:[],
+      Like:false,
       updatecomment:{},
       isupdate: false,
       cid:"",
