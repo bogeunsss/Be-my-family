@@ -96,7 +96,7 @@ export default {
           { state: '작성자', abbr: 'uid' }],
       category: {},
       searchText: '',
-      pagene:'',
+      
 
       adoptData: {
         postscriptno: "",
@@ -139,15 +139,14 @@ export default {
     search(){
         console.log(this.category)
         console.log(this.searchText)
-        console.log(this.pageno)
+        console.log(this.page)
         if(this.searchText === ""){
                 this.adoptList()
         }else{
-            axios.get(`http://localhost:8080/postscript/postsearch?category=${this.category}&searchText=${this.searchText}&page=${this.pageno}`)
+            axios.get(`http://localhost:8080/postscript/Search?category=${this.category}&searchText=${this.searchText}&pageno=${this.page}`)
             .then((response) =>{
                 this.adoptData = response.data.object
                 this.searchText = ""
-                this.page= ""
                 console.log(response)
 
             })
