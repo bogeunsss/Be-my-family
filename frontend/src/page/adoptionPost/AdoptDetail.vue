@@ -62,7 +62,7 @@
           row-height="15"
           v-model="updatecomment.content"
         ></v-textarea>
-        <v-btn v-if="comment.commentno == cid" class="mt-2" text color="success accent-4" @click="commentupdate(updatecomment.content, updatecomment.commentno)">수정완료</v-btn>
+        <v-btn v-if="comment.commentno == cid" class="mt-2" text color="success accent-4" @click="commentupdate(comment.commentno)">수정완료</v-btn>
           </div>
         </div>
       </v-card>
@@ -155,13 +155,13 @@ export default {
         }
 
     },
-    commentupdate(Content, Contentno){
-      axios.put("http://localhost:8080/comment/modify" ,{
+    commentupdate(Commentno){
+      axios.put('http://localhost:8080/comment/modify',{
         uid: this.profileData.nickName,
-        postscriptno: this.$route.params.ID,
-        content: Content,
-        contentno: Contentno
-      })
+        commentno : Commentno,
+        content : this.updatecomment.content,
+        postscriptno: this.$route.params.ID
+      })  
       .then(() =>{
         alert("수정완료!")
         this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTDETAIL, params:{ ID: this.$route.params.ID} })
