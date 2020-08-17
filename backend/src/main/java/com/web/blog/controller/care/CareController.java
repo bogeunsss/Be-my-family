@@ -83,7 +83,7 @@ public class CareController {
                 if (!(user.isPresent() && survey.isPresent() && user.get().getFlag() == 1)) {
                     
                     result.data = "success";
-                    result.object = careList;
+                    result.object = careList.getContent();
 
                 } else {
                     for (int i = 0; i < careList.getContent().size(); i++) {
