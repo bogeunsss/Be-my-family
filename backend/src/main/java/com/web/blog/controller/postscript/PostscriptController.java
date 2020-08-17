@@ -142,8 +142,17 @@ public class PostscriptController {
             List<Postpic> postpicList = new ArrayList<>();
             for (MultipartFile file : images) {
                 final String originalfileName = file.getOriginalFilename();
+                //로컬
                 final String filepath = "C:/Image/" + originalfileName;
                 final File dest = new File(filepath);
+                
+                //서버
+                // final String filepath = "http://i3b201.p.ssafy.io/file/post" + originalfileName;  
+                // final File dest = new File("http://i3b201.p.ssafy.io/file/post" + file.getOriginalFilename());
+                // if (!dest.getParentFile().exists())
+                //     dest.getParentFile().mkdirs();
+                
+                
                 file.transferTo(dest);
                 Postpic postpic = new Postpic();
                 postpic.setPostscriptno(postscript.getPostscriptno());
@@ -291,13 +300,11 @@ public class PostscriptController {
                     postpic.setPostpath(filepath);
                     postpicList.add(postpic);
                 }
+
             }
-
             postpicDao.saveAll(postpicList);
-
             result.status = true;
             result.data = "success";
-
             response = new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
 
