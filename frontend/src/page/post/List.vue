@@ -1,6 +1,5 @@
 <template>
     <v-container fluid id="scollDetect">
-        <h1 v-if="isSearched">검색 결과가 없습니다.</h1>
         <div class="container">
         <form>
             <v-row class="d-flex align-center mx-auto">
@@ -94,9 +93,18 @@ export default {
         ...mapState(['dogData', 'isLast'])
     },
     created() {
-        this.mainList(this.pageno)
+        if(this.$cookies.isKey('auth-token')){
+            if(this.$cookies.get('auth-token').uid !== undefined){
+                this.userInfo = this.$cookies.get('auth-token').uid
+            }
+        }
+        var paramInfo = {
+            pageno : this.pageno,
+            userInfo : this.userInfo
+        }
+        this.mainList(paramInfo)
         window.addEventListener('scroll', this.handleScroll)
-        console.log(this.dogData)
+        // console.log(this.dogData)
     },
     beforeDestroy(){
         window.removeEventListener('scroll', this.handleScroll)
@@ -112,16 +120,22 @@ export default {
             console.log(this.category)
             console.log(this.searchText)
             if(this.searchText === ""){
-                    this.mainList(-1)
+                    this.mainList(this.pageno)
             }else{
-                axios.get(constants.SERVER_URL + `/care/search?category=${this.category}&searchText=${this.searchText}`)
+                if(!this.isSearched){
+                    this.pageno = 0
+                }
+                axios.get(constants.SERVER_URL + `/care/search?category=${this.category}&searchText=${this.searchText}&pageno=${this.pageno}`)
                 .then((response) =>{
-                    this.setSearchDogs(response.data.object)
-                    if(!this.dogData){this.isSearched=true}
-                    else{this.isSearched=false}
-                    this.searchText = ""
                     console.log(response)
-
+                    if(response.data.object.empty){
+                        alert('검색 결과가 없습니다.')
+                        this.mainList(0)
+                        this.searchText = ""
+                    }else{
+                        this.setSearchDogs(response.data)
+                        this.isSearched = true
+                    }
                 })
                 .catch(() =>{
                     alert("올바른 값을 입력하세요")
@@ -133,7 +147,11 @@ export default {
             if(window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 1){
                 if(!this.isLast){
                     this.pageno += 1
-                    this.mainList(this.pageno)
+                    if(this.isSearched){
+                        this.search()
+                    }else{
+                        this.mainList(this.pageno)
+                    }
                 }
             }
         }
@@ -147,10 +165,11 @@ export default {
             category: {},
             searchText: '',
             contacts: [],
-            isSearched: false,
             pageno: 0,
+            isSearched: false,
             scrollY: 0,
             timer: null,
+            userInfo: null,
         }
     }
 }

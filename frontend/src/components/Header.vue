@@ -43,7 +43,9 @@
                     </v-radio-group>
                     <!-- </v-container> -->
                 <p >* 아직 회원이 아니신가요?</p>
-                <router-link v-bind:to="{name:constants.URL_TYPE.USER.JOIN}" class="btn--text">회원가입</router-link>
+                <v-btn text v-bind:to="{name:constants.URL_TYPE.USER.JOIN}" color="primary">회원가입</v-btn>
+                <v-btn text color="primary" @click="PWDialog = true">pw찾기</v-btn>
+                
               </v-card-text>
               <div class="d-flex float-right mr-3">
                 <v-btn color="blue darken-1" text @click="setDialog">Close</v-btn>
@@ -51,9 +53,29 @@
 
               </div>
             </v-card>
+          <v-dialog v-model="PWDialog" max-width="300px">
+              <v-card>
+                <v-card-title>비밀번호 찾기</v-card-title>
+                <v-card-text class="pb-0">
+                  <v-text-field label="Email*" required v-model="PWEmail"></v-text-field>
+                  <v-text-field label="NickName*" required v-model="PWNickName"></v-text-field>
+                </v-card-text>
+                <v-divider></v-divider>
+                <v-card-actions>
+                  <v-btn @click="findPW">완료</v-btn>
+                  <v-btn @click="PWDialog = false">취소</v-btn>
+                  <v-progress-circular
+                    class="ml-3"
+                    v-if="nowLoading"
+                    indeterminate
+                    color="primary"
+                  ></v-progress-circular>
+                </v-card-actions>
+              </v-card>
+          </v-dialog>
           </v-dialog>
         <!-- </v-list-item-content> -->
-          <p class="mb-0" v-if="isLoggedIn && !isManager">{{ $store.state.profileData.nickName }}</p>
+          <p class="mb-0" v-if="isLoggedIn && !isManager">{{ profileData.nickName }}</p>
           <p class="mb-0" v-else-if="isLoggedIn && isManager ">{{ $cookies.get('auth-token').mid }}</p>
           <!-- {{$store.state.profileData}} -->
           <!-- </v-list-item-content> -->
@@ -142,7 +164,6 @@
       <v-btn outlined @click="goLost">실종/보호/목격</v-btn>
       <v-btn outlined @click="adoptList">입양후기</v-btn>
     </div>
-  
   </div>
 </template>
 
@@ -185,11 +206,12 @@ export default {
       this.isLoggedInChecker(login)
       console.log(this.isLoggedIn)
       console.log(this.$cookies.get('auth-token').mid)
-    if(this.$cookies.get('auth-token').mid != null){
-      this.isManager = true
+      if(this.$cookies.get('auth-token').mid !== undefined){
+        this.isManager = true
       }else{
         this.isManager = false
         this.find(token.email)
+        console.log('프로필 ==> ' + this.profileData.nickName)
       }
     //   this.isLoggedInChecker(login)
     //   this.find(token.email)
@@ -253,6 +275,24 @@ export default {
     goManager() {
       this.$router.push( { name: constants.URL_TYPE.USER.MANAGER })
     },
+    findPW(){
+      this.nowLoading = true
+      var formData = new FormData()
+      formData.append('email', this.PWEmail)
+      formData.append('uid', this.PWNickName)
+      axios.post(constants.SERVER_URL + '/account/findpassword', formData
+      ).then(response => {
+        if(response.data.data === 'success'){
+          this.PWDialog = false
+          alert('이메일로 임시 비밀번호가 발송 되었습니다.')
+        }else{
+          alert('비밀번호 찾기에 실패하였습니다.')
+        }
+        this.nowLoading = false
+      }).catch(error => {
+        console.log(error)
+      })
+    }
   },
 
   data: function () {
@@ -261,6 +301,10 @@ export default {
       drawer: null,
       radios: 'radios-1',
       isManager: false,
+      PWDialog: false,
+      PWEmail: '',
+      PWNickName: '',
+      nowLoading: false,
     };
   },
 }
