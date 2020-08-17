@@ -11,5 +11,5 @@ public interface ManagerDao extends JpaRepository<Manager, String> {
     Manager getManagerByMid(String mid);
     Manager save(Manager manager);
     
-    Optional<Manager> findManagerByEmailAndPassword(String email, String password);
+    Optional<Manager> findByMidAndPassword(String mid, String password);
 }
