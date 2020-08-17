@@ -129,7 +129,7 @@ export default {
       })},100)
     },
     postdelete(){ 
-      axios.delete(`http://localhost:8080/postscript/Delete?postscriptno=${this.$route.params.ID}&Uid=${this.profileData.nickName}`)
+      axios.delete(`http://localhost:8080/postscript/Delete?postscriptno=${this.$route.params.ID}&uid=${this.profileData.nickName}`)
       .then(()=>{
         alert("삭제되었습니다.")
          this.adoptlist()
