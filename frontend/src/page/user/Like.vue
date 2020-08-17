@@ -3,9 +3,36 @@
     <v-container fluid class="mx-5 mt-5 pt-5">
       <h1>내 관심 강아지</h1>
       <v-row>
-        <v-col v-for="interest in interestData" :key="interest.id" class="my-5 pt-5">
-          <!-- {{ dogData }} -->
-          <v-card v-if="interest.desertionno" class="d-inline-block mx-auto" style="width:400px">
+        <v-col cols="4" v-for="(dogData, i) in dogDatas" :key="i">
+          <v-hover v-slot:default="{ hover }">
+            <v-card
+              :elevation="hover ? 12 : 2"
+              @click="goDetail(dogData.desertionno)"
+            >
+              <p class="text-center ma-0">{{ dogData.kindcd }}</p>
+              <v-img
+                :src="dogData.popfile"
+                width="400px"
+                height="400px"
+              >
+                <div :class="{ 'show-btns': hover }">
+                  <v-card-title class="title" v-if="hover">
+                    <v-row class="fill-height flex-column" justify="space-between">
+                      
+                      <div>                            
+                          <p col="6" class="font-weight-black text-left font-italic ma-2">성별: {{ dogData.sexcd}}</p>
+                          <p col="6" class="font-weight-black text-left font-italic ma-2">연령: {{ dogData.age }}</p>
+                          <p col="6" class="font-weight-black text-left font-italic ma-2">모색: {{ dogData.colorcd }}</p>
+                          <p col="6" class="font-weight-black text-left font-italic ma-2">체중: {{ dogData.weight }}</p>
+                          <p col="12" class="font-weight-black text-left font-italic ma-2">특징: {{ dogData.specialmark }}</p>
+                      </div>
+                    </v-row>
+                  </v-card-title>
+                </div>
+              </v-img>
+            </v-card>
+          </v-hover>
+          <!-- <v-card v-if="interest.desertionno" class="d-inline-block mx-auto" style="width:400px">
             <i @click="deleteLike(interest)" class="fas fa-backspace float-right" style="font-size:40px; cursor:pointer"></i>
             <v-container>
               <v-row justify="space-between">
@@ -17,13 +44,42 @@
                       :src="dogData.popfile"
                       @click="goDetail(interest)"
                     >
-                      <!-- <v-expand-transition> -->
                       <div
                         v-if="hover"
                         class="d-flex transition-fast-in-fast-out brown lighten-5 v-card--reveal display-3 white--text"
                         style="height: 100%;"
-                      >dog dog dog dog</div>
-                      <!-- </v-expand-transition> -->
+                      >
+                        <v-row>
+                          <v-col col="12" class="font-weight-black">구조일</v-col>
+                          {{ dogData.noticesdt }}
+                        </v-row>
+                        <v-row>
+                          <v-col col="12" class="font-weight-black">구조장소</v-col>
+                          {{ dogData.happenplace }}
+                        </v-row>
+                        <v-row>
+                          <v-col col="6" class="font-weight-black">견종</v-col>
+                          {{ dogData.kindcd }}
+                          <v-col col="6" class="font-weight-black">성별</v-col>
+                          {{ dogData.sexcd}}
+                        </v-row>
+                        <v-row>
+                          <v-col col="6" class="font-weight-black">연령</v-col>
+                          {{ dogData.age }}
+                          <v-col col="6" class="font-weight-black">모색</v-col>
+                          {{ dogData.colorcd }}
+                        </v-row>
+                        <v-row>
+                          <v-col col="6" class="font-weight-black">중성화 여부</v-col>
+                          {{ dogData.neuteryn }}
+                          <v-col col="6" class="font-weight-black">체중</v-col>
+                          {{ dogData.weight }}
+                        </v-row>
+                        <v-row>
+                          <v-col col="12" class="font-weight-black">특징</v-col>
+                          {{ dogData.specialmark }}
+                        </v-row>
+                      </div>
                     </v-img>
                   </v-hover>
                   <v-card-title>강아지입니다</v-card-title>
@@ -31,28 +87,12 @@
 
                 <v-col cols="auto" class="text-center pl-0">
                   <v-row class="flex-column ma-0 fill-height" justify="center">
-                    <!-- <v-col class="px-0">
-                      <v-btn icon>
-                        <v-icon>mdi-heart</v-icon>
-                      </v-btn>
-                    </v-col>
-
-                    <v-col class="px-0">
-                      <v-btn icon>
-                        <v-icon>mdi-bookmark</v-icon>
-                      </v-btn>
-                    </v-col>
-
-                    <v-col class="px-0">
-                      <v-btn icon>
-                        <v-icon>mdi-share-variant</v-icon>
-                      </v-btn>
-                    </v-col> -->
+                    
                   </v-row>
                 </v-col>
               </v-row>
             </v-container>
-          </v-card>
+          </v-card> -->
         </v-col>
       </v-row>
     </v-container>
@@ -86,33 +126,41 @@ export default {
           },
         })
         .then((response) => {
+          console.log(response)
           this.interestData = response.data.object;
           for (var i = 0; i < this.interestData.length; i++) {
-            this.getInformation(this.interestData[i].desertionno);
+            axios
+              .get(constants.SERVER_URL + `/care/detailUser`, {
+                params: {
+                  desertionno: this.interestData[i].desertionno,
+                  uid: this.profileData.nickName,
+                },
+              })
+              .then((response) => {
+                var tempData = Object
+                tempData = response.data.object
+                if(response.data.object.sexcd === 'F'){
+                  tempData.sexcd = '암컷'
+                }else if(response.data.object.sexcd === 'M'){
+                  tempData.sexcd = '수컷'
+                }
+                console.log(response)
+                this.dogDatas.push(tempData)
+              })
+              .catch((error) => {
+                console.log(error);
+              });
           }
         })
         .catch((err) => console.log(err));
     },
     getInformation(desertionno_no) {
-      console.log(desertionno_no)
-      axios
-        .get(constants.SERVER_URL + `/care/detailUser`, {
-          params: {
-            desertionno: desertionno_no,
-            uid: this.profileData.nickName,
-          },
-        })
-        .then((response) => {
-          this.dogData = response.data.object;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      
     },
-    goDetail(index) {
+    goDetail(desertionNo) {
       console.log(this.$store.state.profileData.nickName);
       this.$cookies.set("desertionno", {
-        desertionno: index.desertionno,
+        desertionno: desertionNo,
       });
       this.$router.push({ name: constants.URL_TYPE.POST.DETAIL , params : { uuid : this.$store.state.profileData.nickName } });
     },
@@ -144,7 +192,7 @@ export default {
   data() {
     return {
       interestData: {},
-      dogData: {},
+      dogDatas: [],
       isLiked: true,
     };
   },
@@ -152,4 +200,15 @@ export default {
 </script>
 
 <style scoped>
+.v-card {
+  transition: .4s ease-in-out;
+}
+
+.v-card:hover {
+  opacity: 0.6;
+}
+
+.show-btns {
+  color: rgba(255,255,255) !important;
+}
 </style>

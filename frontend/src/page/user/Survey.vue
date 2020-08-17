@@ -523,6 +523,7 @@ export default {
           this.getProfile()
         },
         goHome(){
+          window.scrollTo(0, 0);
           this.$router.push({name: constants.URL_TYPE.MAIN})
         }
     },

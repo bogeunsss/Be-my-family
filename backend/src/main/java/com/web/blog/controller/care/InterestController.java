@@ -83,6 +83,7 @@ public class InterestController {
         return response;
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @DeleteMapping("/care/interestDelete")
     @ApiOperation(value = "관심 목록 삭제")
     public Object interestDelete(@RequestParam String uid, @RequestParam String desertionno) {

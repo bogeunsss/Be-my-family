@@ -65,6 +65,7 @@ public class LostReplyController {
         return response;
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @DeleteMapping("lost/reply/delete")
     @ApiOperation(value = "실종/보호/목격 댓글 삭제")
     public Object lostReplyDelete(@RequestParam final int lostreplyno, @RequestParam final String uid) {

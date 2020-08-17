@@ -25,7 +25,8 @@
               <v-card-text>
                   <!-- <v-row>
                     <v-col cols="12"> -->
-                      <v-text-field v-model="loginData.email" label="Email*" required></v-text-field>
+                      <v-text-field v-if="radios === 'radio-1'" v-model="loginData.email" label="Email*" required></v-text-field>
+                      <v-text-field v-if="radios === 'radio-2'" v-model="loginData.mid" label="Center name*" required></v-text-field>
                     <!-- </v-col>
                     <v-col cols="12"> -->
                       <v-text-field
@@ -299,7 +300,7 @@ export default {
     return {
       constants,
       drawer: null,
-      radios: 'radios-1',
+      radios: 'radio-1',
       isManager: false,
       PWDialog: false,
       PWEmail: '',
