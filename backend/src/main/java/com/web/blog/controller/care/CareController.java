@@ -83,7 +83,7 @@ public class CareController {
                 if (!(user.isPresent() && survey.isPresent() && user.get().getFlag() == 1)) {
                     
                     result.data = "success";
-                    result.object = careList;
+                    result.object = careList.getContent();
 
                 } else {
                     for (int i = 0; i < careList.getContent().size(); i++) {
@@ -99,12 +99,6 @@ public class CareController {
                         careRecommend.setOrgnm(careList.getContent().get(i).getOrgnm());
                         careRecommend.setChargenm(careList.getContent().get(i).getChargenm());
                         careRecommend.setOfficetel(careList.getContent().get(i).getOfficetel());
-                        careRecommend.setNoticecomment(careList.getContent().get(i).getNoticecomment());
-                        careRecommend.setNumofrows(careList.getContent().get(i).getNumofrows());
-                        careRecommend.setPageno(careList.getContent().get(i).getPageno());
-                        careRecommend.setTotalcount(careList.getContent().get(i).getTotalcount());
-                        careRecommend.setResultcode(careList.getContent().get(i).getResultcode());
-                        careRecommend.setResultmsg(careList.getContent().get(i).getResultmsg());
                         careRecommend.setFilename(careList.getContent().get(i).getFilename());
                         careRecommend.setHappendt(careList.getContent().get(i).getHappendt());
                         careRecommend.setHappenplace(careList.getContent().get(i).getHappenplace());
@@ -158,7 +152,6 @@ public class CareController {
 
         ResponseEntity response = null;
         Page<Careboard> careList = null;
-        // Page<CareRecommend> careRecommendList = null;
         List<CareRecommend> careRecommends = new ArrayList<>();
         final CareboardResponse result = new CareboardResponse();
         // 리스트랑 설문조사 객체 보내주기
@@ -184,12 +177,6 @@ public class CareController {
                     careRecommend.setOrgnm(careList.getContent().get(i).getOrgnm());
                     careRecommend.setChargenm(careList.getContent().get(i).getChargenm());
                     careRecommend.setOfficetel(careList.getContent().get(i).getOfficetel());
-                    careRecommend.setNoticecomment(careList.getContent().get(i).getNoticecomment());
-                    careRecommend.setNumofrows(careList.getContent().get(i).getNumofrows());
-                    careRecommend.setPageno(careList.getContent().get(i).getPageno());
-                    careRecommend.setTotalcount(careList.getContent().get(i).getTotalcount());
-                    careRecommend.setResultcode(careList.getContent().get(i).getResultcode());
-                    careRecommend.setResultmsg(careList.getContent().get(i).getResultmsg());
                     careRecommend.setFilename(careList.getContent().get(i).getFilename());
                     careRecommend.setHappendt(careList.getContent().get(i).getHappendt());
                     careRecommend.setHappenplace(careList.getContent().get(i).getHappenplace());
@@ -205,7 +192,6 @@ public class CareController {
                     careRecommends.add(careRecommend);
                 }
 
-                // careRecommendList = careList.get();
                 int totalPage = careList.getTotalPages();
                 boolean hasNext = careList.hasNext();
                 long totalData = careList.getTotalElements();
@@ -258,36 +244,5 @@ public class CareController {
 
         return response;
     }
-
-        // @GetMapping("/care/search")
-    // @ApiOperation(value = "보호소 유기견 검색")
-    // public Object careboardSearch(@RequestParam(required = true) final String category,
-    //         @RequestParam(required = true) final String searchText, @RequestParam(required = true) int pageno) {
-
-    //     ResponseEntity response = null;
-    //     Page<Careboard> careOpt = null;
-
-    //     if (category.equals("careAddr")) {
-    //         careOpt = careDao.findByCareaddrContaining(searchText,
-    //                 PageRequest.of(pageno, 12, Sort.Direction.DESC, "Noticesdt"));
-    //     } else if (category.equals("kindCd")) {
-    //         careOpt = careDao.findBykindcdContaining(searchText,
-    //                 PageRequest.of(pageno, 12, Sort.Direction.DESC, "Noticesdt"));
-    //     }
-
-    //     final BasicResponse result = new BasicResponse();
-
-    //     if (careOpt != null) {
-    //         result.status = true;
-    //         result.data = "success";
-    //         result.object = careOpt;
-    //         response = new ResponseEntity<>(result, HttpStatus.OK);
-    //     } else {
-    //         result.data = "fail";
-    //         response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
-    //     }
-
-    //     return response;
-    // }
 
 }

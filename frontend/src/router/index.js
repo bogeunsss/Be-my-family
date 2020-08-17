@@ -51,7 +51,7 @@ export default new Router({
       component: Profile,
       props: true,
       beforeEnter(to, from, next){
-        if($cookies.isKey('auth-token').uid || $cookies.isKey('auth-token').mid){
+        if($cookies.isKey('auth-token')){
           next()
         }else{
           alert('로그인이 필요합니다.')
@@ -63,7 +63,7 @@ export default new Router({
       name: constants.URL_TYPE.USER.UPDATE,
       component: Update,
       beforeEnter(to, from, next){
-        if($cookies.isKey('auth-token').uid || $cookies.isKey('auth-token').mid){
+        if($cookies.isKey('auth-token')){
           next()
         }else{
           alert('로그인이 필요합니다.')
@@ -90,7 +90,7 @@ export default new Router({
       name: constants.URL_TYPE.ADOPTIONPOST.ADOPTCREATE,
       component: AdoptCreate,
       beforeEnter(to, from, next){
-        if($cookies.isKey('auth-token').uid){
+        if($cookies.isKey('auth-token')){
           next()
         }else{
           alert('로그인이 필요합니다.')
@@ -102,7 +102,7 @@ export default new Router({
       name: constants.URL_TYPE.ADOPTIONPOST.ADOPTUPDATE,
       component: AdoptUpdate,
       beforeEnter(to, from, next){
-        if($cookies.isKey('auth-token').uid){
+        if($cookies.isKey('auth-token')){
           next()
         }else{
           alert('로그인이 필요합니다.')
@@ -136,7 +136,7 @@ export default new Router({
       name: constants.URL_TYPE.USER.SURVEY,
       component: Survey,
       beforeEnter(to, from, next){
-        if($cookies.isKey('auth-token').uid){
+        if($cookies.isKey('auth-token')){
           next()
         }else{
           alert('로그인이 필요합니다.')
@@ -158,7 +158,7 @@ export default new Router({
       name: constants.URL_TYPE.USER.MANAGER,
       component: Manager,
       beforeEnter(to, from, next){
-        if($cookies.isKey('auth-token').mid){
+        if($cookies.isKey('auth-token')){
           next()
         }else{
           alert('로그인이 필요합니다.')

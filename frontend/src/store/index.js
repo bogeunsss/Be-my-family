@@ -52,6 +52,7 @@ export default new Vuex.Store({
     dogData: [],
     isLast: false,
     adoptionData:{},
+    searchedPage: false,
     sido_states: [
       '서울특별시', '부산광역시', '인천광역시', '대전광역시',
       '대구광역시', '울산광역시', '광주광역시', '세종특별자치시',
@@ -162,7 +163,17 @@ export default new Vuex.Store({
       state.profileData.nickName = nickName
     },
     setSearchDogs(state, newDogData){
-      state.dogData = newDogData
+      if(!state.searchedPage){
+        state.dogData = []
+      }
+      state.dogData.push(newDogData.object)
+      if(!newDogData.hasNext){
+        state.isLast = true
+        state.searchedPage = false
+      }else{
+        state.isLast = false
+        state.searchedPage = true
+      }
     },
     checkLoggedIn(state, check){
       state.isLoggedIn = check
@@ -182,63 +193,6 @@ export default new Vuex.Store({
   },
 
   actions: {
-    signup({ commit }, signupData){
-      const info = {
-        data: signupData,
-        location: SERVER.URL_TYPE.USER.JOIN
-      }
-      console.log(info.data.nickName)
-      var reg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      var passwordReg = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
-      if(!info.data.nickName){
-        alert('닉네임을 입력하세요')
-      }else if(!info.data.email){
-          alert('이메일을 입력하세요')
-      }
-      else if(!reg.test(info.data.email)){
-          alert('이메일 형식을 확인하세요')
-      }
-      else if(!info.data.password){
-          alert('비밀번호를 입력하세요')
-      }else if(!info.data.passwordConfirm){
-          alert('비밀번호 확인을 입력하세요')
-      }else if(info.data.password !== info.data.passwordConfirm){
-          alert('비밀번호가 일치하지 않습니다')
-      }else if(false === passwordReg.test(info.data.password)) {
-          alert('비밀번호는 8자 이상이어야 하며, 숫자/대문자/소문자/특수문자를 모두 포함해야 합니다.');
-      }else if(/(\w)\1\1\1/.test(info.data.password)){
-          alert('같은 문자를 4번 이상 사용하실 수 없습니다.');
-      }else if(info.data.password.search(info.data.email) > -1){
-          alert("비밀번호에 아이디가 포함되었습니다.");
-      }else if(info.data.password.search(/\s/) != -1){
-          alert("비밀번호는 공백 없이 입력해주세요.");
-      }else{
-        axios.post(SERVER.SERVER_URL + '/account/signup', {
-          email: info.data.email,
-          name: info.data.name,
-          password: info.data.password,
-          uid: info.data.nickName,
-          phone: info.data.phone,
-          job: info.data.job,
-          marriaged: info.data.marriaged,
-          sex: info.data.sex,
-          birthdate: info.data.birthdate,
-
-        })
-        .then(res=>{
-          if(res.data.data === 'emailexist'){
-              alert('이미 있는 이메일입니다.')
-          }else if(res.data.data === 'nicknameexist'){
-              alert('이미 있는 닉네임입니다.')
-          }else if(res.data.data === 'emailsuccess'){
-              router.push({name:SERVER.URL_TYPE.POST.MAIN})
-          }else if(res.data.data === 'emailfail'){
-              alert('이메일 전송 실패')
-          }
-        })
-        .catch(err=>console.log(err))
-      }
-    },
     login({ commit, state }, loginData){
       console.log(loginData)
       let formData = new FormData()
@@ -373,17 +327,25 @@ export default new Vuex.Store({
           console.log(err)
       })
     },
-    mainList({commit, state}, pageno){
-      if(pageno === 0){
+    mainList({commit, state}, paramInfo){
+      if(paramInfo.pageno === 0){
         state.dogData = []
       }
+      var parameterInfo = '?pageno=' + paramInfo.pageno
+      if(paramInfo.userInfo !== undefined){
+        parameterInfo = parameterInfo + '&uid=' + paramInfo.userInfo
+      }
+      console.log(parameterInfo)
       axios
-        .get(SERVER.SERVER_URL + "/care/list?pageno=" + pageno)
+        .get(SERVER.SERVER_URL + "/care/list" + parameterInfo)
         .then((res) =>{
-            if(res.data.object.empty){
+          console.log(res)
+            if(!res.data.hasNext){
               state.isLast = true
             }
-            state.dogData.push(res.data.object.content)
+            if(state.currentPage !== paramInfo.pageno){
+              state.dogData.push(res.data.object)
+            }
         })
         .catch((err) =>{
             console.log(err)

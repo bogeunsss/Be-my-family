@@ -61,7 +61,7 @@
       </v-col>
       <v-col cols="12" sm="4">
         <v-select
-          v-model="sido"
+          v-model="survey.sido"
           :items="sido_states"
           :menu-props="{ maxHeight: '400' }"
           label="Select"
@@ -76,8 +76,8 @@
 
       <v-col cols="12" sm="4">
         <v-select
-          v-model="gugun"
-          :items="gugun_states[sido]"
+          v-model="survey.gugun"
+          :items="gugun_states[survey.sido]"
           label="Select"
           hint="거주 지역을 선택하세요"
           persistent-hint
@@ -367,17 +367,17 @@
 
   <h2>-------------------- 동의 서약 --------------------</h2>
      1. 반려견과 평생을 함께 하실 수 있으십니까? 
-      <v-radio-group >
+      <v-radio-group v-model="agreement_1">
       <div>
       <v-row class="justify-content-start">
       <v-radio class="ml-2"
         label="예"
-        :value="1"
+        :value="yes"
         color="success"
       ></v-radio>
       <v-radio  class="mb-2 ml-4"
         label="아니오"
-        :value="0"
+        :value="no"
         color="success"
       ></v-radio>
       </v-row>
@@ -385,17 +385,17 @@
     </v-radio-group>
      
      2. 양육할 여견이 되지 않을 시 보호소로 돌려 보내실 것에 동의합니까?
-      <v-radio-group >
+      <v-radio-group v-model="agreement_2">
       <div>
       <v-row class="justify-content-start">
       <v-radio class="ml-2"
         label="예"
-        :value="1"
+        :value="yes"
         color="success"
       ></v-radio>
       <v-radio  class="mb-2 ml-4"
         label="아니오"
-        :value="0"
+        :value="no"
         color="success"
       ></v-radio>
       </v-row>
@@ -404,17 +404,17 @@
     </v-radio-group>
      
      3. 마이크로 칩 / 중성화 수술 / 입양비에 동의 하십니까?
-      <v-radio-group  >
+      <v-radio-group v-model="agreement_3">
       <div>
       <v-row class="justify-content-start">
       <v-radio class="ml-2"
         label="예"
-        :value="1"
+        :value="yes"
         color="success"
       ></v-radio>
       <v-radio  class="mb-2 ml-4"
         label="아니오"
-        :value="0"
+        :value="no"
         color="success"
       ></v-radio>
       </v-row>
@@ -423,17 +423,17 @@
     </v-radio-group>
      
      4. 가정 방문에 동의 하십니까? 
-      <v-radio-group>
+      <v-radio-group v-model="agreement_4">
       <div>
       <v-row class="justify-content-start">
       <v-radio class="ml-2"
         label="예"
-        :value="1"
+        :value="yes"
         color="success"
       ></v-radio>
       <v-radio  class="mb-2 ml-4"
         label="아니오"
-        :value="0"
+        :value="no"
         color="success"
       ></v-radio>
       </v-row>
@@ -456,8 +456,8 @@
     {{checkbox}}
 
     <v-btn class="mr-4" @click="submit">submit</v-btn>
-    <!-- <v-btn @click="clear">clear</v-btn> -->
   </form>
+  <v-btn @click="goHome">홈으로</v-btn>
 
  
 
@@ -498,9 +498,15 @@ export default {
     methods: {
       ...mapActions(['find', 'getProfile']),
         submit(){
-          if(this.checkbox) {
-            console.log('된다')
+          if(this.checkbox && this.agreement_1 && this.agreement_2 && this.agreement_3 && this.agreement_4) {
             this.survey.uid = this.profileData.nickName
+            this.survey.name = this.profileData.name
+            this.survey.email = this.profileData.email
+            this.survey.phone = this.profileData.phone
+            this.survey.job = this.profileData.job
+            this.survey.marriaged = this.profileData.marriaged === '기혼' ? 1:0
+            this.survey.sex = this.profileData.sex === '여자' ? 1:0
+            this.survey.birthdate = this.profileData.birthdate
             axios
               .post(constants.SERVER_URL + "/care/surveyAdd", this.survey)
               .then((response) =>{
@@ -508,25 +514,21 @@ export default {
               }).catch((error) =>{
                 console.log(error)
               })
+            alert('저장되었습니다.')
           }else{
             alert('동의해주세요!')
-            console.log('자자')
           }
         },
         getProfileData(){
           this.getProfile()
+        },
+        goHome(){
+          this.$router.push({name: constants.URL_TYPE.MAIN})
         }
     },
     data(){
         return {
           token:'',
-          name:"",
-          sex:"",
-          birthdate:"",
-          phone:"",
-          email:"",
-          marriaged:"",
-          job:"",
           survey:{
             nation:"korea",
             place:"home",
@@ -546,10 +548,23 @@ export default {
             reason:"",
             think:"", 
             uid:"",
+            name:"",
+            sex:"",
+            birthdate:"",
+            phone:"",
+            email:"",
+            marriaged:"",
+            job:"",
+            sido: "",
+            gugun: "",
           },
-          sido: [],
-          gugun: [],
           checkbox:"",
+          agreement_1: false,
+          agreement_2: false,
+          agreement_3: false,
+          agreement_4: false,
+          yes: true,
+          no: false,
         }
     },
 }

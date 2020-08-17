@@ -135,11 +135,8 @@ export default {
     },
     deleteAdoption(desertion_no) {
       console.log(desertion_no)
-      axios.delete(constants.SERVER_URL + '/adoption/delete', { params :{
-        uid : this.profileData.nickName,
-        desertionno : desertion_no
-      }
-      }).then(res=>{console.log(res)
+      axios.delete(constants.SERVER_URL + `/adoption/delete?uid=${this.profileData.nickName}&desertionno=${desertion_no}`
+      ).then(res=>{console.log(res)
         this.getAdoptionList()
         console.log(this.adoptionList)
         console.log(this.adoptionData)
