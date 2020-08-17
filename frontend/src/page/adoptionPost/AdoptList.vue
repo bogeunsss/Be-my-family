@@ -71,7 +71,7 @@
   </v-container>
 </template>
 
-<script>
+<script>  
 import constants from "@/lib/constants";
 import axios from "axios";
 
@@ -96,6 +96,7 @@ export default {
           { state: '작성자', abbr: 'uid' }],
       category: {},
       searchText: '',
+      
 
       adoptData: {
         postscriptno: "",
@@ -113,7 +114,7 @@ export default {
   methods: {
     adoptList(){
       axios
-          .get(constants.SERVER_URL + "/postscript/List")
+          .get("http://localhost:8080/postscript/List?pageno="+this.page)
           .then((res) =>{
             this.adoptData = res.data.object
             console.log(this.adoptData)
@@ -138,10 +139,11 @@ export default {
     search(){
         console.log(this.category)
         console.log(this.searchText)
+        console.log(this.page)
         if(this.searchText === ""){
                 this.adoptList()
         }else{
-            axios.get(constants.SERVER_URL + `/postscript/Search?category=${this.category}&searchText=${this.searchText}`)
+            axios.get(`http://localhost:8080/postscript/Search?category=${this.category}&searchText=${this.searchText}&pageno=${this.page}`)
             .then((response) =>{
                 this.adoptData = response.data.object
                 this.searchText = ""
@@ -154,7 +156,22 @@ export default {
         }
 
     },
+    checkPage(){
+      axios.get("http://localhost:8080/postscript/List?pageno="+this.page)
+          .then((res) =>{
+            this.adoptData = res.data.object
+            console.log(this.adoptData)
+          })
+          .catch((err)=>{
+            console.log(err)
+          })
+    }
   },
+  watch :{
+    page: function(v){
+      this.checkPage()
+    }
+  }
 };
 </script>
 

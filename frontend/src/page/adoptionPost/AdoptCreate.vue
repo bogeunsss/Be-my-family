@@ -107,6 +107,14 @@ export default {
         // ...mapActions(['find']),
         submitadopt(){
             // console.log(this.profileData.nickName)
+            const formData = new FormData()
+            formData.append('uid', this.profileData.nickName)
+            formData.append('title', this.adoptcreate.title)
+            formData.append('sido', this.adoptcreate.sido)
+            formData.append('gugun', this.adoptcreate.gugun)
+            formData.append('content', this.adoptcreate.content)
+            formData.append('kind', this.adoptcreate.kind)  
+            
             var flag = 0
             if(this.adoptcreate.title == ""){
                 alert("제목을 입력해주세요")
@@ -119,9 +127,9 @@ export default {
             if(flag == 0){
                 this.adoptcreate.uid = this.profileData.nickName
                 axios
-                .post(constants.SERVER_URL+"postscript/Add",this.adoptcreate)
+                .post("http://localhost:8080/postscript/Add",formData)
                 .then((res) =>{
-                    console.log(this.adoptcreates)
+                    console.log(this.res)
                     alert('작성이 완료됬습니다.')
                     this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTLIST });
                 })

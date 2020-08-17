@@ -14,10 +14,11 @@ public interface PostscriptDao extends JpaRepository<Postscript, String> {
     Postscript save (Postscript postscript);
     
     Optional<Postscript> findByPostscriptno(int postscriptno);
+    Optional<Postscript> findByPostscriptnoAndUid(int postscriptno, String uid);
     
     @Transactional
     @Modifying
     void deleteByPostscriptno(int postscriptno);
     
-    Postscript getPostscriptByPostscriptno(Integer postscriptno);
+    Postscript getPostscriptByPostscriptno(int postscriptno);
 }
