@@ -151,6 +151,10 @@ public class AccountController {
 
         checkUser.setEmail(request.getEmail());
         checkUser.setPassword(request.getPassword());
+        checkUser.setPhone(request.getPhone());
+        checkUser.setJob(request.getJob());
+        checkUser.setMarriaged(request.getMarriaged());
+        
         userDao.save(checkUser);
 
         final BasicResponse result = new BasicResponse();
