@@ -89,7 +89,7 @@ export default {
   data() {
     return {
       page: 1,
-      pageCount: 15,
+      pageCount: 0,
   
       items: [                
           { state: '글제목', abbr: 'title' },
@@ -117,6 +117,8 @@ export default {
           .get("http://localhost:8080/postscript/List?pageno="+this.page)
           .then((res) =>{
             this.adoptData = res.data.object
+            this.pageCount = res.data.totalPage
+            console.log(this.pageCount)
             console.log(this.adoptData)
           })
           .catch((err)=>{

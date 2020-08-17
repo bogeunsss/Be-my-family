@@ -7,8 +7,8 @@
           <v-list-item>
             <v-list-item-avatar color="grey"></v-list-item-avatar>
             <v-list-item-content>
-              <v-list-item-title class="headline">입양후기</v-list-item-title>
-              <v-list-item-subtitle>작성자(닉네임)</v-list-item-subtitle>
+              <v-list-item-title class="headline">{{Adoptdata.title}}</v-list-item-title>
+              <v-list-item-subtitle>{{Adoptdata.uid}}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </v-toolbar>
@@ -28,9 +28,6 @@
           </v-btn>
           <v-btn icon large style="color:red;" v-if="this.likegood" @click="like">
             <v-icon large>mdi-heart</v-icon>
-          </v-btn>
-          <v-btn icon large>
-            <v-icon large>mdi-share-variant</v-icon>
           </v-btn>
         </v-card-actions>
 
@@ -132,7 +129,7 @@ export default {
       })},100)
     },
     postdelete(){ 
-      axios.delete(`http://localhost:8080/postscript/Delete?postscriptno=${this.$route.params.ID}`)
+      axios.delete(`http://localhost:8080/postscript/Delete?postscriptno=${this.$route.params.ID}&uid=${this.profileData.nickName}`)
       .then(()=>{
         alert("삭제되었습니다.")
          this.adoptlist()
@@ -145,24 +142,28 @@ export default {
       this.$router.push( {name: constants.URL_TYPE.ADOPTIONPOST.ADOPTUPDATE , params:{ ID: this.$route.params.ID}})
     },
     createComment(){
-      this.commentData.uid = this.profileData.nickName
-      var flag = 0
-      if(this.commentData.content == ""){
-        alert("댓글을 입력해주세요.")
-        flag = 1
-      }
-      if(flag == 0){
-        axios.post("http://localhost:8080/comment/add", this.commentData)
-        .then((res)=>{
-          console.log(this.commentData)
-          this.commentData.content = "";
-          alert("댓글이 등록되었습니다.")
-          this.$router.go()
-        })
-        .catch((error) =>{
-          console.log(error)
-        })
+      if(!this.$cookies.isKey("auth-token")){
+          alert('로그인해주세요')
+      }else{
+        var flag = 0
+        if(this.commentData.content == ""){
+          alert("댓글을 입력해주세요.")
+          flag = 1
         }
+        if(flag == 0){
+          this.commentData.uid = this.profileData.nickName
+          axios.post("http://localhost:8080/comment/add", this.commentData)
+          .then((res)=>{
+            console.log(this.commentData)
+            this.commentData.content = "";
+            alert("댓글이 등록되었습니다.")
+            this.$router.go()
+          })
+          .catch((error) =>{
+            console.log(error)
+          })
+          }
+      }
 
     },
     commentupdate(Commentno){

@@ -71,7 +71,6 @@
         <v-row>
           <v-textarea filled name="context" hint="내용을 입력해주세요." v-model="Adoptupdate.content"></v-textarea>
         </v-row>
-        {{this.Adoptupdate}}
         <v-row>
           <v-btn outlined color="blue" style="margin-left: auto;" @click="submitupdate">등록</v-btn>
         </v-row>
