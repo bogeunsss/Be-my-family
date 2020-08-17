@@ -7,8 +7,8 @@
           <v-list-item>
             <v-list-item-avatar color="grey"></v-list-item-avatar>
             <v-list-item-content>
-              <v-list-item-title class="headline">입양후기</v-list-item-title>
-              <v-list-item-subtitle>작성자(닉네임)</v-list-item-subtitle>
+              <v-list-item-title class="headline">{{Adoptdata.title}}</v-list-item-title>
+              <v-list-item-subtitle>{{Adoptdata.uid}}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </v-toolbar>
@@ -28,9 +28,6 @@
           </v-btn>
           <v-btn icon large style="color:red;" v-if="this.likegood" @click="like">
             <v-icon large>mdi-heart</v-icon>
-          </v-btn>
-          <v-btn icon large>
-            <v-icon large>mdi-share-variant</v-icon>
           </v-btn>
         </v-card-actions>
 
