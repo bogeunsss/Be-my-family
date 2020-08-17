@@ -124,6 +124,7 @@ public class ManagerController {
         try {
             checkmanager.setEmail(request.getEmail());
             checkmanager.setPassword(request.getPassword());
+            checkmanager.setPhone(request.getPhone());
             managerDao.save(checkmanager);
             result.status = true;
             result.data = "success";
