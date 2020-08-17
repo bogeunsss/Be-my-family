@@ -89,7 +89,7 @@ export default {
   data() {
     return {
       page: 1,
-      pageCount: "",
+      pageCount: 0,
   
       items: [                
           { state: '글제목', abbr: 'title' },
@@ -118,6 +118,7 @@ export default {
           .then((res) =>{
             this.adoptData = res.data.object
             this.pageCount = res.data.totalPage
+            console.log(this.pageCount)
             console.log(this.adoptData)
           })
           .catch((err)=>{

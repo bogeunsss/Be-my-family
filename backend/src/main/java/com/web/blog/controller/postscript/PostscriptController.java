@@ -173,17 +173,6 @@ public class PostscriptController {
 
         ResponseEntity response = null;
         final BasicResponse result = new BasicResponse();
-<<<<<<< HEAD
-       
-        Optional<Postscript> postscriptOpt = postscriptDao.findByPostscriptno(postscriptno);
-
-        System.out.println(postscriptOpt);
-
-        if (postscriptOpt.isPresent()) {
-            postscriptDao.deleteByPostscriptno(postscriptno);
-            result.status = true;
-            result.data = "success";
-=======
         try {
             Optional<Postscript> postscriptOpt = postscriptDao.findByPostscriptnoAndUid(postscriptno, Uid);
             Optional<User> userOpt = userDao.findByUid(Uid);
@@ -201,7 +190,6 @@ public class PostscriptController {
                     result.status = true;
                 }
             }
->>>>>>> adoption_postscript
             response = new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
             result.data = "fail";

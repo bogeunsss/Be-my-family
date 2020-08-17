@@ -129,7 +129,7 @@ export default {
       })},100)
     },
     postdelete(){ 
-      axios.delete(`http://localhost:8080/postscript/Delete?postscriptno=${this.$route.params.ID}`)
+      axios.delete(`http://localhost:8080/postscript/Delete?postscriptno=${this.$route.params.ID}&Uid=${this.profileData.nickName}`)
       .then(()=>{
         alert("삭제되었습니다.")
          this.adoptlist()
@@ -142,24 +142,28 @@ export default {
       this.$router.push( {name: constants.URL_TYPE.ADOPTIONPOST.ADOPTUPDATE , params:{ ID: this.$route.params.ID}})
     },
     createComment(){
-      this.commentData.uid = this.profileData.nickName
-      var flag = 0
-      if(this.commentData.content == ""){
-        alert("댓글을 입력해주세요.")
-        flag = 1
-      }
-      if(flag == 0){
-        axios.post("http://localhost:8080/comment/add", this.commentData)
-        .then((res)=>{
-          console.log(this.commentData)
-          this.commentData.content = "";
-          alert("댓글이 등록되었습니다.")
-          this.$router.go()
-        })
-        .catch((error) =>{
-          console.log(error)
-        })
+      if(!this.$cookies.isKey("auth-token")){
+          alert('로그인해주세요')
+      }else{
+        var flag = 0
+        if(this.commentData.content == ""){
+          alert("댓글을 입력해주세요.")
+          flag = 1
         }
+        if(flag == 0){
+          this.commentData.uid = this.profileData.nickName
+          axios.post("http://localhost:8080/comment/add", this.commentData)
+          .then((res)=>{
+            console.log(this.commentData)
+            this.commentData.content = "";
+            alert("댓글이 등록되었습니다.")
+            this.$router.go()
+          })
+          .catch((error) =>{
+            console.log(error)
+          })
+          }
+      }
 
     },
     commentupdate(Commentno){
