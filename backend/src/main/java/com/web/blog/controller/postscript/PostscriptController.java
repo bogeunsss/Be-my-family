@@ -178,14 +178,14 @@ public class PostscriptController {
     @DeleteMapping("/postscript/Delete")
     @ApiOperation(value = "입양후기 게시글 삭제")
     public Object postscriptDelete(@RequestParam(required = true) final int postscriptno,
-    @RequestParam(required = true) final String Uid) {
+    @RequestParam(required = true) final String uid) {
 
         ResponseEntity response = null;
         final BasicResponse result = new BasicResponse();
 
         try {
-            Optional<Postscript> postscriptOpt = postscriptDao.findByPostscriptnoAndUid(postscriptno, Uid);
-            Optional<User> userOpt = userDao.findByUid(Uid);
+            Optional<Postscript> postscriptOpt = postscriptDao.findByPostscriptnoAndUid(postscriptno, uid);
+            Optional<User> userOpt = userDao.findByUid(uid);
             System.out.println(postscriptOpt);
             if(!userOpt.isPresent()) {
                 result.data = "not user";
