@@ -41,7 +41,7 @@
         <v-col col="12" md="6" class="my-auto">
           <h1 style="color:#4ba5cd;font-family: 'GmarketSansBold';">유기동물 보호소</h1>
           <h3 style="color:gray;">유기동물 보호소 있는 강아지들의 가족이 되어주세요</h3>
-          <v-btn class="my-5">GO</v-btn>
+          <v-btn class="my-5" @click="goList">GO</v-btn>
         </v-col>
 
         <v-col col="12" md="6" style="padding:0rem 4rem;">
@@ -54,10 +54,10 @@
                   :src="item.popfile"
                 >
                 </v-img>
-                <v-card-subtitle class="pb-0">보호소 : {{ item.carenm }}</v-card-subtitle>
+                <v-card-subtitle class="pb-0">{{ item.carenm }}</v-card-subtitle>
                 <v-card-text class="text--primary">
                   <div>{{ item.kindcd}}</div>
-                  <br />
+          
                   <span class="comment">특징 : {{ item.specialmark }}</span>
                   <br>
                   <span class="comment">나이 : {{ item.age }}</span>
@@ -77,19 +77,17 @@
         <v-col col="12" md="6" style="padding:0rem 4rem;" >
           <v-row>
             <v-col v-for="item in lostList" :key="item.id" col="6" md="6">
-              <v-card style="">
+              <v-card style="width:100%" class="pr-0">
                 <v-img
                   class="white--text align-end"
-                  height="10rem"
-                  src=""
+                  height="9rem"
+                  src="http://www.animal.go.kr/files/shelter/2020/01/202002291102598_s.jpg"
                 >
                 </v-img>
                 <v-card-subtitle class="pb-0">{{ item.losttype }}</v-card-subtitle>
                 <v-card-text class="text--primary">
                   <div>{{ item.lostbread}}</div>
-                  <br />
-                  <span class="comment">실종지역 : {{ item.lostsido }}</span>
-                  <br>
+                  <span class="comment">실종지역 : {{ item.lostsido }}</span><br>
                   <span class="comment">특징 : {{ item.lostcontent }}</span> 
                 </v-card-text>
               </v-card>
@@ -100,7 +98,7 @@
           <h1 style="color:#f2cc59;font-family: 'GmarketSansBold';">실종 / 보호 / 목격</h1>
           <h3 style="color:gray;">강아지를 잃어버리신 분들이나</h3>
           <h3 style="color:gray;">보호하거나 목격하신 분들은 알려주세요.</h3>
-          <v-btn class="my-5">GO</v-btn>
+          <v-btn class="my-5" @click="goLost">GO</v-btn>
         </v-col>
           <div style="position:absolute;bottom:0%;left:50%;" @click="scrollDown3">
             <i class="fas fa-chevron-down"></i>
@@ -114,7 +112,7 @@
         <v-col col="12" md="6" class="my-auto">
           <h1 style="color:#4ba5cd;font-family: 'GmarketSansBold';">입양 후기</h1>
           <h3 style="color:gray;">유기동물 보호소에서 입양한 강아지들의 이야기를 들려주세요.</h3>
-          <v-btn class="my-5">GO</v-btn>
+          <v-btn class="my-5" @click="goReview">GO</v-btn>
         </v-col>
         <v-col col="12" md="6" style="padding:0rem 4rem;">
           <v-row>
@@ -126,13 +124,13 @@
                   :src="item.image"
                 >
                 </v-img>
-                <v-card-subtitle class="pb-0">보호소 : {{ item.carenm }}</v-card-subtitle>
+                <v-card-subtitle class="pb-0">제목 : {{ item.title }}</v-card-subtitle>
                 <v-card-text class="text--primary">
-                  <div>{{ item.kindcd}}</div>
+                  <div>닉네임 : {{ item.uid}}</div>
                   <br />
-                  <span class="comment">특징 : {{ item.specialmark }}</span>
+                  <span class="comment">종류 : {{ item.kind }}</span>
                   <br>
-                  <span class="comment">나이 : {{ item.age }}</span>
+                  <span class="comment">후기 : {{ item.content }}</span>
                 </v-card-text>
               </v-card>
             </v-col>
@@ -158,7 +156,8 @@ export default {
   name: "Main",
   components: {
     InfiniteLoading,
-    ICountUp
+    ICountUp,
+    constants
   },
   watch: {},
   created() {
@@ -222,6 +221,15 @@ export default {
       }
       )
     },
+    goList(){
+      this.$router.push({ name: constants.URL_TYPE.POST.LIST });
+    },
+    goLost(){
+      this.$router.push({ name: constants.URL_TYPE.LOST.LOSTLIST });
+    },
+    goReview(){
+      this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTLIST });
+    },
   },
   data: () => {
     return {
@@ -231,7 +239,7 @@ export default {
       lostList:{},
       postscriptList:{},
       delay: 1000,
-        endVal: 320,
+        endVal: 638,
         options: {
           useEasing: true,
           useGrouping: true,
