@@ -12,15 +12,17 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface LostDao extends JpaRepository<Lost, String> {
+
+    List<Lost> findAllByOrderByLostnoDesc();
     
     Optional<Lost> findByLostno(int lostno);
 
     Optional<Lost> findByLostnoAndUid(int lostno, String uid);   
 
-    @Query(value = "SELECT * FROM lost WHERE lostno IN (:lostnoList)", nativeQuery = true)
+    @Query(value = "SELECT * FROM lost WHERE lostno IN (:lostnoList) ORDER BY lostno desc", nativeQuery = true)
     List<Lost> findByLostnoList(@Param("lostnoList") List<Integer> lostnoList);
 
-    @Query(value = "SELECT * FROM lost WHERE losttype IN(:matchType) AND lostBreed = :lostBreed AND lostsido = :lostSido", nativeQuery = true)
+    @Query(value = "SELECT * FROM lost WHERE losttype IN(:matchType) AND lostBreed = :lostBreed AND lostsido = :lostSido ORDER BY lostno desc", nativeQuery = true)
     List<Lost> findMatch(List<String> matchType, String lostSido, String lostBreed);
     
     @Transactional

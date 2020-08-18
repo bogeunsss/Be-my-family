@@ -179,7 +179,7 @@ public class LostController {
 
         try {
 
-            List<Lost> lostList = lostDao.findAll();
+            List<Lost> lostList = lostDao.findAllByOrderByLostnoDesc();
             result.status = true;
             result.data = "success";
             result.object = lostList;
