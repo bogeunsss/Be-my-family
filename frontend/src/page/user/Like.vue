@@ -3,15 +3,15 @@
     <v-container fluid class="mx-5 mt-5 pt-5">
       <h1>내 관심 강아지</h1>
       <v-row>
-        <v-col cols="4" v-for="(dogData, i) in dogDatas" :key="i">
+        <v-col cols="4" v-for="(interest, i) in interestData" :key="i">
           <v-hover v-slot:default="{ hover }">
             <v-card
               :elevation="hover ? 12 : 2"
-              @click="goDetail(dogData.desertionno)"
+              @click="goDetail(interest.desertionno)"
             >
-              <p class="text-center ma-0">{{ dogData.kindcd }}</p>
+              <p class="text-center ma-0">{{ interest.kindcd }}</p>
               <v-img
-                :src="dogData.popfile"
+                :src="interest.popfile"
                 width="400px"
                 height="400px"
               >
@@ -20,11 +20,11 @@
                     <v-row class="fill-height flex-column" justify="space-between">
                       
                       <div>                            
-                          <p col="6" class="font-weight-black text-left font-italic ma-2">성별: {{ dogData.sexcd}}</p>
-                          <p col="6" class="font-weight-black text-left font-italic ma-2">연령: {{ dogData.age }}</p>
-                          <p col="6" class="font-weight-black text-left font-italic ma-2">모색: {{ dogData.colorcd }}</p>
-                          <p col="6" class="font-weight-black text-left font-italic ma-2">체중: {{ dogData.weight }}</p>
-                          <p col="12" class="font-weight-black text-left font-italic ma-2">특징: {{ dogData.specialmark }}</p>
+                          <p col="6" class="font-weight-black text-left font-italic ma-2">성별: {{ interest.sexcd}}</p>
+                          <p col="6" class="font-weight-black text-left font-italic ma-2">연령: {{ interest.age }}</p>
+                          <p col="6" class="font-weight-black text-left font-italic ma-2">모색: {{ interest.colorcd }}</p>
+                          <p col="6" class="font-weight-black text-left font-italic ma-2">체중: {{ interest.weight }}</p>
+                          <p col="12" class="font-weight-black text-left font-italic ma-2">특징: {{ interest.specialmark }}</p>
                       </div>
                     </v-row>
                   </v-card-title>
@@ -32,67 +32,6 @@
               </v-img>
             </v-card>
           </v-hover>
-          <!-- <v-card v-if="interest.desertionno" class="d-inline-block mx-auto" style="width:400px">
-            <i @click="deleteLike(interest)" class="fas fa-backspace float-right" style="font-size:40px; cursor:pointer"></i>
-            <v-container>
-              <v-row justify="space-between">
-                <v-col cols="auto">
-                  <v-hover v-slot:default="{ hover }">
-                    <v-img
-                      height="300"
-                      width="300"
-                      :src="dogData.popfile"
-                      @click="goDetail(interest)"
-                    >
-                      <div
-                        v-if="hover"
-                        class="d-flex transition-fast-in-fast-out brown lighten-5 v-card--reveal display-3 white--text"
-                        style="height: 100%;"
-                      >
-                        <v-row>
-                          <v-col col="12" class="font-weight-black">구조일</v-col>
-                          {{ dogData.noticesdt }}
-                        </v-row>
-                        <v-row>
-                          <v-col col="12" class="font-weight-black">구조장소</v-col>
-                          {{ dogData.happenplace }}
-                        </v-row>
-                        <v-row>
-                          <v-col col="6" class="font-weight-black">견종</v-col>
-                          {{ dogData.kindcd }}
-                          <v-col col="6" class="font-weight-black">성별</v-col>
-                          {{ dogData.sexcd}}
-                        </v-row>
-                        <v-row>
-                          <v-col col="6" class="font-weight-black">연령</v-col>
-                          {{ dogData.age }}
-                          <v-col col="6" class="font-weight-black">모색</v-col>
-                          {{ dogData.colorcd }}
-                        </v-row>
-                        <v-row>
-                          <v-col col="6" class="font-weight-black">중성화 여부</v-col>
-                          {{ dogData.neuteryn }}
-                          <v-col col="6" class="font-weight-black">체중</v-col>
-                          {{ dogData.weight }}
-                        </v-row>
-                        <v-row>
-                          <v-col col="12" class="font-weight-black">특징</v-col>
-                          {{ dogData.specialmark }}
-                        </v-row>
-                      </div>
-                    </v-img>
-                  </v-hover>
-                  <v-card-title>강아지입니다</v-card-title>
-                </v-col>
-
-                <v-col cols="auto" class="text-center pl-0">
-                  <v-row class="flex-column ma-0 fill-height" justify="center">
-                    
-                  </v-row>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-card> -->
         </v-col>
       </v-row>
     </v-container>
@@ -128,29 +67,6 @@ export default {
         .then((response) => {
           console.log(response)
           this.interestData = response.data.object;
-          for (var i = 0; i < this.interestData.length; i++) {
-            axios
-              .get(constants.SERVER_URL + `/care/detailUser`, {
-                params: {
-                  desertionno: this.interestData[i].desertionno,
-                  uid: this.profileData.nickName,
-                },
-              })
-              .then((response) => {
-                var tempData = Object
-                tempData = response.data.object
-                if(response.data.object.sexcd === 'F'){
-                  tempData.sexcd = '암컷'
-                }else if(response.data.object.sexcd === 'M'){
-                  tempData.sexcd = '수컷'
-                }
-                console.log(response)
-                this.dogDatas.push(tempData)
-              })
-              .catch((error) => {
-                console.log(error);
-              });
-          }
         })
         .catch((err) => console.log(err));
     },
@@ -165,12 +81,7 @@ export default {
       this.$router.push({ name: constants.URL_TYPE.POST.DETAIL , params : { uuid : this.$store.state.profileData.nickName } });
     },
     deleteLike(index) {
-      // let formData = new FormData();
       console.log(this.$store.state.profileData.nickName);
-      // formData.append('uid', this.$store.state.profileData.nickName)
-      // formData.append('desertionno', index.desertionno)
-      // console.log(index.desertionno)
-      // console.log(formData)
       const uidd = this.$store.state.profileData.nickName
       axios
         .delete(constants.SERVER_URL + `/care/interestDelete`, { params:{
@@ -182,7 +93,6 @@ export default {
           console.log("성공");
           index.desertionno = null;
           this.getInterest()
-          // console.log(index.desertionno)
         })
         .catch((error) => {
           console.log("실패");

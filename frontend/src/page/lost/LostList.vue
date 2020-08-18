@@ -29,12 +29,13 @@
           :key="i"
           cols="3"
         >
-          <v-card @click="goDetail(card.lostno)" v-if="i<scrolled">
+          <v-card v-if="i<scrolled">
             <v-img
               :src="card.lostpic1"
               class="white--text align-end"
               gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
               height="200px"
+              @click="goDetail(card.lostno)"
             >
               <v-card-title v-text="card.lostsido"></v-card-title>
             </v-img>
@@ -44,7 +45,7 @@
               <v-chip :color="myColors[card.losttype]" text-color="white">{{ card.losttype }}</v-chip>
               <div>
                 <v-btn icon>
-                  <v-icon>mdi-share-variant</v-icon>
+                  <v-icon @click="copyUrl(card.lostno)">mdi-share-variant</v-icon>
                 </v-btn>
               </div>
             </v-card-actions>
@@ -186,6 +187,23 @@
     </v-date-picker>
   </v-dialog>
 
+  <v-snackbar
+    v-model="snackbar"
+    :timeout="2000"
+  >
+    복사 되었습니다.
+
+    <template v-slot:action="{ attrs }">
+      <v-btn
+        color="blue"
+        text
+        v-bind="attrs"
+        @click="snackbar = false"
+      >
+        Close
+      </v-btn>
+    </template>
+  </v-snackbar>
   </div>
 </template>
 
@@ -251,6 +269,8 @@ export default {
       searchTags: [],
       tempCards: [],
       scrolled: 12,
+      snackbar: false,
+      url: '',
     }
   },
   methods: {
@@ -369,6 +389,15 @@ export default {
         this.scrolled += 8
       }
     },
+    copyUrl(no){
+      var temp = document.createElement('textarea')
+      document.body.appendChild(temp)
+      temp.value = window.document.location.href + '/' + no
+      temp.select()
+      document.execCommand('copy')
+      document.body.removeChild(temp)
+      this.snackbar = true
+    }
   }
 }
 </script>
