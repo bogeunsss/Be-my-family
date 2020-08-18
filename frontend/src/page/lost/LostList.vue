@@ -29,7 +29,7 @@
           :key="i"
           cols="3"
         >
-          <v-card @click="goDetail(card.lostno)">
+          <v-card @click="goDetail(card.lostno)" v-if="i<scrolled">
             <v-img
               :src="card.lostpic1"
               class="white--text align-end"
@@ -197,7 +197,11 @@ import { mapState } from 'vuex'
 
 export default {
   created(){
+    window.addEventListener("scroll", this.handleScroll);
     this.getList()
+  },
+  beforeDestroy(){
+    window.removeEventListener("scroll", this.handleScroll);
   },
   computed:{
     ...mapState(['sido_states', 'gugun_states', 'profileData']),
@@ -246,6 +250,7 @@ export default {
       searchText: '',
       searchTags: [],
       tempCards: [],
+      scrolled: 12,
     }
   },
   methods: {
@@ -358,7 +363,12 @@ export default {
         }).catch(error => {
           console.log(error)
         })
-    }
+    },
+    handleScroll(){
+      if(window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 1){
+        this.scrolled += 8
+      }
+    },
   }
 }
 </script>

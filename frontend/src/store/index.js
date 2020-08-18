@@ -314,12 +314,25 @@ export default new Vuex.Store({
         alert('탈퇴 실패')
       })
     },
-    userUpdate({commit}, userData){
-      console.log(userData)
+    userUpdate({commit, state}, userData){
+      var marriaged = ''
+      if(userData.password === ''){
+        userData.password = state.profileData.password
+      }
+      if(userData.marriaged === '기혼'){
+        marriaged = 1
+      }else{
+        marriaged = 0
+      }
       axios.put(SERVER.SERVER_URL + `/account/update`,{
-          uid:userData.nickName,
-          email:userData.email,
-          password:userData.password
+          uid: state.profileData.nickName,
+          name: state.profileData.name,
+          email: state.profileData.email,
+          password: userData.password,
+          phone: userData.phone,
+          job: userData.job,
+          marriaged: marriaged,
+          birthdate: state.profileData.birthdate
       }).then(res=>{
           alert('수정 성공')
       }).catch(err=>{
