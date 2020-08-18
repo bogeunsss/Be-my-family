@@ -102,6 +102,7 @@ public class ManagerController {
             result.name = checkmanager.getName();
             result.email = checkmanager.getEmail();
             result.phone = checkmanager.getPhone();
+            result.password = checkmanager.getPassword();
             response = new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
             result.data = "fail";
