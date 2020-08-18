@@ -74,7 +74,6 @@ export default {
   data: () => {
     return {
       scrolled: 12,
-      timer: null,
     };
   },
 };

@@ -142,6 +142,7 @@ public class AccountController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @PutMapping("/account/update")
     @ApiOperation(value = "수정하기")
     public Object modify(@Valid @RequestBody SignupRequest request) {

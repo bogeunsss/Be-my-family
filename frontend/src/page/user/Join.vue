@@ -362,7 +362,6 @@ export default {
           }else if(res.data.data === 'emailfail'){
               alert('이메일 전송 실패')
           }else{
-            if(this.e1 === 1)
             this.confirmData = res.data.data
             this.e1 = 2
           }
@@ -377,6 +376,7 @@ export default {
         location: constants.URL_TYPE.USER.JOIN
       }
       var confirmNumber = this.confirmNo1 + this.confirmNo2 + this.confirmNo3 + this.confirmNo4 + this.confirmNo5 + this.confirmNo6
+      console.log(this.confirmData)
       if(confirmNumber === this.confirmData){
         axios.post(constants.SERVER_URL + '/account/emailkey', {
           email: info.data.email,

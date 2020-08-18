@@ -25,7 +25,8 @@
               <v-card-text>
                   <!-- <v-row>
                     <v-col cols="12"> -->
-                      <v-text-field v-model="loginData.email" label="Email*" required></v-text-field>
+                      <v-text-field v-if="radios === 'radio-1'" v-model="loginData.email" label="Email*" required></v-text-field>
+                      <v-text-field v-if="radios === 'radio-2'" v-model="loginData.mid" label="Center name*" required></v-text-field>
                     <!-- </v-col>
                     <v-col cols="12"> -->
                       <v-text-field
@@ -204,8 +205,6 @@ export default {
     if(login){
       var token = this.$cookies.get('auth-token')
       this.isLoggedInChecker(login)
-      console.log(this.isLoggedIn)
-      console.log(this.$cookies.get('auth-token').mid)
       if(this.$cookies.get('auth-token').mid !== undefined){
         this.isManager = true
       }else{
@@ -226,54 +225,61 @@ export default {
     ...mapMutations(["setDialog"]),
     Login(radios) {
       this.$store.state.loginData.isManager = radios
-      // console.log()
-      this.login(this.$store.state.loginData);
-      // this.$router.push({ name: constants.URL_TYPE.MAIN });
+      var paramData = {
+        loginData: this.loginData,
+        page: this.$route.name
+      }
+      this.login(paramData);
     },
     Logout() {
-      this.logout();
-      this.$router.push({ name: constants.URL_TYPE.MAIN });
+      this.logout(this.$route.name);
     },
     userProfile() {
-      console.log(this.$store.state.loginData);
-      this.$router
-        .push({ name: constants.URL_TYPE.USER.PROFILE })
-        .catch((err) => {
-          err;
-        });
+      if(this.$route.name !== constants.URL_TYPE.USER.PROFILE){
+        this.$router.push({ name: constants.URL_TYPE.USER.PROFILE })
+      }else{
+        this.$router.go()
+      }
+
     },
     goHome() {
-      this.$router.push({ name: constants.URL_TYPE.MAIN });
-      this.$router.go()
+      if(this.$route.name !== constants.URL_TYPE.MAIN){
+        this.$router.push({ name: constants.URL_TYPE.MAIN });
+      }
     },
     userLike() {
-      this.$router
-        .push({ name: constants.URL_TYPE.USER.LIKE })
-        .catch((err) => {
-          err;
-        });
+      if(this.$route.name !== constants.URL_TYPE.USER.LIKE){
+        this.$router.push({ name: constants.URL_TYPE.USER.LIKE })
+      }else{
+        this.$router.go()
+      }
     },
     userSurvey() {
-      // console.log(this.$store.state.loginData);
-      this.$router
-        .push({ name: constants.URL_TYPE.USER.SURVEY })
-        .catch((err) => {
-          err;
-        });
+      if(this.$route.name !== constants.URL_TYPE.USER.SURVEY){
+        this.$router.push({ name: constants.URL_TYPE.USER.SURVEY })
+      }else{
+        this.$router.go()
+      }
     },
     goList(){
-      this.$router
-        .push({ name: constants.URL_TYPE.POST.LIST })
+      if(this.$route.name !== constants.URL_TYPE.POST.LIST){
+        this.$router.push({ name: constants.URL_TYPE.POST.LIST })
+      }
     },
     adoptList(){
-      this.$router
-        .push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTLIST })
+      if(this.$route.name !== constants.URL_TYPE.ADOPTIONPOST.ADOPTLIST){
+        this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTLIST })
+      }
     },
     goLost(){
-      this.$router.push({ name: constants.URL_TYPE.LOST.LOSTLIST })
+      if(this.$route.name !== constants.URL_TYPE.LOST.LOSTLIST){
+        this.$router.push({ name: constants.URL_TYPE.LOST.LOSTLIST })
+      }
     },
     goManager() {
-      this.$router.push( { name: constants.URL_TYPE.USER.MANAGER })
+      if(this.$route.name !== constants.URL_TYPE.USER.MANAGER){
+        this.$router.push( { name: constants.URL_TYPE.USER.MANAGER })
+      }
     },
     findPW(){
       this.nowLoading = true
@@ -299,7 +305,7 @@ export default {
     return {
       constants,
       drawer: null,
-      radios: 'radios-1',
+      radios: 'radio-1',
       isManager: false,
       PWDialog: false,
       PWEmail: '',

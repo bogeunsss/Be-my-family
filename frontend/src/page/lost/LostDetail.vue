@@ -317,18 +317,6 @@ export default {
             })
     },
     watch:{
-        // lostTagText(newVal, oldVal){
-        //     if(newVal[newVal.length-1] === '#'){
-        //         this.tagState = true
-        //     }
-        //     if(this.tagState && newVal[newVal.length-1] === ' '){
-        //         this.lostTagText = this.lostTagText.substring(1, this.lostTagText.length)
-        //         this.lostTags.push(this.lostTagText.trim())
-        //         this.lostTagText = ''
-        //         this.tagState = false
-        //         console.log(this.lostTags)
-        //     }
-        // },
     },
     computed:{
         param(){
@@ -488,18 +476,22 @@ export default {
                 })
         },
         commentCreate(){
-            axios.post(constants.SERVER_URL + '/lost/reply/add', {
-                uid: this.profileData.nickName,
-                lostno: this.$route.params.articleNo,
-                lostcontent: this.comment,
-                }).then(response => {
-                    if(response.data.data === 'success'){
-                        this.getCommentList()
-                    }
-                }).catch(error => {
-                    console.log(error)
-                })
-                this.comment = ''
+            if(this.$cookies.isKey('auth-token')){
+                axios.post(constants.SERVER_URL + '/lost/reply/add', {
+                    uid: this.profileData.nickName,
+                    lostno: this.$route.params.articleNo,
+                    lostcontent: this.comment,
+                    }).then(response => {
+                        if(response.data.data === 'success'){
+                            this.getCommentList()
+                        }
+                    }).catch(error => {
+                        console.log(error)
+                    })
+            }else{
+                alert('로그인 후 이용 가능합니다.')
+            }
+            this.comment = ''
         },
         commentModify(content, contentNo){
             axios.post(constants.SERVER_URL + '/lost/reply/add', {

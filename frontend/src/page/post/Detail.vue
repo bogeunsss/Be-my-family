@@ -175,6 +175,9 @@ export default {
         }
     },
     computed:{
+      param(){
+        return this.$route.params.desertionno
+      },
       ...mapState(['profileData','loginData','adoptionData'])
     },
     created(){
@@ -196,7 +199,7 @@ export default {
 
                 axios.get(constants.SERVER_URL + '/care/detailUser', {
                   params: {
-                    desertionno: this.$cookies.get('desertionno').desertionno,
+                    desertionno: this.$route.params.desertionno,
                     uid: this.profileData.nickName
                   }
                 })
@@ -206,7 +209,7 @@ export default {
                     this.dogData = response.data.object
                     console.log(this.adoptionData)
                     for (var i = 0; i < this.adoptionData.length; i++){
-                      if(this.adoptionData[i].desertionno ==  this.$cookies.get('desertionno').desertionno){
+                      if(this.adoptionData[i].desertionno ==  this.$route.params.desertionno){
                         this.isAdoption = true
                       }
                     }
@@ -225,7 +228,7 @@ export default {
               this.isManager = true
               axios.get(constants.SERVER_URL + '/care/detailUser', {
                 params: {
-                  desertionno: this.$cookies.get('desertionno').desertionno,
+                  desertionno: this.$route.params.desertionno,
                 }
               })
               .then( response => {
@@ -240,7 +243,7 @@ export default {
         else{
           axios.get(constants.SERVER_URL + '/care/detailUser', {
                 params: {
-                  desertionno: this.$cookies.get('desertionno').desertionno,
+                  desertionno: this.$route.params.desertionno,
                 }
               })
               .then( response => {
@@ -265,7 +268,7 @@ export default {
         formData.append('fixdate', this.date)
         formData.append('fixtime', st)
         formData.append('uid', this.profileData.nickName)
-        formData.append('desertionno', this.$cookies.get('desertionno').desertionno)
+        formData.append('desertionno', this.$route.params.desertionno)
         // formData.append('mid',this.survey.carenm)
 
         axios.post(constants.SERVER_URL + '/adoption/Success', formData)
@@ -305,7 +308,7 @@ export default {
       .delete(constants.SERVER_URL + `/care/interestDelete`, { params:{
         // uid: this.$cookies.get('nickName'),
         uid : this.$store.state.profileData.nickName,
-        desertionno: this.$cookies.get('desertionno').desertionno
+        desertionno: this.$route.params.desertionno
       }})
       .then((response) => {
         console.log(response);
@@ -322,9 +325,9 @@ export default {
     getSurvey() {
       let formData = new FormData();
         formData.append('email', this.$cookies.get('auth-token').email)
-        formData.append('desertionno', this.$cookies.get('desertionno').desertionno)
+        formData.append('desertionno', this.$route.params.desertionno)
         console.log(this.$cookies.get('auth-token').email)
-        console.log(this.$cookies.get('desertionno').desertionno)
+        console.log(this.$route.params.desertionno)
         axios.post(constants.SERVER_URL + '/adoption/Application', formData)
           .then(response => {
             console.log(response.data)  
@@ -423,9 +426,6 @@ export default {
     },
     goModal() {
       this.getSurvey()
-    },
-    destroyed(){
-      this.$cookies.remove('desertionno')
     },
   }
 }
