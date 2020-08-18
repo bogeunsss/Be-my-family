@@ -194,19 +194,17 @@ export default new Vuex.Store({
   },
 
   actions: {
-    login({ commit, state }, loginData){
-      console.log(loginData)
+    login({ commit, state }, paramData){
       let formData = new FormData()
-      console.log(loginData.email)
       var reg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      if(loginData.isManager === 'radio-1'){
-        formData.append('email', loginData.email)
-        formData.append('password', loginData.password)
-        if (!loginData.email) {
-          console.log(loginData.email)
+      if(paramData.loginData.isManager === 'radio-1'){
+        formData.append('email', paramData.loginData.email)
+        formData.append('password', paramData.loginData.password)
+        if (!paramData.loginData.email) {
+          console.log(paramData.loginData.email)
           alert("이메일을 입력하세요");
         }
-        else if (!reg.test(loginData.email)) {
+        else if (!reg.test(paramData.loginData.email)) {
           alert("이메일 형식을 확인하세요");
         }
         else {
@@ -233,11 +231,11 @@ export default new Vuex.Store({
               state.dialog = false;
             })
         }
-      }else if(loginData.isManager === 'radio-2'){
-        console.log(loginData.mid)
-        console.log(loginData.password)
-        formData.append('mid', loginData.mid)
-        formData.append('password', loginData.password)
+      }else if(paramData.loginData.isManager === 'radio-2'){
+        console.log(paramData.loginData.mid)
+        console.log(paramData.loginData.password)
+        formData.append('mid', paramData.loginData.mid)
+        formData.append('password', paramData.loginData.password)
         axios.post(SERVER.SERVER_URL +'/manager/login ', formData)
           .then(response => {
             if(response.status == 200){
@@ -252,8 +250,7 @@ export default new Vuex.Store({
                   uid:response.data.uid,
                   mid:response.data.mid
                 })
-                state.authToken = cookies.get('auth-token')
-                router.push({name:constants.URL_TYPE.POST.MAIN})
+                state.authToken = cookies.get('auth-token')                
                 router.go()
               }
             })
@@ -264,10 +261,14 @@ export default new Vuex.Store({
             })
       }
     },
-    logout({ commit, state }){
+    logout({ commit, state }, path){
       state.authToken = null
       cookies.remove('auth-token')
-      router.push({name: constants.URL_TYPE.MAIN})
+      if (path !== constants.URL_TYPE.MAIN){
+        router.push({name: constants.URL_TYPE.MAIN})
+      }else{
+        router.go()
+      }
     },
     // 데이터 조회할때 유저 null 값 나옴
     find({commit, state}, email){
