@@ -15,7 +15,12 @@
             <v-card style="width:350px" @click="goAdoptionDetail(adoption.adoptionno)">
               <div class="d-flex inline">
               <v-card-title class="subheading font-weight-bold">i dont know what to do</v-card-title>
-              <v-btn class='my-auto'>승인대기</v-btn>
+              
+              <div>
+              <v-btn class='my-auto' v-if="adoption.state === 0">승인대기</v-btn>
+              <v-btn class='my-auto' v-if="adoption.state === 1">승인완료</v-btn>
+              <v-btn class='my-auto' v-if="adoption.state === 2">승인거절</v-btn>
+              </div>
               </div>
               <v-divider></v-divider>
 

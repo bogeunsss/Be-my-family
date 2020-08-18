@@ -53,6 +53,7 @@
       <v-list-item two-line>
         <v-list-item-content>
           <v-list-item-title class="headline">입양희망자 상세정보</v-list-item-title>
+          <p> {{adoption[0].state }} </p>
           <v-list-item-subtitle>보호소 No : {{mid}}</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
@@ -219,8 +220,44 @@ export default {
           console.log(error);
         });
     },
-    dogApproval() {
-        this.isApproval = true
+     dogApproval() {
+        axios.patch(constants.SERVER_URL + '/manager/adoptionList/approve',
+        {
+          adoptionno : this.adoption[0].adoptionno,
+          uid : this.adoption[0].uid,
+          desertionno :this.adoption[0].desertionno,
+          fixdate : this.adoption[0].fixdate,
+          fixtime : this.adoption[0].fixtime,
+          name : this.adoption[0].name,
+          mid : this.adoption[0].mid,
+          email : this.adoption[0].email,
+          phone : this.adoption[0].phone
+        }).then((res)=> {
+        console.log(res)
+        alert('승인완료 되었습니다.')
+        }).catch((err)=>{
+          console.log9err
+        })
+    },
+    dogApprovalRefuse() {
+      axios.patch(constants.SERVER_URL + '/manager/adoptionList/reject',
+        {
+          adoptionno : this.adoption[0].adoptionno,
+          uid : this.adoption[0].uid,
+          desertionno :this.adoption[0].desertionno,
+          fixdate : this.adoption[0].fixdate,
+          fixtime : this.adoption[0].fixtime,
+          name : this.adoption[0].name,
+          mid : this.adoption[0].mid,
+          email : this.adoption[0].email,
+          phone : this.adoption[0].phone
+        }).then((res)=> {
+        console.log(res)
+        alert('승인거절 되었습니다.')
+        }).catch((err)=>{
+          console.log9err
+        })
+
     },
   },
   data() {

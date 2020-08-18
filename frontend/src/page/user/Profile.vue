@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="margin-top:7rem;">
     <v-container style="width:80%">
       <div>
         <div class="d-flex">
@@ -66,7 +66,12 @@
                 <div>유기견 번호 : {{adoption.desertionno}}</div>
                 <div class="ml-auto">
                   {{adoption.fixdate}}
-                  {{adoption.fixtime}}
+                  {{adoption.fixtime}}시
+                </div>
+                <div class="ml-auto">
+                  <v-btn class='my-auto' v-if="adoption.state === 0">승인대기</v-btn>
+                  <v-btn class='my-auto' v-if="adoption.state === 1">승인완료</v-btn>
+                  <v-btn class='my-auto' v-if="adoption.state === 2">승인거절</v-btn>
                 </div>
               </v-card-text>
             </v-card>
