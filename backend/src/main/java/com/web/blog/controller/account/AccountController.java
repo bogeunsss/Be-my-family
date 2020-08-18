@@ -156,6 +156,7 @@ public class AccountController {
         checkUser.setJob(request.getJob());
         checkUser.setMarriaged(request.getMarriaged());
         
+
         userDao.save(checkUser);
 
         final BasicResponse result = new BasicResponse();

@@ -20,5 +20,5 @@ public interface InterestDao extends JpaRepository<Interest, String> {
     Interest save(Interest interest);
     List<Interest> findByUid(String uid);
     Optional<Interest> findByUidAndDesertionno(String uid, String desertionno);
-    List<Interest> findByUidOrderByDesertionno(String uid);
+    List<Interest> findByUidOrderByInterestno(String uid);
 }

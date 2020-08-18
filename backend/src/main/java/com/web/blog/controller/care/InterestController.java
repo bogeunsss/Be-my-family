@@ -47,7 +47,7 @@ public class InterestController {
         List<Careboard> careboardList = new LinkedList<>();
 
         final BasicResponse result = new BasicResponse();
-        interestlist = interestDao.findByUidOrderByDesertionno(uid);
+        interestlist = interestDao.findByUidOrderByInterestno(uid);
         if(!interestlist.isEmpty()) {
             for (int i = 0; i < interestlist.size(); i++) {
                 String desertionno = interestlist.get(i).getDesertionno();
