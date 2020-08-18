@@ -1,15 +1,14 @@
 <template>
-  <div v-if="isHeader">
-    <div class="mb-5">
-    <v-sheet>
-      <v-btn class="hambuger" color="cyan" dark @click.stop="drawer = !drawer">
-        <i class="lg fas fa-bars" style="font-size:30px"></i>
+  <div class="header d-flex" style="position:fixed;padding:15px 50px;width:100%; box-shadow:2px 2px 3px rgba(0,0,0,0.3); background-color:#f2cc59;" v-if="isHeader">
+      <v-btn class="mr-5" style="background-color:transparent;box-shadow: none;" @click.stop="drawer = !drawer">
+        <i class="lg fas fa-bars" style="color:#4ba5cd;font-size:30px"></i>
       </v-btn>
-      <v-navigation-drawer v-model="drawer" absolute temporary height="400">
+      <v-navigation-drawer v-model="drawer" absolute temporary height="400" class="ml-4" style="background-color:#f2cc59; border-radius:15px;">
         <v-list-item class="pl-0">
-          <v-list-item-avatar v-if="isLoggedIn">
-            <v-img src="https://picsum.photos/78.jpg"></v-img>
-          </v-list-item-avatar>
+          <div class="ml-5" style="font-size:20px;">
+            <p class="mb-0" v-if="isLoggedIn && !isManager">{{ profileData.nickName }}</p>
+            <p class="mb-0" v-else-if="isLoggedIn && isManager ">{{ $cookies.get('auth-token').mid }}</p>
+          </div>
 
 
           <!-- <v-list-item-content> -->
@@ -76,26 +75,27 @@
           </v-dialog>
           </v-dialog>
         <!-- </v-list-item-content> -->
-          <p class="mb-0" v-if="isLoggedIn && !isManager">{{ profileData.nickName }}</p>
-          <p class="mb-0" v-else-if="isLoggedIn && isManager ">{{ $cookies.get('auth-token').mid }}</p>
+          <!-- <p class="mb-0" v-if="isLoggedIn && !isManager">{{ profileData.nickName }}</p>
+          <p class="mb-0" v-else-if="isLoggedIn && isManager ">{{ $cookies.get('auth-token').mid }}</p> -->
           <!-- {{$store.state.profileData}} -->
           <!-- </v-list-item-content> -->
         </v-list-item>
 
+        <v-divider></v-divider>
         <v-divider></v-divider>
 
         <v-list dense>
           <div class="ml-5 d-flex inline">
             <v-list-item-icon>
               <router-link v-bind:to="{name:constants.URL_TYPE.MAIN}">
-                <i class="fas fa-home black--text" style="font-size:30px"></i>
+                <i class="fas fa-home" style="color:#4ba5cd; font-size:30px;"></i>
               </router-link>
             </v-list-item-icon>
             <!-- 홈 글자 눌렀을때 메인으로 이동하는거 고치기 -->
-            <v-list-item-title @click="goHome" style="cursor: pointer;">Home</v-list-item-title>
+            <v-list-item-title @click="goHome" style="cursor: pointer; font-weight:bold;">Home</v-list-item-title>
           </div>
           <div class="ml-5 d-flex inline">
-            <v-list-item-icon style="cursor: pointer;">
+            <v-list-item-icon style="color:#4ba5cd; cursor: pointer;">
               <i
                 class="fas fa-id-card"
                 v-if="isLoggedIn"
@@ -104,7 +104,7 @@
               ></i>
             </v-list-item-icon>
 
-            <v-list-item-title v-if="isLoggedIn" @click="userProfile" style="cursor: pointer;">My page</v-list-item-title>
+            <v-list-item-title v-if="isLoggedIn" @click="userProfile" style="cursor: pointer; font-weight:bold">My page</v-list-item-title>
           </div>
           <div class="ml-5 d-flex inline" v-if="isLoggedIn && !isManager">
             <!-- like 아이콘, 글자 눌렀을 때 like 페이지로 이동 -->
@@ -113,22 +113,22 @@
                 class="fas fa-paw"
                 v-if="isLoggedIn"
                 @click="userLike"
-                style="font-size:30px"
+                style="color:#4ba5cd; font-size:30px"
               ></i>
             </v-list-item-icon>
-            <v-list-item-title v-if="isLoggedIn" @click="userLike" style="cursor: pointer;">Like</v-list-item-title>
+            <v-list-item-title v-if="isLoggedIn" @click="userLike" style="cursor: pointer; font-weight:bold">Like</v-list-item-title>
           </div>
           <div class="ml-5 d-flex inline" v-if="isLoggedIn && !isManager">
             <!-- survey 아이콘, 글자 눌렀을 때 survey 페이지로 이동 -->
             <v-list-item-icon style="cursor: pointer;">
               <i
-                class="far fa-file-alt"
+                class="far fa-file-alt ml-1"
                 v-if="isLoggedIn"
                 @click="userSurvey"
-                style="font-size:30px"
+                style="color:#4ba5cd; font-size:30px"
               ></i>
             </v-list-item-icon>
-            <v-list-item-title v-if="isLoggedIn" @click="userSurvey" style="cursor: pointer;">Survey</v-list-item-title>
+            <v-list-item-title v-if="isLoggedIn" @click="userSurvey" style="cursor: pointer; font-weight:bold">Survey</v-list-item-title>
           </div>
           <div class="ml-5 d-flex inline" v-if="isLoggedIn && isManager">
             <!-- survey 아이콘, 글자 눌렀을 때 survey 페이지로 이동 -->
@@ -136,39 +136,45 @@
               <i
                class="fas fa-clipboard-list"
                 @click="goManager"
-                style="font-size:30px"
+                style="color:#4ba5cd; font-size:30px"
               ></i>
             </v-list-item-icon>
-            <v-list-item-title @click="goManager" style="cursor: pointer;">Manager</v-list-item-title>
+            <v-list-item-title @click="goManager" style="cursor: pointer; font-weight:bold">Manager</v-list-item-title>
           </div>
           <div class="ml-5 d-flex inline">
             <v-list-item-icon style="cursor: pointer;">
               <i
-                class="fas fa-sign-out-alt"
+                class="fas fa-sign-out-alt ml-1"
                 v-if="isLoggedIn"
                 @click="Logout"
-                style="font-size:30px"
+                style="color:#4ba5cd; font-size:30px"
               ></i>
             </v-list-item-icon>
-            <v-list-item-title v-if="isLoggedIn" @click="Logout" style="cursor: pointer;">Logout</v-list-item-title>
+            <v-list-item-title v-if="isLoggedIn" @click="Logout" style="cursor: pointer; font-weight:bold">Logout</v-list-item-title>
           </div>
         </v-list>
       </v-navigation-drawer>
-    </v-sheet>
-    <router-link class="text-decoration-none" v-bind:to="{name:constants.URL_TYPE.MAIN}">
-      <h1 class="text-center cyan--text text--lighten-2" >Dog Dog!</h1>
-    </router-link>
+    <div class="my-auto">
+      <router-link :to="{name:constants.URL_TYPE.MAIN}" style="font-family: 'Recipekorea';font-size:1.6rem;font-weight:bold; color:#4ba5cd;" class="ml-0 text-decoration-none text-center ">Be My Family<i class="fas fa-paw pl-3"></i></router-link>
     </div>
-    <div class="container mb-5">
-      <v-btn outlined @click="goHome">메인</v-btn>
-      <v-btn outlined @click="goList">보호소</v-btn>
-      <v-btn outlined @click="goLost">실종/보호/목격</v-btn>
-      <v-btn outlined @click="adoptList">입양후기</v-btn>
+
+    <div class="ml-auto d-flex">
+      <div class="mr-3 my-auto">
+        <!-- font-family: 'ImcreSoojin'; -->
+        <p class="m-0 my-auto" @click="goList" style="font-family: 'Recipekorea';font-size:1rem; cursor:pointer; color:#4ba5cd;">보호소</p>
+      </div>
+      <div class="mr-3 my-auto">
+        <p class="m-0 my-auto" @click="goLost" style="font-family: 'Recipekorea';font-size:1rem; cursor:pointer; color:#4ba5cd;">실종/보호/목격</p>
+      </div>
+      <div class="mr-3 my-auto">
+        <p class="m-0 my-auto" @click="adoptList" style="font-family: 'Recipekorea';font-size:1rem; cursor:pointer; color:#4ba5cd;">입양후기</p>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+
 import constants from "@/lib/constants";
 import axios from "axios";
 
@@ -318,10 +324,42 @@ export default {
 </script>
 
 <style scoped>
-.hambuger{
+            @font-face {
+    font-family: 'Recipekorea';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/Recipekorea.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+            
+            @font-face {
+    font-family: 'ImcreSoojin';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.3/ImcreSoojin.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+            
+@font-face {
+    font-family: 'TmoneyRoundWindExtraBold';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-07@1.0/TmoneyRoundWindExtraBold.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+      
+  @font-face {
+    font-family: 'GmarketSansBold';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
+            
+.header{
+  /* height: 80px; */
+  z-index: 11;
+}
+/* .hambuger{
   top: 50px;
   left: 50px;
-}
+} */
 .v-navigation-drawer {
   margin-top: 50px;
   top: 50px;

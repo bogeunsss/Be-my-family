@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="margin-top:7rem;">
     <v-container >
       <form>
         <v-row class="d-flex align-center mx-auto">

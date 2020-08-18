@@ -1,251 +1,278 @@
 <template>
-  <div>
-      <v-container class="pa-0">
-          <h1>상세페이지</h1>
-          <v-card>
-            <v-toolbar flat color="pink" dark>
-                <v-toolbar-title class="d-flex justify-space-between">
-                    <div></div>
-                    <div>작성자 | {{ writer }}</div>
-                </v-toolbar-title>
-            </v-toolbar>
-            <v-card-subtitle class="mx-auto" style="width: 60%">
+  <div style="margin-top:7rem;">
+    <v-container class="p-4">
+        <v-row>
+            <v-col class="detailcol1" cols="12" lg="6">
+            <v-card>
+                <v-row>
+            <v-card-subtitle class="mx-auto" style="width: 100%">
                 <v-img
                 src="http://www.animal.go.kr/files/shelter/2014/02/201403010903285_s.jpg"
-                class="white--text align-end"
-                gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                max-height="100%"
+                class="white--text float-center"
+                min-width="80%"
                 height="auto"
-                >
-                </v-img>
+                ></v-img>
             </v-card-subtitle>
-            <v-card-text>
-                <v-list v-for="(subTitle, i) in subTitles" :key="i" dense>
-                    <v-list-item>
-                        <p class="font-weight-black mr-3">{{subTitle}}: </p>
-                        <p> {{subContents[subTitle]}} </p>
-                    </v-list-item>
-                </v-list>
-                <p>태그:</p>
-                <div class="d-flex flex-row">
-                    <v-list v-for="(madeTag, i) in madeTags" :key="'tag'+i">
-                        <v-chip v-if="madeTag">{{ madeTag }}</v-chip>
-                    </v-list>
-                </div>
-                <v-divider></v-divider>
-                <p>{{ content }}</p>
+            </v-row>      
+            <v-row>
+            <v-card-text class="py-0">
+                <v-row>
+                <v-col cols="6" v-for="(subTitle, i) in subTitles" :key="i" dense class="pl-5">
+                    <div class="d-flex px-5">
+                    <i v-if="i==0" style="font-size:25px;" class="fas fa-dog"></i>
+                    <i v-if="i==1" style="font-size:25px;" class="fas fa-venus-mars"></i>
+                    <i v-if="i==2" style="font-size:25px;" class="fas fa-calendar-week"></i>
+                    <i v-if="i==3" style="font-size:25px;" class="fas fa-map-marked-alt"></i>
+                    <p class="font-weight-black mr-3 pl-1 pt-1">{{subTitle}}</p>
+                    </div>
+                    <p class="px-5">{{subContents[subTitle]}}</p>
+                </v-col>
+                </v-row>
             </v-card-text>
-            <v-card-actions class="d-flex justify-center">
-              <v-spacer></v-spacer>
-              <!-- <v-btn v-if="isWriter">수정</v-btn> -->
-              <div v-if="isWriter">
-                <v-dialog v-model="dialog" scrollable max-width="700px">
-                    <template v-slot:activator="{ on, attrs }">
-                        <v-btn
-                            color="success"
-                            dark
-                            v-bind="attrs"
-                            v-on="on"
-                            v-if="isWriter"
-                        >
-                            수정
-                        </v-btn>
-                    </template>
-                    <v-card>
-                    <v-card-title>글 작성하기</v-card-title>
-                    <v-divider></v-divider>
-                    <v-card-text style="height: 500px;">
-                        <v-list>
-                        <v-list-item-subtitle>카테고리</v-list-item-subtitle>
-                        <v-list-item class="mt-3 d-flex justify-space-between">
-                            <v-radio-group v-model="lostType" v-for="category in categories" :key="category">
-                            <v-radio :label=category :value=category :selected="lostType"></v-radio>
-                            </v-radio-group>
-                        </v-list-item>
-                        <v-list-item-subtitle>성별</v-list-item-subtitle>
-                        <v-list-item class="mt-3 d-flex justify-space-between">
-                            <v-radio-group v-model="lostSex" v-for="gd in gender" :key="gd">
-                            <v-radio :label=gd :value=gd :selected="lostSex"></v-radio>
-                            </v-radio-group>
-                        </v-list-item>
-                        <v-list-item-subtitle>품종</v-list-item-subtitle>
-                        <v-list-item class="mt-3">
-                            <v-select
-                            v-model="lostBreed"
-                            :items="kinds"
-                            label="선택해주세요"
-                            solo
-                            ></v-select>
-                        </v-list-item>
-                        <v-row>
-                            <v-col>
-                            <v-list-item-subtitle>시/도</v-list-item-subtitle>
-                            <v-list-item class="mt-3">
-                                <v-select
-                                v-model="lostSido"
-                                :items="sido_states"
-                                label="선택해주세요"
-                                solo
-                                ></v-select>
-                            </v-list-item>
-                            </v-col>
-                            <v-col>
-                            <div v-if="lostSido.length > 0">
-                                <v-list-item-subtitle>구/군</v-list-item-subtitle>
-                                <v-list-item class="mt-3">
-                                <v-select
-                                    v-model="lostGugun"
-                                    :items="gugun_states[lostSido]"
-                                    label="선택해주세요"
-                                    solo
-                                ></v-select>
-                                </v-list-item>
-                            </div>
-                            </v-col>
-                        </v-row>
-
-                        <v-row>
-                            <v-col>
-                            <v-list-item-subtitle>상세주소</v-list-item-subtitle>
-                            <v-list-item>
-                                <v-text-field v-model="lostPlace"></v-text-field>
-                            </v-list-item>
-                            </v-col>
-                            <v-col>
-                            <v-list-item-subtitle>발생날짜</v-list-item-subtitle>
-                            <v-list-item>
-                                <v-text-field
-                                color="primary"
-                                @click="dialog2 = !dialog2"
-                                v-model="lostDate"
-                                label="발생 날짜를 선택해주세요"
-                                readonly
-                                ></v-text-field>
-                            </v-list-item>
-                            </v-col>
-                        </v-row>
-                        
-                        <v-list-item>
-                            <p class="font-weght-black mr-3">태그:</p>
-                            <div class="d-flex flex-column">
-                                <v-text-field v-model="lostTagText"></v-text-field>
-                                <div class="d-flex flex-row">
-                                    <v-list v-for="(madeTag, index) in madeTags" :key="index">
-                                        <v-chip v-if="madeTag" close color="teal" text-color="white" @click:close="closeTag(index)">{{ madeTag }}</v-chip>
-                                    </v-list>
-                                </div>
-                            </div>
-                        </v-list-item>
-                        <v-list-item>
-                            <v-textarea v-model="content" outlined label="내용">{{content}}</v-textarea>
-                        </v-list-item>
-                        </v-list>
-                    </v-card-text>
-                    <v-divider></v-divider>
-                    <v-card-actions class="d-flex justify-space-between">
-                        <input @change="onChangeImages" type="file" id="inputFiles" multiple="multiple" accept="image/*">
-                        <div>
-                        <v-btn type="button" color="blue darken-1" text @click="submit">Save</v-btn>
-                        <v-btn color="blue darken-1" text @click="closeDialog">Close</v-btn>
-                        </div>
-                    </v-card-actions>
-                    </v-card>
-                </v-dialog>
-              </div>
-                <v-dialog ref="dialog" v-model="dialog2" :return-value.sync="lostDate" persistent width="290px">
-                    <v-date-picker v-model="lostDate" scrollable>
-                    <v-spacer></v-spacer>
-                    <v-btn color="primary" @click="dialog2 = false">취소</v-btn>
-                    <v-btn color="primary" @click="$refs.dialog.save(lostDate)">확인</v-btn>
-                    </v-date-picker>
-                </v-dialog>
-              <v-btn v-if="isWriter" @click="deleteLost" color="red">삭제</v-btn>
-              <v-btn @click="goList">목록</v-btn>
-            </v-card-actions>
-            <div style="position: relative">
-                <v-subheader class="font-weight-black">댓글</v-subheader>
-                <v-textarea
-                    v-model="comment"
-                    :label="comment.length+'/100'"
-                    auto-grow
-                    outlined
-                    rows="3"
-                    row-height="30"
-                    shaped
-                >
-                </v-textarea>
-                <v-btn color="indigo" outlined class="write-btn" @click="commentCreate">
-                    작성
-                </v-btn>
-
-            </div>
-            <v-row class="px-4">
-                <v-col cols="1" class="text-center font-weight-black">번호</v-col>
-                <v-col cols="9" class="text-center font-weight-black">내용</v-col>
-                <v-col cols="1" class="text-end font-weight-black">작성자</v-col>
-                <v-col cols="1"></v-col>
             </v-row>
-            <v-list v-for="(lostReply, i) in lostReplies" :key="i" class="pa-0">
-                <v-list-item>
-                    <v-row>
-                        <v-col cols="1" class="text-center">{{ i+1 }}</v-col>
-                        <v-col cols="9" class="pl-5">{{ lostReply.lostreplycontent }}</v-col>
-                        <v-col cols="1" class="text-end">{{ lostReply.uid }}</v-col>
-                        <!-- <v-col cols="1"><v-icon @click="modifyTooltip = !modifyTooltip">mdi-pencil-circle-outline</v-icon><v-icon @click="commentDelete(lostReply.lostreplyno)" v-if="lostReply.uid === profileData.nickName" color="red">mdi-close-circle-outline</v-icon></v-col>
+            </v-card>
+            </v-col>
+            <v-col  class="detailcol2" cols="12" lg="6">
+                <v-card style="min-height:450px;height:100%;position:relative;" class="ml-0 pa-9">
+                    <div style="height:100%;">
+                        <div style="position:absolute;top:20%;">
+                            <p class="font-weight-bold">내용</p>
+                            <p>{{ content }}</p>
+                        </div>
+                        <div style="position:absolute;top:67%;">
+                            <div class="d-flex">
+                                <i class="mr-1 my-auto fas fa-tags font-weight-bold"></i><p class="m-0 my-auto font-weight-bold">태그</p>
+                            </div>
+                            <div class="d-flex flex-row">
+                                <v-list v-for="(madeTag, i) in madeTags" :key="'tag'+i">
+                                    <v-chip v-if="madeTag">{{ madeTag }}</v-chip>
+                                </v-list>
+                            </div>
+                        </div>
+                        <div style="position:absolute;bottom:5%;right:5%;">
+                            <v-card-actions class="d-flex justify-center">
+                            <v-spacer></v-spacer>
+                            <!-- <v-btn v-if="isWriter">수정</v-btn> -->
+                            <div v-if="isWriter">
+                                <v-dialog v-model="dialog" scrollable max-width="700px">
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-btn color="success" dark v-bind="attrs" v-on="on" v-if="isWriter">수정</v-btn>
+                                </template>
+                                <v-card>
+                                    <v-card-title>글 작성하기</v-card-title>
+                                    <v-divider></v-divider>
+                                    <v-card-text style="height: 500px;">
+                                    <v-list>
+                                        <v-list-item-subtitle>카테고리</v-list-item-subtitle>
+                                        <v-list-item class="mt-3 d-flex justify-space-between">
+                                        <v-radio-group
+                                            v-model="lostType"
+                                            v-for="category in categories"
+                                            :key="category"
+                                        >
+                                            <v-radio :label="category" :value="category" :selected="lostType"></v-radio>
+                                        </v-radio-group>
+                                        </v-list-item>
+                                        <v-list-item-subtitle>성별</v-list-item-subtitle>
+                                        <v-list-item class="mt-3 d-flex justify-space-between">
+                                        <v-radio-group v-model="lostSex" v-for="gd in gender" :key="gd">
+                                            <v-radio :label="gd" :value="gd" :selected="lostSex"></v-radio>
+                                        </v-radio-group>
+                                        </v-list-item>
+                                        <v-list-item-subtitle>품종</v-list-item-subtitle>
+                                        <v-list-item class="mt-3">
+                                        <v-select v-model="lostBreed" :items="kinds" label="선택해주세요" solo></v-select>
+                                        </v-list-item>
+                                        <v-row>
+                                        <v-col>
+                                            <v-list-item-subtitle>시/도</v-list-item-subtitle>
+                                            <v-list-item class="mt-3">
+                                            <v-select v-model="lostSido" :items="sido_states" label="선택해주세요" solo></v-select>
+                                            </v-list-item>
+                                        </v-col>
+                                        <v-col>
+                                            <div v-if="lostSido.length > 0">
+                                            <v-list-item-subtitle>구/군</v-list-item-subtitle>
+                                            <v-list-item class="mt-3">
+                                                <v-select
+                                                v-model="lostGugun"
+                                                :items="gugun_states[lostSido]"
+                                                label="선택해주세요"
+                                                solo
+                                                ></v-select>
+                                            </v-list-item>
+                                            </div>
+                                        </v-col>
+                                        </v-row>
+
+                                        <v-row>
+                                        <v-col>
+                                            <v-list-item-subtitle>상세주소</v-list-item-subtitle>
+                                            <v-list-item>
+                                            <v-text-field v-model="lostPlace"></v-text-field>
+                                            </v-list-item>
+                                        </v-col>
+                                        <v-col>
+                                            <v-list-item-subtitle>발생날짜</v-list-item-subtitle>
+                                            <v-list-item>
+                                            <v-text-field
+                                                color="primary"
+                                                @click="dialog2 = !dialog2"
+                                                v-model="lostDate"
+                                                label="발생 날짜를 선택해주세요"
+                                                readonly
+                                            ></v-text-field>
+                                            </v-list-item>
+                                        </v-col>
+                                        </v-row>
+
+                                        <v-list-item>
+                                        <p class="font-weght-black mr-3">태그:</p>
+                                        <div class="d-flex flex-column">
+                                            <v-text-field v-model="lostTagText"></v-text-field>
+                                            <div class="d-flex flex-row">
+                                            <v-list v-for="(madeTag, index) in madeTags" :key="index">
+                                                <v-chip
+                                                v-if="madeTag"
+                                                close
+                                                color="teal"
+                                                text-color="white"
+                                                @click:close="closeTag(index)"
+                                                >{{ madeTag }}</v-chip>
+                                            </v-list>
+                                            </div>
+                                        </div>
+                                        </v-list-item>
+                                        <v-list-item>
+                                        <v-textarea v-model="content" outlined label="내용">{{content}}</v-textarea>
+                                        </v-list-item>
+                                    </v-list>
+                                    </v-card-text>
+                                    <v-divider></v-divider>
+                                    <v-card-actions class="d-flex justify-space-between">
+                                    <input
+                                        @change="onChangeImages"
+                                        type="file"
+                                        id="inputFiles"
+                                        multiple="multiple"
+                                        accept="image/*"
+                                    />
+                                    <div>
+                                        <v-btn type="button" color="blue darken-1" text @click="submit">Save</v-btn>
+                                        <v-btn color="blue darken-1" text @click="closeDialog">Close</v-btn>
+                                    </div>
+                                    </v-card-actions>
+                                </v-card>
+                                </v-dialog>
+                            </div>
+                            <v-dialog
+                                ref="dialog"
+                                v-model="dialog2"
+                                :return-value.sync="lostDate"
+                                persistent
+                                width="290px"
+                            >
+                                <v-date-picker v-model="lostDate" scrollable>
+                                <v-spacer></v-spacer>
+                                <v-btn color="primary" @click="dialog2 = false">취소</v-btn>
+                                <v-btn color="primary" @click="$refs.dialog.save(lostDate)">확인</v-btn>
+                                </v-date-picker>
+                            </v-dialog>
+                            <v-btn v-if="isWriter" @click="deleteLost" color="red">삭제</v-btn>
+                            <v-btn @click="goList">목록</v-btn>
+                            </v-card-actions>
+                        </div>
+                    </div>
+                </v-card>
+            </v-col>
+        </v-row>
+    </v-container>
+
+    <v-container>
+      <v-card>
+        <div style="position: relative">
+          <v-subheader class="font-weight-black">댓글</v-subheader>
+          <v-textarea
+            v-model="comment"
+            :label="comment.length+'/100'"
+            auto-grow
+            outlined
+            rows="3"
+            row-height="30"
+            shaped
+          ></v-textarea>
+          <v-btn color="indigo" outlined class="write-btn" @click="commentCreate">작성</v-btn>
+        </div>
+        <v-row class="px-4">
+          <v-col cols="1" class="text-center font-weight-black">번호</v-col>
+          <v-col cols="9" class="text-center font-weight-black">내용</v-col>
+          <v-col cols="1" class="text-end font-weight-black">작성자</v-col>
+          <v-col cols="1"></v-col>
+        </v-row>
+        <v-list v-for="(lostReply, i) in lostReplies" :key="i" class="pa-0">
+          <v-list-item>
+            <v-row>
+              <v-col cols="1" class="text-center">{{ i+1 }}</v-col>
+              <v-col cols="9" class="pl-5">{{ lostReply.lostreplycontent }}</v-col>
+              <v-col cols="1" class="text-end">{{ lostReply.uid }}</v-col>
+              <!-- <v-col cols="1"><v-icon @click="modifyTooltip = !modifyTooltip">mdi-pencil-circle-outline</v-icon><v-icon @click="commentDelete(lostReply.lostreplyno)" v-if="lostReply.uid === profileData.nickName" color="red">mdi-close-circle-outline</v-icon></v-col>
                         <v-tooltip v-model="modifyTooltip">
                             <v-text-field v-model="modifiedComment" @keyup.enter="commentCreate"></v-text-field>
-                        </v-tooltip> -->
-                        <v-col cols="1" class="d-flex">
-                            <v-menu top :close-on-content-click="closeOnContentClick">
-                                <template v-slot:activator="{ on, attrs }">
-                                    <v-icon v-bind="attrs" v-on="on">mdi-pencil-circle-outline</v-icon>
-                                </template>
-                                <v-card class="d-flex">
-                                    <input type="text" v-model="lostReply.lostreplycontent">
-                                    <v-chip label @click="commentModify(lostReply.lostreplycontent, lostReply.lostreplyno)">수정</v-chip>
-                                </v-card>
-                            </v-menu>
-                            <!-- <v-speed-dial direction="top" open-on-hover="false" transition="scale-transition">
+              </v-tooltip>-->
+              <v-col cols="1" class="d-flex">
+                <v-menu top :close-on-content-click="closeOnContentClick">
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-icon v-bind="attrs" v-on="on">mdi-pencil-circle-outline</v-icon>
+                  </template>
+                  <v-card class="d-flex">
+                    <input type="text" v-model="lostReply.lostreplycontent" />
+                    <v-chip
+                      label
+                      @click="commentModify(lostReply.lostreplycontent, lostReply.lostreplyno)"
+                    >수정</v-chip>
+                  </v-card>
+                </v-menu>
+                <!-- <v-speed-dial direction="top" open-on-hover="false" transition="scale-transition">
                                 <template v-slot:activator>
                                     <v-icon>mdi-pencil-circle-outline</v-icon>
                                 </template>
                                 <v-text-field v-model="modifiedComment" @keyup.enter="commentCreate"></v-text-field>
-                            </v-speed-dial> -->
+                </v-speed-dial>-->
 
-
-                            <!-- 수정 간지나는거 찾아보기 -->
-                            <v-icon @click="commentDelete(lostReply.lostreplyno)" v-if="lostReply.uid === profileData.nickName" color="red">mdi-close-circle-outline</v-icon>
-                        </v-col>
-                    </v-row>
-                </v-list-item>
-                    <v-divider></v-divider>
-            </v-list>
-          </v-card>
-      </v-container>
+                <!-- 수정 간지나는거 찾아보기 -->
+                <v-icon
+                  @click="commentDelete(lostReply.lostreplyno)"
+                  v-if="lostReply.uid === profileData.nickName"
+                  color="red"
+                >mdi-close-circle-outline</v-icon>
+              </v-col>
+            </v-row>
+          </v-list-item>
+          <v-divider></v-divider>
+        </v-list>
+      </v-card>
+    </v-container>
     <div class="float-window">
-        <v-card id="create">
-            <v-speed-dial
-            :direction="direction"
-            :open-on-hover="hover"
-            :transition="transition"
-            >
-            <template v-slot:activator>
-                <v-btn
-                color="blue darken-2"
-                large
-                dark
-                >
-                <div class="d-flex flex-column">
-                    <p class="ma-0 pa-0"><v-icon small>mdi-magnify</v-icon>이 강아지를</p>
-                    <p class="ma-0 pa-0">찾으셨나요?</p>
-                </div>
-                </v-btn>
-            </template>
-            <div v-for="(m, i) in matched" :key="i">
-                <v-img src="http://www.animal.go.kr/files/shelter/2014/02/201403010903285_s.jpg" @click="goDetail(m.lostno)"></v-img>
-            </div>
-            </v-speed-dial>
-        </v-card>
+      <v-card id="create">
+        <v-speed-dial :direction="direction" :open-on-hover="hover" :transition="transition">
+          <template v-slot:activator>
+            <v-btn color="blue darken-2" large dark>
+              <div class="d-flex flex-column">
+                <p class="ma-0 pa-0">
+                  <v-icon small>mdi-magnify</v-icon>이 강아지를
+                </p>
+                <p class="ma-0 pa-0">찾으셨나요?</p>
+              </div>
+            </v-btn>
+          </template>
+          <div v-for="(m, i) in matched" :key="i">
+            <v-img
+              src="http://www.animal.go.kr/files/shelter/2014/02/201403010903285_s.jpg"
+              @click="goDetail(m.lostno)"
+            ></v-img>
+          </div>
+        </v-speed-dial>
+      </v-card>
     </div>
     <v-snackbar v-model="snackbar" timeout="2000">수정되었습니다.</v-snackbar>
   </div>
@@ -528,25 +555,40 @@ export default {
         }
     },
 }
+
 </script>
 
 <style>
+.detailcol1{
+    padding-right: 0;
+}
+.detailcol2 {
+    padding-left: 0;
+}
+@media (max-width:760px) {
+    .detailcol1{
+        padding-right:12px;
+    }
+    .detailcol2{
+        padding-left:12px;
+    }
+}
 .float-window {
-    position: fixed;
-    bottom: 40vw;
-    right: 5vw;
+  position: fixed;
+  bottom: 40vw;
+  right: 5vw;
 }
 .write-btn {
-    position: absolute;
-    bottom: 60px;
-    right: 10px;
+  position: absolute;
+  bottom: 60px;
+  right: 10px;
 }
 .comment-header {
-    position: absolute;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    bottom: 3px;
-    width: 100%;
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  bottom: 3px;
+  width: 100%;
 }
 </style>
