@@ -101,7 +101,7 @@ export default {
     // this.likecheck()
   },
   computed:{
-    ...mapState(['profileData','loginData', ]),
+    ...mapState(['profileData','loginData' ]),
     param()
     {
       return this.$route.params.ID
@@ -114,7 +114,7 @@ export default {
     },
     adoptdetail(){
       setTimeout(()=>{
-        axios.get(`http://localhost:8080/postscript/detail?postscriptno=${this.$route.params.ID}&uid=${this.profileData.nickName}`)
+        axios.get(constants.SERVER_URL + `/postscript/detail?postscriptno=${this.$route.params.ID}&uid=${this.profileData.nickName}`)
       .then((res) =>{
       console.log(this.$route.params.ID, this.profileData.nickName)
         this.Adoptdata = res.data.object
@@ -129,7 +129,7 @@ export default {
       })},100)
     },
     postdelete(){ 
-      axios.delete(`http://localhost:8080/postscript/Delete?postscriptno=${this.$route.params.ID}&uid=${this.profileData.nickName}`)
+      axios.delete(constants.SERVER_URL + `/postscript/Delete?postscriptno=${this.$route.params.ID}&uid=${this.profileData.nickName}`)
       .then(()=>{
         alert("삭제되었습니다.")
          this.adoptlist()
@@ -145,29 +145,34 @@ export default {
       if(!this.$cookies.isKey("auth-token")){
           alert('로그인해주세요')
       }else{
-        var flag = 0
-        if(this.commentData.content == ""){
-          alert("댓글을 입력해주세요.")
-          flag = 1
-        }
-        if(flag == 0){
-          this.commentData.uid = this.profileData.nickName
-          axios.post("http://localhost:8080/comment/add", this.commentData)
-          .then((res)=>{
-            console.log(this.commentData)
-            this.commentData.content = "";
-            alert("댓글이 등록되었습니다.")
-            this.$router.go()
-          })
-          .catch((error) =>{
-            console.log(error)
-          })
+        if(this.$cookies.get('auth-token').uid !== undefined){
+          var flag = 0
+          if(this.commentData.content == ""){
+            alert("댓글을 입력해주세요.")
+            flag = 1
           }
+          if(flag == 0){
+            this.commentData.uid = this.profileData.nickName
+            axios.post(constants.SERVER_URL + "/comment/add", this.commentData)
+            .then((res)=>{
+              console.log(this.commentData)
+              this.commentData.content = "";
+              alert("댓글이 등록되었습니다.")
+              this.$router.go()
+            })
+            .catch((error) =>{
+              console.log(error)
+            })
+          }
+        }else{
+          alert('죄송합니다. 매니저는 댓글을 다실 수 없습니다.')
+          this.commentData.content = ''
+        }
       }
 
     },
     commentupdate(Commentno){
-      axios.put('http://localhost:8080/comment/modify',{
+      axios.put(constants.SERVER_URL + '/comment/modify',{
         uid: this.profileData.nickName,
         commentno : Commentno,
         content : this.updatecomment.content,
@@ -183,7 +188,7 @@ export default {
       })
     },
     commentdelete(Commentno){
-      axios.delete(`http://localhost:8080/comment/delete?commentno=${Commentno}&uid=${this.profileData.nickName}`)
+      axios.delete(constants.SERVER_URL + `/comment/delete?commentno=${Commentno}&uid=${this.profileData.nickName}`)
       .then(() => {
         alert("삭제완료")
         this.$router.go()
@@ -199,7 +204,7 @@ export default {
       console.log(this.cid)
     },
     like(){
-      axios.post(`http://localhost:8080/postscript/good/add?postscriptno=${this.$route.params.ID}&uid=${this.profileData.nickName}`)
+      axios.post(constants.SERVER_URL + `/postscript/good/add?postscriptno=${this.$route.params.ID}&uid=${this.profileData.nickName}`)
       .then((res)=>{
         console.log(res.data.isGood)
         // this.Like = res.data.isGood
@@ -217,7 +222,7 @@ export default {
       })
     },
     // likecheck(){
-    //   axios.post(`http://localhost:8080/postscript/good/add?postscriptno=${this.$route.params.ID}&uid=${this.profileData.nickName}`)
+    //   axios.post(constants.SERVER_URL + `/postscript/good/add?postscriptno=${this.$route.params.ID}&uid=${this.profileData.nickName}`)
     //   .then((res)=>{
     //     this.Like = res.data.isGood
     //   })

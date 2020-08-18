@@ -96,10 +96,7 @@ export default {
           },
         })
         .then((res) => {
-          console.log(res.data);
           this.managerInfo = res.data;
-          console.log(this.managerInfo);
-          console.log(this.profileData)
         })
         .catch((err) => {
           console.log(err);
@@ -107,7 +104,6 @@ export default {
     },
 
     managerDateUpdate() {
-      console.log(this.managerInfo.password)
       if(this.password === this.passwordConfirm){
         if(this.password !== ''){
           if(!passwordReg.test(this.password)) {
@@ -124,7 +120,7 @@ export default {
               password : this.managerInfo.password,
               phone: this.managerInfo.phone
             }).then((res)=>{
-              console.log(res)
+              alert('수정 성공!')
             this.$router.push({name:constants.URL_TYPE.MAIN})
             }).catch((err)=>{
               console.log(err)
@@ -137,7 +133,7 @@ export default {
             password : this.managerInfo.password,
             phone: this.managerInfo.phone
           }).then((res)=>{
-            console.log(res)
+            alert('수정 성공!')
           this.$router.push({name:constants.URL_TYPE.MAIN})
           }).catch((err)=>{
             console.log(err)
