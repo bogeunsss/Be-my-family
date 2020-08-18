@@ -117,8 +117,8 @@ export default {
         ...mapActions(['mainList', 'setSearchDogs']),
         goDetail(j,index){
             // this.$router.push({name:constants.URL_TYPE.POST.DETAIL, params: {desertionno:this.dogData.desertionno}})
-            this.$cookies.set('desertionno', {desertionno:this.dogData[j][index].desertionno})
-            this.$router.push({name:constants.URL_TYPE.POST.DETAIL})
+            // this.$cookies.set('desertionno', {desertionno:this.dogData[j][index].desertionno})
+            this.$router.push({name:constants.URL_TYPE.POST.DETAIL, params:{desertionno: this.dogData[j][index].desertionno}})
         },
         search(){
             var paramInfo = {

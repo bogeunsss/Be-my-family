@@ -263,6 +263,7 @@ export default new Vuex.Store({
     },
     logout({ commit, state }, path){
       state.authToken = null
+      state.isLoggedIn = false
       cookies.remove('auth-token')
       if (path !== constants.URL_TYPE.MAIN){
         router.push({name: constants.URL_TYPE.MAIN})

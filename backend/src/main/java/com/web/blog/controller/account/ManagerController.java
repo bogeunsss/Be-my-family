@@ -88,10 +88,10 @@ public class ManagerController {
 
     @GetMapping("/manager/find")
     @ApiOperation(value = "매니저 조회")
-    public Object find (@RequestParam(required = true) final String mid) {
+    public Object find (String email) {
         ResponseEntity response = null;
 
-        Manager checkmanager = managerDao.getManagerByMid(mid);
+        Manager checkmanager = managerDao.getManagerByEmail(email);
         System.out.println(checkmanager);
         final ManagerResponse result = new ManagerResponse();
         
@@ -141,16 +141,17 @@ public class ManagerController {
 
     @GetMapping("/manager/adoptionList")
     @ApiOperation(value = "입양신청목록 조회")
-    public Object adoptionList(@RequestParam(required = true) final String mid) {
+    public Object adoptionList(String email) {
         ResponseEntity response = null;
 
+        Manager checkmanager = managerDao.getManagerByEmail(email);
         final ManagerResponse result = new ManagerResponse();
         
         try {
-            List<Adoption> adoptionList = adoptionDao.findByMid(mid);
+            List<Adoption> adoptionList = adoptionDao.findByMid(checkmanager.getMid());
             result.status = true;
             result.data = "success";
-            result.mid = mid;
+            result.mid = checkmanager.getMid();
             result.adoptions = adoptionList;
             response = new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
