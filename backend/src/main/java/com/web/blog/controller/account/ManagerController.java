@@ -165,13 +165,13 @@ public class ManagerController {
 
     @PatchMapping("/manager/adoptionList/reject")
     @ApiOperation(value = "입양신청 거절")
-    public Object adoptionReject(@Valid @RequestBody ApplicationRequest request) {
+    public Object adoptionReject(@RequestParam(required = true) final int adoptionno) {
        
         ResponseEntity response = null;
         final BasicResponse result = new BasicResponse();
 
         try {
-            Adoption checkadoption = adoptionDao.getByAdoptionno(request.getAdoptionno());
+            Adoption checkadoption = adoptionDao.getByAdoptionno(adoptionno);
             checkadoption.setState(2);
             adoptionDao.save(checkadoption);
             result.data = "success";
@@ -188,13 +188,13 @@ public class ManagerController {
 
     @PatchMapping("/manager/adoptionList/approve")
     @ApiOperation(value = "입양신청 승인")
-    public Object adoptionApprove(@Valid @RequestBody ApplicationRequest request) {
+    public Object adoptionApprove(@RequestParam(required = true) final int adoptionno) {
        
         ResponseEntity response = null;
         final BasicResponse result = new BasicResponse();
 
         try {
-            Adoption checkadoption = adoptionDao.getByAdoptionno(request.getAdoptionno());
+            Adoption checkadoption = adoptionDao.getByAdoptionno(adoptionno);
             checkadoption.setState(1);
             adoptionDao.save(checkadoption);
             result.data = "success";
