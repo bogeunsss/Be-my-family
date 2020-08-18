@@ -81,7 +81,8 @@
                 ></v-textarea> 
                 </v-row> 
          
-            <v-row>          
+            <v-row>
+            <input @change="onChangeImages" type="file" id="inputFiles" multiple="multiple" accept="image/*">
             <v-btn outlined color="blue" style="margin-left: auto;" @click="submitadopt"> 등록 </v-btn> 
             </v-row> 
             </v-col>
@@ -101,19 +102,21 @@ export default {
         // this.find(token.email)
     },
     computed:{
-        ...mapState(['profileData','loginData', 'sido_states', 'gugun_states']),
+        ...mapState(['profileData', 'sido_states', 'gugun_states']),
     },
     methods:{
         // ...mapActions(['find']),
         submitadopt(){
-            // console.log(this.profileData.nickName)
             const formData = new FormData()
             formData.append('uid', this.profileData.nickName)
             formData.append('title', this.adoptcreate.title)
             formData.append('sido', this.adoptcreate.sido)
             formData.append('gugun', this.adoptcreate.gugun)
             formData.append('content', this.adoptcreate.content)
-            formData.append('kind', this.adoptcreate.kind)  
+            formData.append('kind', this.adoptcreate.kind)
+            for(var x=0;x<this.images.length;x++){
+                formData.append('images', this.images[x])
+            }  
             
             var flag = 0
             if(this.adoptcreate.title == ""){
@@ -127,17 +130,29 @@ export default {
             if(flag == 0){
                 this.adoptcreate.uid = this.profileData.nickName
                 axios
-                .post("http://localhost:8080/postscript/Add",formData)
+                .post(constants.SERVER_URL + "/postscript/Add", formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
                 .then((res) =>{
                     console.log(this.res)
-                    alert('작성이 완료됬습니다.')
+                    alert('작성이 완료됐습니다.')
                     this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTLIST });
                 })
                 .catch((error) => {
                     console.log(error)
                 })
             }
+        },
+        onChangeImages(event){
+            if(event.target.files.length > 3){
+                alert('파일은 3개까지 저장 가능합니다.')
+                document.getElementById('inputFiles').value = '';
+            }else{
+                this.images = event.target.files
             }
+        },
     },
     data () {
         return{
@@ -163,14 +178,14 @@ export default {
             selectSido: '',
             selectGugun: '',
             adoptcreate:{
-                image:"",
                 title:"",
                 sido:"",
                 gugun:"",
                 content:"",
                 kind:"",
                 uid:'',
-            }
+            },
+            images: [],
         }
         
     },

@@ -170,7 +170,7 @@ public class LostController {
         return response;
     }
 
-    @GetMapping("lost/list")
+    @GetMapping("/lost/list")
     @ApiOperation(value = "실종/보호/목격 전체 조회")
     public Object lostList() {
 
@@ -179,7 +179,7 @@ public class LostController {
 
         try {
 
-            List<Lost> lostList = lostDao.findAll();
+            List<Lost> lostList = lostDao.findAllByOrderByLostnoDesc();
             result.status = true;
             result.data = "success";
             result.object = lostList;
@@ -195,7 +195,7 @@ public class LostController {
         return response;
     }
 
-    @GetMapping("lost/detail")
+    @GetMapping("/lost/detail")
     @ApiOperation(value = "실종/보호/목격 상세 조회")
     public Object lostDetail(@RequestParam(required = true) int lostno) {
 
@@ -236,7 +236,7 @@ public class LostController {
         return response;
     }
 
-    @DeleteMapping("lost/delete")
+    @DeleteMapping("/lost/delete")
     @ApiOperation(value = "실종/목격/보호 글 삭제")
     public Object lostDelete(@RequestParam(required = true) final int lostno, @RequestParam(required = true) final String uid) {
 
@@ -293,7 +293,7 @@ public class LostController {
 
     }
 
-    @GetMapping("lost/search")
+    @GetMapping("/lost/search")
     @ApiOperation(value = "실종/보호/목격 태그 검색")
     public Object lostSearch(@RequestParam(required = false) final List<String> tags) {
 
@@ -348,7 +348,7 @@ public class LostController {
         return response;
     }
 
-    @GetMapping("lost/match")
+    @GetMapping("/lost/match")
     @ApiOperation(value = "실종/보호/목격 매칭")
     public Object lostMatch(@RequestParam final int lostno) {
 

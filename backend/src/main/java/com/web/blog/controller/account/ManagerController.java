@@ -88,10 +88,10 @@ public class ManagerController {
 
     @GetMapping("/manager/find")
     @ApiOperation(value = "매니저 조회")
-    public Object find (String email) {
+    public Object find (@RequestParam(required = true) final String mid) {
         ResponseEntity response = null;
 
-        Manager checkmanager = managerDao.getManagerByEmail(email);
+        Manager checkmanager = managerDao.getManagerByMid(mid);
         System.out.println(checkmanager);
         final ManagerResponse result = new ManagerResponse();
         
@@ -102,6 +102,7 @@ public class ManagerController {
             result.name = checkmanager.getName();
             result.email = checkmanager.getEmail();
             result.phone = checkmanager.getPhone();
+            result.password = checkmanager.getPassword();
             response = new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
             result.data = "fail";
@@ -124,6 +125,7 @@ public class ManagerController {
         try {
             checkmanager.setEmail(request.getEmail());
             checkmanager.setPassword(request.getPassword());
+            checkmanager.setPhone(request.getPhone());
             managerDao.save(checkmanager);
             result.status = true;
             result.data = "success";
@@ -140,17 +142,16 @@ public class ManagerController {
 
     @GetMapping("/manager/adoptionList")
     @ApiOperation(value = "입양신청목록 조회")
-    public Object adoptionList(String email) {
+    public Object adoptionList(@RequestParam(required = true) final String mid) {
         ResponseEntity response = null;
 
-        Manager checkmanager = managerDao.getManagerByEmail(email);
         final ManagerResponse result = new ManagerResponse();
         
         try {
-            List<Adoption> adoptionList = adoptionDao.findByMid(checkmanager.getMid());
+            List<Adoption> adoptionList = adoptionDao.findByMid(mid);
             result.status = true;
             result.data = "success";
-            result.mid = checkmanager.getMid();
+            result.mid = mid;
             result.adoptions = adoptionList;
             response = new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
@@ -164,13 +165,13 @@ public class ManagerController {
 
     @PatchMapping("/manager/adoptionList/reject")
     @ApiOperation(value = "입양신청 거절")
-    public Object adoptionReject(@Valid @RequestBody ApplicationRequest request) {
+    public Object adoptionReject(@RequestParam(required = true) final int adoptionno) {
        
         ResponseEntity response = null;
         final BasicResponse result = new BasicResponse();
 
         try {
-            Adoption checkadoption = adoptionDao.getByAdoptionno(request.getAdoptionno());
+            Adoption checkadoption = adoptionDao.getByAdoptionno(adoptionno);
             checkadoption.setState(2);
             adoptionDao.save(checkadoption);
             result.data = "success";
@@ -187,13 +188,13 @@ public class ManagerController {
 
     @PatchMapping("/manager/adoptionList/approve")
     @ApiOperation(value = "입양신청 승인")
-    public Object adoptionApprove(@Valid @RequestBody ApplicationRequest request) {
+    public Object adoptionApprove(@RequestParam(required = true) final int adoptionno) {
        
         ResponseEntity response = null;
         final BasicResponse result = new BasicResponse();
 
         try {
-            Adoption checkadoption = adoptionDao.getByAdoptionno(request.getAdoptionno());
+            Adoption checkadoption = adoptionDao.getByAdoptionno(adoptionno);
             checkadoption.setState(1);
             adoptionDao.save(checkadoption);
             result.data = "success";

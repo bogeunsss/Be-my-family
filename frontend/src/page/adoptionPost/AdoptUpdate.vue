@@ -71,7 +71,6 @@
         <v-row>
           <v-textarea filled name="context" hint="내용을 입력해주세요." v-model="Adoptupdate.content"></v-textarea>
         </v-row>
-        {{this.Adoptupdate}}
         <v-row>
           <v-btn outlined color="blue" style="margin-left: auto;" @click="submitupdate">등록</v-btn>
         </v-row>
@@ -108,7 +107,7 @@ export default {
     submitupdate() {
 
 
-      axios.put(`http://localhost:8080/postscript/Modify?postscriptno=${this.$route.params.ID}&title=${this.Adoptupdate.title}&content=${this.Adoptupdate.content}&sido=${this.Adoptupdate.sido}&gugun=${this.Adoptupdate.gugun}&kind=${this.Adoptupdate.kind}`)
+      axios.put(constants.SERVER_URL + `/postscript/Modify?postscriptno=${this.$route.params.ID}&title=${this.Adoptupdate.title}&content=${this.Adoptupdate.content}&sido=${this.Adoptupdate.sido}&gugun=${this.Adoptupdate.gugun}&kind=${this.Adoptupdate.kind}`)
       .then(()=>{
           this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTDETAIL, params:{ ID: this.$route.params.ID} })
       })

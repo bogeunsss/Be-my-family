@@ -82,7 +82,7 @@ public class Fit {
                 result = no;
             }
 
-        } else if (house.equals("housing") && place.equals("home")) {
+        } else if (house.equals("housing")) {
             if(kind.contains("꼬똥") || kind.contains("말티즈") || kind.contains("퍼그") || kind.contains("믹스") ||
             kind.contains("포메라니안") || kind.contains("푸들") || kind.contains("시츄") || kind.contains("요크셔") ||
             kind.contains("치와와") || kind.contains("비숑") || kind.contains("슈나") || kind.contains("닥스훈트")

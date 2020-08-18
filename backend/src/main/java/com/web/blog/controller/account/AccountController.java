@@ -142,6 +142,7 @@ public class AccountController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @PutMapping("/account/update")
     @ApiOperation(value = "수정하기")
     public Object modify(@Valid @RequestBody SignupRequest request) {
@@ -149,8 +150,13 @@ public class AccountController {
         User checkUser = userDao.getUserByUid(request.getUid());
         ResponseEntity response = null;
 
-        checkUser.setEmail(request.getEmail());
+        // checkUser.setEmail(request.getEmail());
         checkUser.setPassword(request.getPassword());
+        checkUser.setPhone(request.getPhone());
+        checkUser.setJob(request.getJob());
+        checkUser.setMarriaged(request.getMarriaged());
+        
+
         userDao.save(checkUser);
 
         final BasicResponse result = new BasicResponse();
