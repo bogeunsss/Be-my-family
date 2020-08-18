@@ -57,7 +57,7 @@
           </thead>
           <tbody>
             <tr v-for="(adopt, index) in adoptData" :key="index" @click="adoptdetail(adopt.postscriptno)">
-              <th scope="row">{{ adopt.postscriptno }}</th>
+              <th scope="row">{{ adoptData.length - index }}</th>
               <td>{{ adopt.title }}</td>
               <td>{{ adopt.uid}}</td>
               <td>{{ nowdate(adopt.createdate)}}</td>
@@ -83,8 +83,10 @@ export default {
 
   },
   created() {
-    if(this.$cookies.get('auth-token').mid){
-      this.isManager = true
+    if(this.$cookies.isKey('auth-token')){
+      if(this.$cookies.get('auth-token').mid !== undefined){
+        this.isManager = true
+      }
     }
     this.adoptList();
   },

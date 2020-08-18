@@ -29,6 +29,7 @@
           <v-btn icon large style="color:red;" v-if="this.likegood" @click="like">
             <v-icon large>mdi-heart</v-icon>
           </v-btn>
+          <p>{{good}}</p>
         </v-card-actions>
 
         <v-divider></v-divider>
@@ -98,8 +99,10 @@ export default {
   created(){
     this.adoptdetail()
     this.commentData.postscriptno = this.$route.params.ID
-    if(this.$cookies.get('auth-token').mid !== undefined){
-      this.isManager = true
+    if(this.$cookies.isKey('auth-token')){
+      if(this.$cookies.get('auth-token').mid !== undefined){
+        this.isManager = true
+      }
     }
     // this.likecheck()
   },
@@ -119,10 +122,11 @@ export default {
       setTimeout(()=>{
         axios.get(constants.SERVER_URL + `/postscript/detail?postscriptno=${this.$route.params.ID}&uid=${this.profileData.nickName}`)
       .then((res) =>{
-      console.log(this.$route.params.ID, this.profileData.nickName)
+      console.log(res)
         this.Adoptdata = res.data.object
         this.comments = res.data.comments
         this.likegood = res.data.isGood
+        this.good = res.data.good
         console.log(this.likegood)
         // console.log(this.Adoptdata)
         // console.log(this.comments)
@@ -218,6 +222,7 @@ export default {
           this.likegood = false
           console.log(this.likegood)
         }
+        this.adoptdetail()
         // console.log(this.Like)
       })
       .catch((error)=>{
@@ -246,6 +251,7 @@ export default {
         commentno:""
       },
       isManager: false,
+      good: '',
     };
   },
 };

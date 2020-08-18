@@ -63,6 +63,7 @@
         v-bind="attrs"
         v-on="on"
         class="float-btn"
+        v-if="isLoggedIn"
       >
         <v-icon>mdi-pencil</v-icon>
       </v-btn>
@@ -222,7 +223,7 @@ export default {
     window.removeEventListener("scroll", this.handleScroll);
   },
   computed:{
-    ...mapState(['sido_states', 'gugun_states', 'profileData']),
+    ...mapState(['sido_states', 'gugun_states', 'profileData', 'isLoggedIn']),
   },
   watch:{
   },
@@ -325,7 +326,6 @@ export default {
       // FormData 객체를 log 찍어보려면
       // FormData.entries()를 이용하여 key : value 쌍을 뽑아야 함.
       
-      console.log(this.images)
       axios.post(constants.SERVER_URL + '/lost/add', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -337,7 +337,7 @@ export default {
       })
       
       this.dialog = false
-      this.$router.go()
+      // this.$router.go(-1)
     },
     closeTag(index){
       this.lostTags.splice(index, 1)

@@ -19,13 +19,13 @@ export default {
             DETAIL: 'detail'
         },
         ADOPTIONPOST:{
-            ADOPTLIST: "AdoptList",
-            ADOPTCREATE: "AdoptCreate",
-            ADOPTDETAIL: "AdoptDetail",
-            ADOPTUPDATE: "AdoptUpdate"
+            ADOPTLIST: "adoptList",
+            ADOPTCREATE: "adoptCreate",
+            ADOPTDETAIL: "adoptDetail",
+            ADOPTUPDATE: "adoptUpdate"
         },
         LOST: {
-            LOSTLIST:'lostList',
+            LOSTLIST:'lost',
             LOSTDETAIL:'lostDetail',
         },
     }

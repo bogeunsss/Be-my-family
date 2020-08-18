@@ -192,11 +192,10 @@ export default {
           this.email = token.email
           this.isLoggedIn = true
 
-          console.log(this.$cookies.get('auth-token').mid)
-          if(this.$cookies.get('auth-token').mid == null){
+          if(this.$cookies.get('auth-token').uid !== undefined){
               this.find(token.email)
+              console.log(this.$route.params.desertionno)
               setTimeout(()=>{
-
                 axios.get(constants.SERVER_URL + '/care/detailUser', {
                   params: {
                     desertionno: this.$route.params.desertionno,
@@ -204,12 +203,9 @@ export default {
                   }
                 })
                 .then( response => {
-                    console.log(response)
-                    console.log(response.data.object.carenm)
                     this.dogData = response.data.object
-                    console.log(this.adoptionData)
                     for (var i = 0; i < this.adoptionData.length; i++){
-                      if(this.adoptionData[i].desertionno ==  this.$route.params.desertionno){
+                      if(this.adoptionData[i].desertionno === this.$route.params.desertionno){
                         this.isAdoption = true
                       }
                     }

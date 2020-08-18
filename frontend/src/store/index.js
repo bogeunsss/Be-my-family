@@ -53,7 +53,6 @@ export default new Vuex.Store({
     dogData: [],
     isLast: false,
     adoptionData:{},
-    searchedPage: false,
     sido_states: [
       '서울특별시', '부산광역시', '인천광역시', '대전광역시',
       '대구광역시', '울산광역시', '광주광역시', '세종특별자치시',
@@ -164,16 +163,15 @@ export default new Vuex.Store({
       state.profileData.nickName = nickName
     },
     setSearchDogs(state, newDogData){
-      if(!state.searchedPage){
+      if(!newDogData.isSearched){
         state.dogData = []
       }
-      state.dogData.push(newDogData.object)
-      if(!newDogData.hasNext){
+      console.log(newDogData)
+      state.dogData.push(newDogData.data.object)
+      if(!newDogData.data.hasNext){
         state.isLast = true
-        state.searchedPage = false
       }else{
         state.isLast = false
-        state.searchedPage = true
       }
     },
     checkLoggedIn(state, check){

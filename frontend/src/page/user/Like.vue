@@ -75,10 +75,7 @@ export default {
     },
     goDetail(desertionNo) {
       console.log(this.$store.state.profileData.nickName);
-      this.$cookies.set("desertionno", {
-        desertionno: desertionNo,
-      });
-      this.$router.push({ name: constants.URL_TYPE.POST.DETAIL , params : { uuid : this.$store.state.profileData.nickName } });
+      this.$router.push({ name: constants.URL_TYPE.POST.DETAIL , params : { uuid : this.$store.state.profileData.nickName, desertionno: desertionNo } });
     },
     deleteLike(index) {
       console.log(this.$store.state.profileData.nickName);

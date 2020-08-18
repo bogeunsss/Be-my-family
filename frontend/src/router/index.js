@@ -115,7 +115,7 @@ export default new Router({
       component: AdoptDetail
     },
     {
-      path: '/:desertionno',
+      path: '/list/:desertionno',
       name: constants.URL_TYPE.POST.DETAIL,
       component: Detail
     },

@@ -3,8 +3,8 @@
     <v-container style="width:80%">
       <h1 class="mb-6">회원정보 수정</h1>
       <form>
-        <p>이메일:</p>
-        <v-text-field v-if="managerInfo" v-model="managerInfo.email" placeholder="이메일을 입력해주세요"></v-text-field>
+        <p v-if="!isUser">이메일:</p>
+        <v-text-field v-if="!isUser" v-model="managerInfo.email" placeholder="이메일을 입력해주세요"></v-text-field>
 
         <p>비밀번호:</p>
         <v-text-field v-model="password" :type="passwordType" placeholder="비밀번호를 입력해주세요">
@@ -26,20 +26,20 @@
         </v-text-field>
 
         <p>전화번호:</p>
-        <v-text-field v-if="profileData.phone" v-model="profileData.phone"></v-text-field>
-        <v-text-field v-if="managerInfo" v-model="managerInfo.phone" placeholder="전화번호를 입력해주세요"></v-text-field>
+        <v-text-field v-if="isUser" v-model="profileData.phone"></v-text-field>
+        <v-text-field v-if="!isUser" v-model="managerInfo.phone" placeholder="전화번호를 입력해주세요"></v-text-field>
 
-        <p v-if="profileData.job">직업:</p>
-        <v-text-field v-if="profileData.job" v-model="profileData.job"></v-text-field>
+        <p v-if="isUser">직업:</p>
+        <v-text-field v-if="isUser" v-model="profileData.job"></v-text-field>
 
-        <p v-if="profileData.marriaged">결혼 유무:</p>
-        <v-radio-group v-if="profileData.marriaged" v-model="profileData.marriaged">
+        <p v-if="isUser">결혼 유무:</p>
+        <v-radio-group v-if="isUser" v-model="profileData.marriaged">
           <v-radio label="기혼" value="기혼"></v-radio>
           <v-radio label="미혼" value="미혼"></v-radio>
         </v-radio-group>
 
-        <v-btn v-if="profileData.email" class="btn" @click="userDataUpdate">수정완료</v-btn>
-        <v-btn v-if="managerInfo.mid" class="btn" @click="managerDateUpdate">수정완료</v-btn>
+        <v-btn v-if="isUser" class="btn" @click="userDataUpdate">수정완료</v-btn>
+        <v-btn v-if="!isUser" class="btn" @click="managerDateUpdate">수정완료</v-btn>
       </form>
     </v-container>
   </div>
@@ -53,11 +53,14 @@ import axios from "axios";
 export default {
   components: {},
   created() {
-    var token = this.$cookies.get("auth-token");
-    if (this.$cookies.get("auth-token").uid) {
-      this.find(token.email);
-    }else {
-      this.getManagerFind(token.email);
+    if(this.$cookies.isKey('auth-token')){
+      var token = this.$cookies.get("auth-token");
+      if (this.$cookies.get("auth-token").uid !== undefined) {
+        this.find(token.email);
+        this.isUser = true
+      }else {
+        this.getManagerFind(token.email);
+      }
     }
   },
   computed: {
@@ -149,6 +152,7 @@ export default {
   data: () => {
     return {
       constants,
+      isUser: false,
       email: "",
       nickName: "",
       password: "",

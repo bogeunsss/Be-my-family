@@ -128,19 +128,26 @@ export default {
             if(this.searchText === ""){
                     paramInfo.pageno = 0
                     this.mainList(paramInfo)
+                    this.isSearched = false
             }else{
+                if(this.lastSearchText !== this.searchText){
+                    this.lastSearchText = this.searchText
+                    this.isSearched = false
+                }
                 if(!this.isSearched){
                     paramInfo.pageno = 0
                 }
                 axios.get(constants.SERVER_URL + `/care/search?category=${this.category}&searchText=${this.searchText}&pageno=${paramInfo.pageno}`)
                 .then((response) =>{
-                    if(response.data.object.empty){
+                    console.log(response)
+                    if(!response.data.totalData){
                         alert('검색 결과가 없습니다.')
                         paramInfo.pageno = 0
-                        this.mainList(paramInfo)
                         this.searchText = ""
+                        this.isSearched = false
+                        this.mainList(paramInfo)
                     }else{
-                        this.setSearchDogs(response.data)
+                        this.setSearchDogs({data: response.data, isSearched: this.isSearched})
                         this.isSearched = true
                     }
                 })
@@ -178,6 +185,7 @@ export default {
             ],
             category: {},
             searchText: '',
+            lastSearchText: '',
             contacts: [],
             pageno: 0,
             isSearched: false,

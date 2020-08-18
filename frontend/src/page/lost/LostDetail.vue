@@ -279,17 +279,21 @@ export default {
                 this.lostTags = []
                 this.madeTags = []
                 var temp = []
-                for(var x=0;x<response.data.madetag.length;x++){
-                    temp.push(response.data.madetag[x].tagname)
+                if(response.data.madetag){
+                    for(var x=0;x<response.data.madetag.length;x++){
+                        temp.push(response.data.madetag[x].tagname)
+                    }
                 }
                 this.madeTags = temp
                 var temp2 = []
                 var temp3 = []
-                for(var x=0;x<response.data.tag.length;x++){
-                    if(this.madeTags.indexOf(response.data.tag[x].tagname) < 0){
-                        temp2.push(response.data.tag[x].tagname)
+                if(response.data.tag){
+                    for(var x=0;x<response.data.tag.length;x++){
+                        if(this.madeTags.indexOf(response.data.tag[x].tagname) < 0){
+                            temp2.push(response.data.tag[x].tagname)
+                        }
+                        temp3.push(response.data.tag[x].tagname)
                     }
-                    temp3.push(response.data.tag[x].tagname)
                 }
                 this.madeTags = temp2
                 this.lostTags = temp3
@@ -309,8 +313,10 @@ export default {
         axios.get(constants.SERVER_URL + `/lost/match?lostno=${this.lostno}`)
             .then(response => {
                 // console.log(response)
-                if(response.data.match.length){
-                    this.matched = response.data.match
+                if(response.data.math){
+                    if(response.data.match.length){
+                        this.matched = response.data.match
+                    }
                 }
             }).catch(error => {
                 console.log(error)
@@ -437,8 +443,10 @@ export default {
             formData.append('lostphone', this.profileData.phone)
             formData.append('lostno', this.$route.params.articleNo)
             formData.append('losttagtext', this.lostTags)
-            for(var x=0;x<this.images.length;x++){
-                formData.append('files', this.images[x])
+            if(this.images){
+                for(var x=0;x<this.images.length;x++){
+                    formData.append('files', this.images[x])
+                }
             }
             
 
