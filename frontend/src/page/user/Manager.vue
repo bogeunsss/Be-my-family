@@ -15,7 +15,7 @@
               <div class="d-flex inline">
               <v-card-title class="subheading font-weight-bold">i dont know what to do</v-card-title>
               <v-chip label class='d-flex flex-column' color="pink" text-color="white" large>
-                승인<br>대기
+                승인<br>{{ approveState[adoption.state] }}
               </v-chip>
               </div>
               <v-divider></v-divider>
@@ -84,6 +84,7 @@ export default {
     data() {
         return {
           adoptions : [],
+          approveState: ['대기', '완료', '거절']
         }
     },
 }

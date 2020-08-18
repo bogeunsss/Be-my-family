@@ -164,7 +164,7 @@
       <v-card-actions>
         <!-- <div class="d-flex float-right mr-3"> -->
         <v-btn @click="dogApproval" class="float-right">승인완료</v-btn>
-        <v-btn @click="dogApproval" class="float-right">승인거절</v-btn>
+        <v-btn @click="dogApprovalRefuse" class="float-right">승인거절</v-btn>
       </v-card-actions>
     </v-card>
   </div>
@@ -236,18 +236,9 @@ export default {
         });
     },
     dogApproval() {
-        axios.patch(constants.SERVER_URL + '/manager/adoptionList/approve',
-        {
-          adoptionno : this.adoption.adoptionno,
-          uid : this.adoption.uid,
-          desertionno :this.adoption.desertionno,
-          fixdate : this.adoption.fixdate,
-          fixtime : this.adoption.fixtime,
-          name : this.adoption.name,
-          mid : this.adoption.mid,
-          email : this.adoption.email,
-          phone : this.adoption.phone
-        }).then((res)=> {
+      console.log(this.adoption.adoptionno)
+        axios.patch(constants.SERVER_URL + '/manager/adoptionList/approve?adoptionno=' + this.adoption.adoptionno
+        ).then((res)=> {
         console.log(res)
         alert('승인완료 되었습니다.')
         }).catch((err)=>{
@@ -255,18 +246,8 @@ export default {
         })
     },
     dogApprovalRefuse() {
-      axios.patch(constants.SERVER_URL + '/manager/adoptionList/reject',
-        {
-          adoptionno : this.adoption.adoptionno,
-          uid : this.adoption.uid,
-          desertionno :this.adoption.desertionno,
-          fixdate : this.adoption.fixdate,
-          fixtime : this.adoption.fixtime,
-          name : this.adoption.name,
-          mid : this.adoption.mid,
-          email : this.adoption.email,
-          phone : this.adoption.phone
-        }).then((res)=> {
+      axios.patch(constants.SERVER_URL + '/manager/adoptionList/reject?adoptionno=' + this.adoption.adoptionno
+        ).then((res)=> {
         console.log(res)
         alert('승인거절 되었습니다.')
         }).catch((err)=>{

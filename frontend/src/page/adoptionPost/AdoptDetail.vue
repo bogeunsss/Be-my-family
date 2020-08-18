@@ -22,7 +22,7 @@
           ></v-img>
         </v-card-subtitle>
 
-        <v-card-actions class="d-flex justify-end mb-3">
+        <v-card-actions v-if="!isManager" class="d-flex justify-end mb-3">
           <v-btn icon large v-if="!this.likegood" @click="like">
             <v-icon large>mdi-heart</v-icon>
           </v-btn>
@@ -98,6 +98,9 @@ export default {
   created(){
     this.adoptdetail()
     this.commentData.postscriptno = this.$route.params.ID
+    if(this.$cookies.get('auth-token').mid !== undefined){
+      this.isManager = true
+    }
     // this.likecheck()
   },
   computed:{
@@ -242,6 +245,7 @@ export default {
         content:"",
         commentno:""
       },
+      isManager: false,
     };
   },
 };
