@@ -149,12 +149,13 @@ public class AccountController {
         User checkUser = userDao.getUserByUid(request.getUid());
         ResponseEntity response = null;
 
-        checkUser.setEmail(request.getEmail());
+        // checkUser.setEmail(request.getEmail());
         checkUser.setPassword(request.getPassword());
         checkUser.setPhone(request.getPhone());
         checkUser.setJob(request.getJob());
         checkUser.setMarriaged(request.getMarriaged());
         
+
         userDao.save(checkUser);
 
         final BasicResponse result = new BasicResponse();

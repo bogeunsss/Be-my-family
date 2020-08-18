@@ -219,7 +219,6 @@ public class AdoptionController {
 
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
     @DeleteMapping("/adoption/delete")
     @ApiOperation(value = "입양 신청 삭제")
     public Object adoptionDelete(String uid, String desertionno) {
