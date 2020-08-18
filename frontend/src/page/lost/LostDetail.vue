@@ -129,7 +129,7 @@
                                         <v-list-item>
                                         <p class="font-weght-black mr-3">태그:</p>
                                         <div class="d-flex flex-column">
-                                            <v-text-field v-model="lostTagText"></v-text-field>
+                                            <v-text-field v-model="lostTagText" @keyup.enter="makeApplyTag"></v-text-field>
                                             <div class="d-flex flex-row">
                                             <v-list v-for="(madeTag, index) in madeTags" :key="index">
                                                 <v-chip
@@ -469,7 +469,7 @@ export default {
             formData.append('lostsex', this.lostSex)
             formData.append('lostphone', this.profileData.phone)
             formData.append('lostno', this.$route.params.articleNo)
-            formData.append('losttagtext', this.lostTags)
+            formData.append('losttagtext', this.madeTags)
             if(this.images){
                 for(var x=0;x<this.images.length;x++){
                     formData.append('files', this.images[x])
@@ -497,6 +497,14 @@ export default {
             
             this.dialog = false
             this.$router.go()
+        },
+        makeApplyTag(){
+            if(this.lostTagText.length > 0){
+                if(this.lostTagText[0] === "#"){
+                this.madeTags.push(this.lostTagText.substring(1,this.lostTagText.length))
+                this.lostTagText = ''
+                }
+            }
         },
         closeTag(index){
             this.madeTags.splice(index, 1)
