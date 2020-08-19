@@ -146,8 +146,8 @@ public class PostscriptController {
                 // final File dest = new File(filepath);
                 
                 //서버
-                final String filepath = "http://i3b201.p.ssafy.io/file/" + originalfileName;  
-                final File dest = new File("/webServer/s03p13b201/frontend/dist/file/" + file.getOriginalFilename());
+                final String filepath = originalfileName;  
+                final File dest = new File("/webServer/s03p13b201/frontend/src/file/" + file.getOriginalFilename());
                 if (!dest.getParentFile().exists())
                     dest.getParentFile().mkdirs();
                 
@@ -294,8 +294,8 @@ public class PostscriptController {
                     final String originalfileName = file.getOriginalFilename();
                     // final String filepath = "C:/Image/" + originalfileName;
                     //서버
-                    final String filepath = "http://i3b201.p.ssafy.io/file/" + originalfileName;  
-                    final File dest = new File("/webServer/s03p13b201/frontend/dist/file/" + file.getOriginalFilename());
+                    final String filepath = originalfileName;  
+                    final File dest = new File("/webServer/s03p13b201/frontend/src/file/" + file.getOriginalFilename());
                     if (!dest.getParentFile().exists())
                         dest.getParentFile().mkdirs();
                     // final File dest = new File(filepath);
