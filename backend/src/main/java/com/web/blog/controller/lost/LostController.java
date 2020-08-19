@@ -85,14 +85,14 @@ public class LostController {
             for (MultipartFile file : lostPics.getLostPics()) {
                 final String originalfileName = file.getOriginalFilename();
                 // 로컬
-                final String filepath = "C:/Image/" + originalfileName;
-                final File dest = new File(filepath);
+                // final String filepath = "C:/Image/" + originalfileName;
+                // final File dest = new File(filepath);
 
                 //서버
-                // final String filepath = "http:\\i3b201.p.ssafy.io\\file\lost\" + originalfileName;  
-                // final File dest = new File("http:\\i3b201.p.ssafy.io\\file\lost\" + file.getOriginalFilename());
-                // if (!dest.getParentFile().exists())
-                //     dest.getParentFile().mkdirs();
+                final String filepath = "http://i3b201.p.ssafy.io/file/lost/" + originalfileName;  
+                final File dest = new File("http://i3b201.p.ssafy.io/file/lost/" + file.getOriginalFilename());
+                if (!dest.getParentFile().exists())
+                    dest.getParentFile().mkdirs();
                 
                 // 존재하면 서버에 저장 안함
                 if (dest.exists() == false) {

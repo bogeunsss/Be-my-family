@@ -142,14 +142,14 @@ public class PostscriptController {
             for (MultipartFile file : images) {
                 final String originalfileName = file.getOriginalFilename();
                 //로컬
-                final String filepath = "C:/Image/" + originalfileName;
-                final File dest = new File(filepath);
+                // final String filepath = "C:/Image/" + originalfileName;
+                // final File dest = new File(filepath);
                 
                 //서버
-                // final String filepath = "http:\\i3b201.p.ssafy.io\\file\post\" + originalfileName;  
-                // final File dest = new File("http:\\i3b201.p.ssafy.io\\file\post\" + file.getOriginalFilename());
-                // if (!dest.getParentFile().exists())
-                //     dest.getParentFile().mkdirs();
+                final String filepath = "http://i3b201.p.ssafy.io/file/post/" + originalfileName;  
+                final File dest = new File("http://i3b201.p.ssafy.io/file/post/" + file.getOriginalFilename());
+                if (!dest.getParentFile().exists())
+                    dest.getParentFile().mkdirs();
                 
                 
                 file.transferTo(dest);
@@ -292,13 +292,13 @@ public class PostscriptController {
                 for (MultipartFile file : images) {
                     //로컬
                     final String originalfileName = file.getOriginalFilename();
-                    final String filepath = "C:/Image/" + originalfileName;
+                    // final String filepath = "C:/Image/" + originalfileName;
                     //서버
-                    // final String filepath = "http:\\i3b201.p.ssafy.io\\file\post\" + originalfileName;  
-                    // final File dest = new File("http:\\i3b201.p.ssafy.io\\file\post\" + file.getOriginalFilename());
-                    // if (!dest.getParentFile().exists())
-                    //     dest.getParentFile().mkdirs();
-                    final File dest = new File(filepath);
+                    final String filepath = "http://i3b201.p.ssafy.io/file/post/" + originalfileName;  
+                    final File dest = new File("http://i3b201.p.ssafy.io/file/post/" + file.getOriginalFilename());
+                    if (!dest.getParentFile().exists())
+                        dest.getParentFile().mkdirs();
+                    // final File dest = new File(filepath);
                     file.transferTo(dest);
                     Postpic postpic = new Postpic();
                     postpic.setPostscriptno(postscript.getPostscriptno());
