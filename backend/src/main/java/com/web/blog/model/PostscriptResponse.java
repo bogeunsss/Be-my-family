@@ -5,7 +5,8 @@ public class PostscriptResponse {
     public String data;
     public Object object;
     public int good;
-    public Object comments;
+	public Object comments;
+	public Object postpic;
 	public boolean isGood;
 	public int totalPage;
 	public boolean hasNext;

@@ -17,7 +17,7 @@
             <v-carousel-item
               v-for="(image,i) in images"
               :key="i"
-              :src="'http://i3b201.p.ssafy.io/file/'+image.postpic"
+              :src="'http://i3b201.p.ssafy.io/file/'+image.postpath"
             ></v-carousel-item>
           </v-carousel>
         </v-card-subtitle>
