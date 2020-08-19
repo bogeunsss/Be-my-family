@@ -49,7 +49,7 @@ export default new Vuex.Store({
       marriaged:null,
       sex:null,
       birthdate:null,
-      flag:null,
+      flag:0,
     },
     dogData: [],
     isLast: false,
