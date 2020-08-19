@@ -89,8 +89,8 @@ public class LostController {
                 // final File dest = new File(filepath);
 
                 //서버
-                final String filepath = "http://i3b201.p.ssafy.io/file/lost/" + originalfileName;  
-                final File dest = new File("http://i3b201.p.ssafy.io/file/lost/" + file.getOriginalFilename());
+                final String filepath = "../../assets/lost/" + originalfileName;  
+                final File dest = new File("/webServer/s03p13b201/frontend/src/assets/lost/" + file.getOriginalFilename());
                 if (!dest.getParentFile().exists())
                     dest.getParentFile().mkdirs();
                 
