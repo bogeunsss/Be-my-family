@@ -7,12 +7,13 @@
           <v-card>
             <v-row>
               <v-card-subtitle class="mx-auto" style="position:relative;width: 100%">
-                <v-img
-                  src="http://www.animal.go.kr/files/shelter/2014/02/201403010903285_s.jpg"
-                  class="white--text float-center"
-                  min-width="80%"
-                  height="auto"
-                ></v-img>
+                <v-carousel hide-delimiters height="auto" class="white--text float-center">
+                    <v-carousel-item
+                    v-for="(getImage,i) in getImages"
+                    :key="i"
+                    :src="getImage"
+                    ></v-carousel-item>
+                </v-carousel>
               <v-chip v-if="lostType=='실종'" class="ma-2 font-weight-bold" color="red" text-color="white" style="position:absolute;top:4%;left:4%;">{{ lostType }}</v-chip>
               <v-chip v-if="lostType=='보호'" class="ma-2 font-weight-bold" color="green" text-color="white" style="position:absolute;top:4%;left:4%;">{{ lostType }}</v-chip>
               <v-chip v-if="lostType=='목격'" class="ma-2 font-weight-bold" color="orange" text-color="white" style="position:absolute;top:4%;left:4%;">{{ lostType }}</v-chip>
@@ -361,8 +362,15 @@ export default {
                         this.isWriter = true
                     }
                 }
-                console.log(this.lostTags)
-                console.log(this.madeTags)
+                if(result.lostpic1){
+                    this.getImages.push(result.lostpic1)
+                }
+                if(result.lostpic2){
+                    this.getImages.push(result.lostpic2)
+                }
+                if(result.lostpic3){
+                    this.getImages.push(result.lostpic3)
+                }
             }).catch(error => {
                 console.log(error)
             })
@@ -422,6 +430,7 @@ export default {
             lostSido: '',
             lostGugun: '',
             images: [],
+            getImages: [],
             lostType: '',
             lostDate: null,
             lostPlace: '',
