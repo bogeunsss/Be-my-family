@@ -77,7 +77,7 @@
         <v-col col="12" md="6" style="padding:0rem 4rem;" >
           <v-row>
             <v-col v-for="item in lostList" :key="item.id" col="6" md="6">
-              <v-card style="width:100%" class="pr-0">
+              <v-card style="width:100%; min-height:300px;" class="pr-0">
                 <v-img
                   class="white--text align-end"
                   height="9rem"
@@ -88,7 +88,7 @@
                 <v-card-text class="text--primary">
                   <div>{{ item.lostbread}}</div>
                   <span class="comment">실종지역 : {{ item.lostsido }}</span><br>
-                  <span class="comment">특징 : {{ item.lostcontent }}</span> 
+                  <span class="comment">특징 : {{ elipsis(item.lostcontent) }}</span> 
                 </v-card-text>
               </v-card>
             </v-col>
@@ -229,6 +229,15 @@ export default {
     },
     goReview(){
       this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTLIST });
+    },
+    elipsis (temp) {
+      var length = 50;
+      if (temp.length > length) {
+        temp = temp.substr(0, length-2) + '...';
+        return temp
+      }else{
+        return temp
+      }
     },
   },
   data: () => {
