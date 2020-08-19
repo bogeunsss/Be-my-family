@@ -1,26 +1,36 @@
 <template>
-    <v-container fluid id="scollDetect">
+    <v-container fluid id="scollDetect" >
+        <v-row>
+        <v-col cols="12">
+        <div class="back-img">
+       
+
         <div class="container">
-        <form>
-            <v-row class="d-flex align-center mx-auto">
-                <v-col cols="2" sm="2" md="2">
+        <form >
+            <div class="search">
+            <v-row>   
+            <v-col cols="12">
+            <v-row class="d-flex align-center">      
+                <v-col cols="12" sm="2"  md="2">
                     <v-select
                         v-model="category"
                         :items="items"
                         label="카테고리"
                         item-text="state"
                         item-value="abbr"
+                        style="border-radius: 12px;"
                         solo
                     ></v-select>
                 </v-col>
-                <v-col cols="8" sm="8" md="8">
+                <v-col cols="8"  md="4">
                     <v-text-field
                         label="검색어를 입력하세요"
                         v-model="searchText"
+                        class="mb-5"
                     ></v-text-field>
                 </v-col>
-                <v-col class="mb-4 pa-0" cols="2" sm="2" md="2">
-                    <v-btn large @click="search" type="submit">
+                <v-col class="mb-4 pa-0" cols="4" md="2">
+                    <v-btn large style="background: #4ba5cd; color:white; border-radius: 12px;" @click="search" type="submit">
                         검색
                     </v-btn>
                     <div class="v-messages theme--light">
@@ -28,7 +38,16 @@
                     </div>
                 </v-col>
             </v-row>
+        </v-col>
+        </v-row>
+        </div>
         </form>
+        </div>
+       </div>
+        </v-col>
+        </v-row>
+   
+        <div class="container" >
 
         <v-row>
             <v-col cols="12">
@@ -196,17 +215,20 @@ export default {
     }
 }
 </script>
+<style scoped>
+.back-img{
+    background: url('../../assets/배경3.png') no-repeat;
+    width: 100%;
+    height: 35rem;
+    background-size: cover;
+    background-position: left top;
 
-<style>
-.topBtn {
-  position: fixed;
-  bottom: 50px;
-  right: 30px;
 }
-.recommend-list {
-    z-index: 1;
-    position: absolute;
-    top: 0;
-    left: 0;
+.search{
+    position: relative;
+    top: 200px;
 }
+
+
+
 </style>

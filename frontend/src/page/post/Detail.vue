@@ -1,46 +1,57 @@
 <template>
-  <div class="container" style="width:40%;">
+  <div class="container" >
     
-    <v-card class="mx-auto" width="95%" height="100%">
-      <v-toolbar flat color="blue-grey" dark>
-        <v-toolbar-title>상세게시판</v-toolbar-title>
+    <div style="width:100%;">
+    <v-card class="mx-auto" width="85%" height="100%">
+      <v-toolbar flat color="#ffde59" >
+        <v-toolbar-title class="mx-auto" style="font-size: 25px;">{{dogData.carenm}}</v-toolbar-title>
       </v-toolbar>
+      <div class="bmg">
       <v-card-text>
-        <img :src="dogData.popfile" alt="dog images" width="100%" height="400px" />
+  
+        <br>
+        <div class="d-flex justify-content-center" >
+        <img :src="dogData.popfile" alt="dog images" width="50%" height="400px" style="margin:0 auto; border-radius: 12px;"/>
 
+        </div>
+
+        <br>
         <!-- <v-text-field filled label="Title" value="My new post"></v-text-field> -->
+     
         <v-row>
-          <v-col col="12" class="font-weight-black">구조일</v-col>
-          {{ dogData.noticesdt }}
+          <v-col col="12" class="font-weight-black" style="font-size: 20px;">구조일 : {{ dogData.noticesdt }}</v-col>
+          
         </v-row>
         <v-row>
-          <v-col col="12" class="font-weight-black">구조장소</v-col>
-          {{ dogData.happenplace }}
+          <v-col col="12" class="font-weight-black" style="font-size: 20px;">구조장소 : {{ dogData.happenplace }}</v-col>
+          
         </v-row>
         <v-row>
-          <v-col col="6" class="font-weight-black">견종</v-col>
-          {{ dogData.kindcd }}
-          <v-col col="6" class="font-weight-black">성별</v-col>
-          {{ dogData.sexcd}}
+          <v-col col="6" class="font-weight-black" style="font-size: 20px;">견종 : {{ dogData.kindcd }} </v-col>
+          
+          <v-col col="6" class="font-weight-black" style="font-size: 20px;">성별 : {{ dogData.sexcd}}</v-col>
+          
         </v-row>
         <v-row>
-          <v-col col="6" class="font-weight-black">연령</v-col>
-          {{ dogData.age }}
-          <v-col col="6" class="font-weight-black">모색</v-col>
-          {{ dogData.colorcd }}
+          <v-col col="6" class="font-weight-black" style="font-size: 20px;">연령 : {{ dogData.age }}</v-col>
+          
+          <v-col col="6" class="font-weight-black" style="font-size: 20px;">모색 : {{ dogData.colorcd }}</v-col>
+         
         </v-row>
         <v-row>
-          <v-col col="6" class="font-weight-black">중성화 여부</v-col>
-          {{ dogData.neuteryn }}
-          <v-col col="6" class="font-weight-black">체중</v-col>
-          {{ dogData.weight }}
+          <v-col col="6" class="font-weight-black" style="font-size: 20px;">중성화 여부 : {{ dogData.neuteryn }}</v-col>
+          
+          <v-col col="6" class="font-weight-black" style="font-size: 20px;">체중 : {{ dogData.weight }}</v-col>
+          
         </v-row>
         <v-row>
-          <v-col col="12" class="font-weight-black">특징</v-col>
-          {{ dogData.specialmark }}
+          <v-col col="12" class="font-weight-black" style="font-size: 20px;">특징 : {{ dogData.specialmark }}</v-col>
+          
         </v-row>
+     
 
         <v-divider class="my-2"></v-divider>
+  
       </v-card-text>
 
       <v-card-actions class="d-flex justify-center">
@@ -53,6 +64,7 @@
         <!-- total 보내야 할 데이터 : email, 상담날짜, 상담시간, 강아지id, url: /account/adoptionList -->
         <v-dialog v-model="dialog" max-width="500px">
           <v-card>
+           
             <v-card-title>입양신청서</v-card-title>
             <v-card-text>
               <!-- 개인 정보 template -->
@@ -140,7 +152,11 @@
           </v-list>
         </v-dialog>
       </v-card-actions>
+  
+      </div>
     </v-card>
+    </div>
+    
   </div>
 </template>
 
@@ -428,4 +444,12 @@ export default {
 </script>
 
 <style>
+.bmg{
+  background: url('../../assets/전단지9.png') no-repeat;
+    width: 100%;
+
+    background-size: cover;
+    background-position: center;
+}
+
 </style>
