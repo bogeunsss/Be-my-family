@@ -4,7 +4,7 @@
     <div style="width:100%;">
     <v-card class="mx-auto" width="85%" height="100%">
       <v-toolbar flat color="#ffde59" >
-        <v-toolbar-title class="mx-auto" style="font-size: 25px;">{{dogData.carenm}}</v-toolbar-title>
+        <v-toolbar-title class="mx-auto" style="font-size: 28px;">{{dogData.carenm}}</v-toolbar-title>
       </v-toolbar>
       <div class="bmg">
       <v-card-text>
@@ -19,33 +19,33 @@
         <!-- <v-text-field filled label="Title" value="My new post"></v-text-field> -->
      
         <v-row>
-          <v-col col="12" class="font-weight-black" style="font-size: 20px;">구조일 : {{ dogData.noticesdt }}</v-col>
+          <v-col col="12" class="font-weight-black" style="font-size: 18px;">구조일 : {{ dogData.noticesdt }}</v-col>
           
         </v-row>
         <v-row>
-          <v-col col="12" class="font-weight-black" style="font-size: 20px;">구조장소 : {{ dogData.happenplace }}</v-col>
+          <v-col col="12" class="font-weight-black" style="font-size: 18px;">구조장소 : {{ dogData.happenplace }}</v-col>
           
         </v-row>
         <v-row>
-          <v-col col="6" class="font-weight-black" style="font-size: 20px;">견종 : {{ dogData.kindcd }} </v-col>
+          <v-col col="6" class="font-weight-black" style="font-size: 18px;">견종 : {{ dogData.kindcd }} </v-col>
           
-          <v-col col="6" class="font-weight-black" style="font-size: 20px;">성별 : {{ dogData.sexcd}}</v-col>
+          <v-col col="6" class="font-weight-black" style="font-size: 18px;">성별 : {{ dogData.sexcd}}</v-col>
           
         </v-row>
         <v-row>
-          <v-col col="6" class="font-weight-black" style="font-size: 20px;">연령 : {{ dogData.age }}</v-col>
+          <v-col col="6" class="font-weight-black" style="font-size: 18px;">연령 : {{ dogData.age }}</v-col>
           
-          <v-col col="6" class="font-weight-black" style="font-size: 20px;">모색 : {{ dogData.colorcd }}</v-col>
+          <v-col col="6" class="font-weight-black" style="font-size: 18px;">모색 : {{ dogData.colorcd }}</v-col>
          
         </v-row>
         <v-row>
-          <v-col col="6" class="font-weight-black" style="font-size: 20px;">중성화 여부 : {{ dogData.neuteryn }}</v-col>
+          <v-col col="6" class="font-weight-black" style="font-size: 18px;">중성화 여부 : {{ dogData.neuteryn }}</v-col>
           
-          <v-col col="6" class="font-weight-black" style="font-size: 20px;">체중 : {{ dogData.weight }}</v-col>
+          <v-col col="6" class="font-weight-black" style="font-size: 18px;">체중 : {{ dogData.weight }}</v-col>
           
         </v-row>
         <v-row>
-          <v-col col="12" class="font-weight-black" style="font-size: 20px;">특징 : {{ dogData.specialmark }}</v-col>
+          <v-col col="12" class="font-weight-black" style="font-size: 18px;">특징 : {{ dogData.specialmark }}</v-col>
           
         </v-row>
      
@@ -56,9 +56,18 @@
 
       <v-card-actions class="d-flex justify-center">
         <div v-if="isLoggedIn  && !isManager">
-        <v-btn color="success" depressed v-if="!isLikeDog" @click="likeDog">관심이써여~</v-btn>
-        <v-btn color="success" depressed v-if="isLikeDog" @click="deleteLike">관심업서여</v-btn>
-        <v-btn color="primary" class="ma-2" v-if="!isAdoption" dark @click="goModal(dialog = true)">입양신청</v-btn>
+          <v-btn class="ma-2" depressed v-if="!isLikeDog" @click="likeDog" tile outlined color="orange darken-2" style="font-size: 15px;">
+            <v-icon left>fas fa-paw</v-icon> 관심있어요
+          </v-btn>
+          <v-btn class="ma-2" depressed v-if="isLikeDog" @click="deleteLike" tile outlined color="red" style="font-size: 15px;">
+            <v-icon left>fas fa-paw</v-icon> 관심없어요
+          </v-btn>
+          <v-btn class="ma-2" v-if="!isAdoption" dark @click="goModal(dialog = true)" tile outlined color="primary" style="font-size: 15px;">
+            <v-icon left>mdi-pencil</v-icon> 입양신청
+          </v-btn>
+        <!-- <v-btn color="success" depressed v-if="!isLikeDog" @click="likeDog">관심있어요</v-btn>
+        <v-btn color="success" depressed v-if="isLikeDog" @click="deleteLike">관심없어요</v-btn> -->
+        <!-- <v-btn color="primary" class="ma-2" v-if="!isAdoption" dark @click="goModal(dialog = true)">입양신청</v-btn> -->
         <v-btn color="primary" class="ma-2" dark v-if="isAdoption">신청대기중</v-btn>
         </div>
         <!-- total 보내야 할 데이터 : email, 상담날짜, 상담시간, 강아지id, url: /account/adoptionList -->
@@ -120,10 +129,13 @@
                 readonly
               ></v-text-field>
             </v-card-text>
-            <v-card-actions>
+            <v-card-actions class="d-flex justify-end">
               <!-- @click 에다가 신청서 보내는 비동기 요청 함수 달기. -->
-              <v-btn color="primary" @click="requestComplete" text>신청완료</v-btn>
-              <v-btn color="primary" text @click="dialog = false">취소</v-btn>
+              <div>
+                <v-btn @click="requestComplete" rounded color="primary" dark class="mr-3">신청완료</v-btn>
+                <v-btn  @click="dialog = false" rounded color="red" dark>취소</v-btn>
+              </div>
+
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -449,7 +461,7 @@ export default {
 
 <style>
 .bmg{
-  background: url('../../assets/전단지9.png') no-repeat;
+  background: url('../../assets/bbbb.png') no-repeat;
     width: 100%;
 
     background-size: cover;

@@ -47,9 +47,12 @@
         </v-col>
         </v-row>
    
+
+    <div class="bmg2">
+    <v-container>
         <div class="container" >
 
-        <v-row>
+        <v-row >
             <v-col cols="12">
                 <v-row>
                     <v-col cols="12" v-for="(dogs, j) in dogData" :key="'dog'+j">
@@ -57,6 +60,7 @@
                             <v-col col="6" md="3" v-for="(dog, i) in dogs" :key="i">
                                 <v-card @click="goDetail(j,i)">
 
+                                <div class="polaroid"> 
                                     <v-img
                                         class="white--text align-end"
                                         height="200px"
@@ -65,25 +69,23 @@
                                     <v-card-title>{{ dog.carenm }}</v-card-title>
                                     </v-img>
 
-                                    <v-card-subtitle class="pb-0">{{ dog.kindcd }}</v-card-subtitle>
+                                    <v-card-subtitle class="pb-0">견종: {{ dog.kindcd }}</v-card-subtitle>
 
                                     <v-card-text class="text--primary">
 
-                                    <div>{{ dog.careaddr }}</div>
+                                    <div>구조 장소: {{ dog.careaddr }}</div>
                                     <br>
-                                    <span class="date">2020-06-19ㆍ</span>  
-                                    <span class="comment">댓글 0개</span>
-                                    <br>
-                                    <a>userID</a><span>ㆍ ♥ 2</span>
+                                    <div>특징: {{ dog.specialmark}}</div>
                                     </v-card-text>
 
-                                    <v-card-actions>
-                                    <v-btn
+                                    <v-card-actions class="d-flex justify-end" >
+                                    <v-btn style="font-weight: bold;"
                                         color="orange"
                                         text >
-                                    Share
+                                        더 보기
                                     </v-btn>
                                     </v-card-actions>
+                                </div>
                                 </v-card>
                             </v-col>
                         </v-row>
@@ -92,6 +94,8 @@
             </v-col>
         </v-row>
         </div>
+    </v-container>
+    </div>
     </v-container>
 
 </template>
@@ -206,7 +210,18 @@ export default {
     position: relative;
     top: 200px;
 }
+.bmg2{
+    background: url('../../assets/bmg111.png') no-repeat;
+    width: 100%;
+    background-repeat : no-repeat;
+    background-size : cover;
+    background-position: left top;
+}
 
+.polaroid{
+    box-shadow:0 4px 10px 0 rgba(0, 0, 0, 0.3), 0 6px 25px 0 rgba(0, 0, 0, 0.19);
+   
+}
 
 
 </style>
