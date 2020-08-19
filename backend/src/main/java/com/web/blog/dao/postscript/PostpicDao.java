@@ -1,5 +1,7 @@
 package com.web.blog.dao.postscript;
 
+import java.util.List;
+
 import com.web.blog.model.postscript.Postpic;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,5 +13,7 @@ public interface PostpicDao extends JpaRepository<Postpic, String> {
 
     @Transactional
     void deleteByPostscriptno(int postscriptno);
+
+    List<Postpic> findByPostscriptno(int postscriptno);
 
 }
