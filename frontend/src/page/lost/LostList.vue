@@ -57,7 +57,7 @@
           </v-card> -->
 
 
-          <v-card elevation="24" max-width="444" class="mx-auto"  v-if="card.lostpic2===null">
+          <v-card elevation="24" max-width="444" class="mx-auto"  v-if="card.lostpic2==null">
             <v-system-bar class="d-flex" lights-out style="height:40px;width:100%;">
               <v-chip :color="myColors[card.losttype]" text-color="white">{{ card.losttype }}</v-chip>
               <v-btn icon class="ml-auto">
@@ -99,7 +99,7 @@
             </v-list>
           </v-card>
 
-          <v-card elevation="24" max-width="444" class="mx-auto"  v-if="card.lostpic3===null  && card.lostpic2!==null">
+          <v-card elevation="24" max-width="444" class="mx-auto"  v-if="card.lostpic3==null  && card.lostpic2!=null">
             <v-system-bar class="d-flex" lights-out style="height:40px;width:100%;">
               <v-chip :color="myColors[card.losttype]" text-color="white">{{ card.losttype }}</v-chip>
               <v-btn icon class="ml-auto">
@@ -141,7 +141,7 @@
             </v-list>
           </v-card>
 
-          <v-card elevation="24" max-width="444" class="mx-auto" v-if="card.lostpic3!==null">
+          <v-card elevation="24" max-width="444" class="mx-auto" v-if="card.lostpic3!=null">
             <v-system-bar class="d-flex" lights-out style="height:40px;width:100%;">
               <v-chip :color="myColors[card.losttype]" text-color="white">{{ card.losttype }}</v-chip>
               <v-btn icon class="ml-auto">
