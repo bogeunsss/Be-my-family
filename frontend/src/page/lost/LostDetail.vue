@@ -11,7 +11,7 @@
                     <v-carousel-item
                     v-for="(getImage,i) in getImages"
                     :key="i"
-                    :src="getImage"
+                    :src="'http://i3b201.p.ssafy.io/file/'+getImage"
                     ></v-carousel-item>
                 </v-carousel>
               <v-chip v-if="lostType=='실종'" class="ma-2 font-weight-bold" color="red" text-color="white" style="position:absolute;top:4%;left:4%;">{{ lostType }}</v-chip>
