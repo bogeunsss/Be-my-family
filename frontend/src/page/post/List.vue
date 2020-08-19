@@ -58,9 +58,9 @@
                     <v-col cols="12" v-for="(dogs, j) in dogData" :key="'dog'+j">
                         <v-row>
                             <v-col col="6" md="3" v-for="(dog, i) in dogs" :key="i">
-                                <v-card @click="goDetail(j,i)">
-
-                                <div class="polaroid"> 
+                                <v-card @click="goDetail(j,i)" width="300px" height="400px" style="position: relative">
+                                <div>
+                                    <v-chip class="recommend-list" v-if="dog.recommend" color="red" text-color="white">추천</v-chip>
                                     <v-img
                                         class="white--text align-end"
                                         height="200px"
@@ -94,6 +94,9 @@
             </v-col>
         </v-row>
         </div>
+        <v-btn class="topBtn" @click="moveTop">
+            <i class="fas fa-arrow-up"></i>
+        </v-btn>
     </v-container>
     </div>
     </v-container>
@@ -125,6 +128,7 @@ export default {
             pageno : this.pageno,
             userInfo : this.userInfo
         }
+        console.log('페이지 ==> '+paramInfo.pageno)
         this.mainList(paramInfo)
         window.addEventListener('scroll', this.handleScroll)
         // console.log(this.dogData)
@@ -136,27 +140,37 @@ export default {
         ...mapActions(['mainList', 'setSearchDogs']),
         goDetail(j,index){
             // this.$router.push({name:constants.URL_TYPE.POST.DETAIL, params: {desertionno:this.dogData.desertionno}})
-            this.$cookies.set('desertionno', {desertionno:this.dogData[j][index].desertionno})
-            this.$router.push({name:constants.URL_TYPE.POST.DETAIL})
+            // this.$cookies.set('desertionno', {desertionno:this.dogData[j][index].desertionno})
+            this.$router.push({name:constants.URL_TYPE.POST.DETAIL, params:{desertionno: this.dogData[j][index].desertionno}})
         },
         search(){
-            console.log(this.category)
-            console.log(this.searchText)
+            var paramInfo = {
+                pageno: this.pageno,
+                userInfo: this.userInfo
+            }
             if(this.searchText === ""){
-                    this.mainList(this.pageno)
+                    paramInfo.pageno = 0
+                    this.mainList(paramInfo)
+                    this.isSearched = false
             }else{
-                if(!this.isSearched){
-                    this.pageno = 0
+                if(this.lastSearchText !== this.searchText){
+                    this.lastSearchText = this.searchText
+                    this.isSearched = false
                 }
-                axios.get(constants.SERVER_URL + `/care/search?category=${this.category}&searchText=${this.searchText}&pageno=${this.pageno}`)
+                if(!this.isSearched){
+                    paramInfo.pageno = 0
+                }
+                axios.get(constants.SERVER_URL + `/care/search?category=${this.category}&searchText=${this.searchText}&pageno=${paramInfo.pageno}`)
                 .then((response) =>{
                     console.log(response)
-                    if(response.data.object.empty){
+                    if(!response.data.totalData){
                         alert('검색 결과가 없습니다.')
-                        this.mainList(0)
+                        paramInfo.pageno = 0
                         this.searchText = ""
+                        this.isSearched = false
+                        this.mainList(paramInfo)
                     }else{
-                        this.setSearchDogs(response.data)
+                        this.setSearchDogs({data: response.data, isSearched: this.isSearched})
                         this.isSearched = true
                     }
                 })
@@ -170,14 +184,21 @@ export default {
             if(window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 1){
                 if(!this.isLast){
                     this.pageno += 1
+                    var paramInfo = {
+                        pageno: this.pageno,
+                        userInfo: this.userInfo
+                    }
                     if(this.isSearched){
                         this.search()
                     }else{
-                        this.mainList(this.pageno)
+                        this.mainList(paramInfo)
                     }
                 }
             }
-        }
+        },
+        moveTop() {
+            window.scrollTo(0, 0);
+        },
     },
     data: () => {
         return {   
@@ -187,6 +208,7 @@ export default {
             ],
             category: {},
             searchText: '',
+            lastSearchText: '',
             contacts: [],
             pageno: 0,
             isSearched: false,

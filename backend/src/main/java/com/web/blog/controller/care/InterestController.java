@@ -1,11 +1,13 @@
 package com.web.blog.controller.care;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-
+import com.web.blog.dao.care.CareDao;
 import com.web.blog.dao.care.InterestDao;
 import com.web.blog.model.BasicResponse;
+import com.web.blog.model.care.Careboard;
 import com.web.blog.model.care.Interest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,20 +35,29 @@ public class InterestController {
     @Autowired
     InterestDao interestDao;
 
+    @Autowired
+    CareDao careDao;
+
     @GetMapping("/care/interestList")
     @ApiOperation(value = "관심 목록 리스트")
     public Object interestList(@RequestParam(required = true) final String uid) {
 
         ResponseEntity response = null;
         List<Interest> interestlist = null;
+        List<Careboard> careboardList = new LinkedList<>();
 
         final BasicResponse result = new BasicResponse();
-        interestlist = interestDao.findByUid(uid);
-
+        interestlist = interestDao.findByUidOrderByInterestno(uid);
         if(!interestlist.isEmpty()) {
+            for (int i = 0; i < interestlist.size(); i++) {
+                String desertionno = interestlist.get(i).getDesertionno();
+                Careboard careboardOpt = careDao.findByDesertionno(desertionno);
+                careboardList.add(careboardOpt);
+                
+            }
             result.status = true;
             result.data = "success";
-            result.object = interestlist;
+            result.object = careboardList;
             result.interest = true;
             result.uid = uid;
             response = new ResponseEntity<>(result, HttpStatus.OK);
@@ -83,6 +94,7 @@ public class InterestController {
         return response;
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @DeleteMapping("/care/interestDelete")
     @ApiOperation(value = "관심 목록 삭제")
     public Object interestDelete(@RequestParam String uid, @RequestParam String desertionno) {

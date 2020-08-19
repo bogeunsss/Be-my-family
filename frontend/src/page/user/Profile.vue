@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="margin-top:7rem;">
     <v-container style="width:80%">
       <div>
         <div class="d-flex">
@@ -39,16 +39,13 @@
                 
                 <div v-if="managerInfo.mid">
                   <div class="w-100">
-                  <h3 class='my-3'>보호소 Name : {{ managerInfo.mid }}</h3>
+                  <h3 class='my-3'>보호소명 : {{ managerInfo.mid }}</h3>
                   </div>
                   <br>
                   <div class="w-100">
-                  <h3 class='my-3'>Manager ID : {{ managerInfo.email }}</h3>
+                  <h3 class='my-3'>보호소 이메일 : {{ managerInfo.email }}</h3>
                   </div>
                   <br>
-                  <div class="w-100">
-                  <h3 class='my-3'>Name : {{ managerInfo.name }}</h3>
-                  </div>
                 </div>
                   <!-- <button @click="test">aaa</button> -->
               </v-col>
@@ -66,7 +63,12 @@
                 <div>유기견 번호 : {{adoption.desertionno}}</div>
                 <div class="ml-auto">
                   {{adoption.fixdate}}
-                  {{adoption.fixtime}}
+                  {{adoption.fixtime}}시
+                </div>
+                <div class="ml-auto">
+                  <v-btn class='my-auto' v-if="adoption.state === 0">승인대기</v-btn>
+                  <v-btn class='my-auto' v-if="adoption.state === 1">승인완료</v-btn>
+                  <v-btn class='my-auto' v-if="adoption.state === 2">승인거절</v-btn>
                 </div>
               </v-card-text>
             </v-card>
@@ -96,14 +98,14 @@ export default {
 
     // this.isLoggedIn = this.$cookies.isKey('auth-token')
     var token = this.$cookies.get("auth-token");
-    if(this.$cookies.get('auth-token').uid){
+    if(this.$cookies.get('auth-token').uid !== undefined){
       this.find(token.email);
       this.getAdoptionList()
       // this.getAdoptionList()
       console.log(this.adoptionData)
       // this.getAdoption();
     }else{
-      this.getManagerFind(token.email)
+      this.getManagerFind()
     }
   },
   computed: {
@@ -122,12 +124,12 @@ export default {
     },
     getManagerFind() {
       axios.get(constants.SERVER_URL + '/manager/find', {params : {
-        email : this.$cookies.get('auth-token').email
+        mid : this.$cookies.get('auth-token').mid
       }})
       .then((res) => {
-        console.log(res.data)
+        // console.log(res.data)
         this.managerInfo = res.data
-        console.log(this.managerInfo)
+        // console.log(this.managerInfo)
       })
       .catch((err)=>{
         console.log(err)

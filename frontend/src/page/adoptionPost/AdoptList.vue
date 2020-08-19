@@ -35,7 +35,7 @@
         </v-col>
       </v-row>
 
-      <div class="d-flex">
+      <div class="d-flex" v-if="!isManager">
         <!-- <v-btn @click="create" class="mt-5" style="margin-left:auto">후기작성</v-btn> -->
         <v-btn @click="create" style="margin-left:auto" outlined color="blue">
           <v-icon left>mdi-pencil</v-icon>후기작성
@@ -57,7 +57,7 @@
           </thead>
           <tbody>
             <tr v-for="(adopt, index) in adoptData" :key="index" @click="adoptdetail(adopt.postscriptno)">
-              <th scope="row">{{ adopt.postscriptno }}</th>
+              <th scope="row">{{ adoptData.length - index }}</th>
               <td>{{ adopt.title }}</td>
               <td>{{ adopt.uid}}</td>
               <td>{{ nowdate(adopt.createdate)}}</td>
@@ -83,8 +83,12 @@ export default {
 
   },
   created() {
+    if(this.$cookies.isKey('auth-token')){
+      if(this.$cookies.get('auth-token').mid !== undefined){
+        this.isManager = true
+      }
+    }
     this.adoptList();
-
   },
   data() {
     return {
@@ -96,8 +100,6 @@ export default {
           { state: '작성자', abbr: 'uid' }],
       category: {},
       searchText: '',
-      
-
       adoptData: {
         postscriptno: "",
         uid: "",
@@ -109,12 +111,13 @@ export default {
         kind: "",
         createdate: "",
       },
+      isManager: false,
     };
   },
   methods: {
     adoptList(){
       axios
-          .get("http://localhost:8080/postscript/List?pageno="+this.page)
+          .get(constants.SERVER_URL + "/postscript/List?pageno="+this.page)
           .then((res) =>{
             this.adoptData = res.data.object
             this.pageCount = res.data.totalPage
@@ -145,7 +148,7 @@ export default {
         if(this.searchText === ""){
                 this.adoptList()
         }else{
-            axios.get(`http://localhost:8080/postscript/Search?category=${this.category}&searchText=${this.searchText}&pageno=${this.page}`)
+            axios.get(constants.SERVER_URL + `/postscript/Search?category=${this.category}&searchText=${this.searchText}&pageno=${this.page}`)
             .then((response) =>{
                 this.adoptData = response.data.object
                 this.searchText = ""
@@ -159,7 +162,7 @@ export default {
 
     },
     checkPage(){
-      axios.get("http://localhost:8080/postscript/List?pageno="+this.page)
+      axios.get(constants.SERVER_URL + "/postscript/List?pageno="+this.page)
           .then((res) =>{
             this.adoptData = res.data.object
             console.log(this.adoptData)

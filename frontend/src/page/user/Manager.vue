@@ -1,7 +1,6 @@
 <template>
   <div class="container">
       <h1 class="mb-3 pb-3">Manager</h1>
-      <p>관리자 : {{ $cookies.get('auth-token').mid }}</p>
       <h2>입양신청 목록</h2>
         <v-row>
           <v-col
@@ -12,10 +11,13 @@
             md="4"
             
           >
-            <v-card style="width:350px" @click="goAdoptionDetail(adoption.adoptionno)">
+            <v-card style="width:350px" @click="goAdoptionDetail(adoption.desertionno)">
               <div class="d-flex inline">
               <v-card-title class="subheading font-weight-bold">i dont know what to do</v-card-title>
-              <v-btn class='my-auto'>승인대기</v-btn>
+
+              <v-chip label class='d-flex flex-column' color="pink" text-color="white" large>
+                승인<br>{{ approveState[adoption.state] }}
+              </v-chip>
               </div>
               <v-divider></v-divider>
 
@@ -69,25 +71,21 @@ export default {
     },
     methods: {
       getAdoptionList() {
-        console.log(this.$cookies.get('auth-token').email)
         axios.get(constants.SERVER_URL + '/manager/adoptionList', {params :{ 
-          email : this.$cookies.get('auth-token').email
-        }}
-      )
-      .then((response)=>{
-        this.adoptions = response.data.adoptions
-        console.log(this.adoptions)
-      }).catch((err) => console.log(err))
+          mid : this.$cookies.get('auth-token').mid
+        }})
+        .then((response)=>{
+          this.adoptions = response.data.adoptions
+        }).catch((err) => console.log(err))
       },
-      goAdoptionDetail(adoptionNo){
-        this.$router.push({name:constants.URL_TYPE.USER.ADOPTIONDETAIL, params:{adoptionno:adoptionNo}})
+      goAdoptionDetail(desertionNo){
+        this.$router.push({name:constants.URL_TYPE.USER.ADOPTIONDETAIL, params:{desertionno: desertionNo}})
       }
     },
     data() {
         return {
-          adoptions : [],          
-       
-        
+          adoptions : [],
+          approveState: ['대기', '완료', '거절']
         }
     },
 }

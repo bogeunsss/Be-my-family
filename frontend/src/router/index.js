@@ -51,7 +51,7 @@ export default new Router({
       component: Profile,
       props: true,
       beforeEnter(to, from, next){
-        if($cookies.isKey('auth-token')){
+        if($cookies.get('auth-token').uid || $cookies.get('auth-token').mid){
           next()
         }else{
           alert('로그인이 필요합니다.')
@@ -63,7 +63,7 @@ export default new Router({
       name: constants.URL_TYPE.USER.UPDATE,
       component: Update,
       beforeEnter(to, from, next){
-        if($cookies.isKey('auth-token')){
+        if($cookies.isKey('auth-token').uid || $cookies.isKey('auth-token').mid){
           next()
         }else{
           alert('로그인이 필요합니다.')
@@ -115,7 +115,7 @@ export default new Router({
       component: AdoptDetail
     },
     {
-      path: '/detail',
+      path: '/list/:desertionno',
       name: constants.URL_TYPE.POST.DETAIL,
       component: Detail
     },
@@ -158,7 +158,7 @@ export default new Router({
       name: constants.URL_TYPE.USER.MANAGER,
       component: Manager,
       beforeEnter(to, from, next){
-        if($cookies.isKey('auth-token')){
+        if($cookies.get('auth-token')){
           next()
         }else{
           alert('로그인이 필요합니다.')
@@ -166,7 +166,7 @@ export default new Router({
       }
     },
     {
-      path: '/user/adoption/:adoptionno',
+      path: '/user/adoption/:desertionno',
       name: constants.URL_TYPE.USER.ADOPTIONDETAIL,
       component: AdoptionDetail
     },

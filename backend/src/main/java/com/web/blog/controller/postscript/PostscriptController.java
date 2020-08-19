@@ -44,7 +44,6 @@ import io.swagger.annotations.ApiResponses;
         @ApiResponse(code = 404, message = "Not Found", response = BasicResponse.class),
         @ApiResponse(code = 500, message = "Failure", response = BasicResponse.class) })
 
-@CrossOrigin(origins = { "http://localhost:3000" })
 @RestController
 public class PostscriptController {
 
@@ -147,8 +146,8 @@ public class PostscriptController {
                 final File dest = new File(filepath);
                 
                 //서버
-                // final String filepath = "http://i3b201.p.ssafy.io/file/post" + originalfileName;  
-                // final File dest = new File("http://i3b201.p.ssafy.io/file/post" + file.getOriginalFilename());
+                // final String filepath = "http:\\i3b201.p.ssafy.io\\file\post\" + originalfileName;  
+                // final File dest = new File("http:\\i3b201.p.ssafy.io\\file\post\" + file.getOriginalFilename());
                 // if (!dest.getParentFile().exists())
                 //     dest.getParentFile().mkdirs();
                 
@@ -291,8 +290,14 @@ public class PostscriptController {
             List<Postpic> postpicList = new ArrayList<>();
             if(!postpicList.isEmpty()){
                 for (MultipartFile file : images) {
+                    //로컬
                     final String originalfileName = file.getOriginalFilename();
                     final String filepath = "C:/Image/" + originalfileName;
+                    //서버
+                    // final String filepath = "http:\\i3b201.p.ssafy.io\\file\post\" + originalfileName;  
+                    // final File dest = new File("http:\\i3b201.p.ssafy.io\\file\post\" + file.getOriginalFilename());
+                    // if (!dest.getParentFile().exists())
+                    //     dest.getParentFile().mkdirs();
                     final File dest = new File(filepath);
                     file.transferTo(dest);
                     Postpic postpic = new Postpic();
