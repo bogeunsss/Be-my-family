@@ -193,7 +193,7 @@
       </v-row>
     </v-container>
 
-  <v-dialog v-model="dialog" scrollable max-width="700px">
+  <v-dialog v-if="!isManager" v-model="dialog" scrollable max-width="700px">
     <template v-slot:activator="{ on, attrs }">
       <v-btn
         color="#4ba5cd"
@@ -355,6 +355,11 @@ import { mapState } from 'vuex'
 
 export default {
   created(){
+    if(this.$cookies.isKey('auth-token')){
+      if(this.$cookies.get('auth-token').mid !== undefined){
+        this.isManager = true
+      }
+    }
     window.addEventListener("scroll", this.handleScroll);
     this.getList()
   },
@@ -411,6 +416,7 @@ export default {
       scrolled: 12,
       snackbar: false,
       url: '',
+      isManager: false,
     }
   },
   methods: {
@@ -470,9 +476,7 @@ export default {
           'Content-Type': 'multipart/form-data'
         }
       }).then(response => {
-        if(response.data.data === 'success'){
-          this.$router.go()
-        }
+        console.log(response)
       }).catch(error => {
         console.log(error)
       })

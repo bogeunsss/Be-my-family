@@ -532,12 +532,18 @@ export default {
             console.log(this.lostTags)
         },
         getCommentList(){
-            axios.get(constants.SERVER_URL + `/lost/detail?lostno=${this.lostno}`)
-                .then(response => {
-                    this.lostReplies = response.data.lostReply
-                }).catch(error => {
-                    console.log(error)
-                })
+            if(this.$cookies.isKey('auth-token')){
+                if(this.$cookies.get('auth-token').mid !== undefined){
+                    alert('죄송합니다. 매니저는 댓글을 다실 수 없습니다.')
+                }
+            }else{
+                axios.get(constants.SERVER_URL + `/lost/detail?lostno=${this.lostno}`)
+                    .then(response => {
+                        this.lostReplies = response.data.lostReply
+                    }).catch(error => {
+                        console.log(error)
+                    })
+            }
         },
         commentCreate(){
             if(this.$cookies.isKey('auth-token')){

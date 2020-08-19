@@ -58,7 +58,7 @@
         <v-row class="mb-5">
           <v-col v-for="adoption in adoptionList" :key="adoption.id">
               <v-btn @click="deleteAdoption(adoption.desertionno)">x</v-btn>
-            <v-card @click="goDetail">
+            <v-card @click="goDetail(adoption.desertionno)">
               <v-card-text class="d-flex">
                 <div>유기견 번호 : {{adoption.desertionno}}</div>
                 <div class="ml-auto">
@@ -119,8 +119,8 @@ export default {
       this.userDelete(this.profileData.nickName);
       this.logout();
     },
-    goDetail(){
-      this.$router.push({name:constants.URL_TYPE.POST.DETAIL})
+    goDetail(no){
+      this.$router.push({name:constants.URL_TYPE.POST.DETAIL, params:{desertionno: no}})
     },
     getManagerFind() {
       axios.get(constants.SERVER_URL + '/manager/find', {params : {
