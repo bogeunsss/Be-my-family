@@ -13,13 +13,13 @@
           </v-list-item>
         </v-toolbar>
         <v-card-subtitle class="mx-auto" style="width: 60%">
-          <v-img
-            src="http://www.animal.go.kr/files/shelter/2014/02/201403010903285_s.jpg"
-            class="white--text align-end"
-            gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-            max-height="100%"
-            height="auto"
-          ></v-img>
+          <v-carousel hide-delimiters>
+            <v-carousel-item
+              v-for="(image,i) in images"
+              :key="i"
+              :src="'http://i3b201.p.ssafy.io/file/'+image.postpath"
+            ></v-carousel-item>
+          </v-carousel>
         </v-card-subtitle>
 
         <v-card-actions v-if="!isManager" class="d-flex justify-end mb-3">
@@ -127,7 +127,7 @@ export default {
         this.comments = res.data.comments
         this.likegood = res.data.isGood
         this.good = res.data.good
-        console.log(this.likegood)
+        this.images = res.data.postpic
         // console.log(this.Adoptdata)
         // console.log(this.comments)
       })
@@ -252,6 +252,7 @@ export default {
       },
       isManager: false,
       good: '',
+      images: [],
     };
   },
 };
