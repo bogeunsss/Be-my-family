@@ -164,7 +164,6 @@
                                   >{{ madeTag }}</v-chip>
                                 </v-list>
                               </div>
->>>>>>> 0817_css_jk
                             </div>
                           </v-list-item>
                           <v-list-item>
