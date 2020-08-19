@@ -411,6 +411,7 @@ export default {
       scrolled: 12,
       snackbar: false,
       url: '',
+      lostPics: [],
     }
   },
   methods: {
