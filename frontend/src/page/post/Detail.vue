@@ -58,7 +58,7 @@
         <div v-if="isLoggedIn  && !isManager">
         <v-btn color="success" depressed v-if="!isLikeDog" @click="likeDog">관심이써여~</v-btn>
         <v-btn color="success" depressed v-if="isLikeDog" @click="deleteLike">관심업서여</v-btn>
-        <v-btn color="primary" class="ma-2" v-if="!isAdoption" dark @click="goModal(dialog = true)">입양신청</v-btn>
+        <v-btn color="primary" class="ma-2" v-if="!isAdoption && profileData.flag" dark @click="goModal(dialog = true)">입양신청</v-btn>
         <v-btn color="primary" class="ma-2" dark v-if="isAdoption">신청대기중</v-btn>
         </div>
         <!-- total 보내야 할 데이터 : email, 상담날짜, 상담시간, 강아지id, url: /account/adoptionList -->

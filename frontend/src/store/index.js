@@ -49,6 +49,7 @@ export default new Vuex.Store({
       marriaged:null,
       sex:null,
       birthdate:null,
+      flag:null,
     },
     dogData: [],
     isLast: false,
@@ -301,6 +302,7 @@ export default new Vuex.Store({
         state.profileData.nickName = response.data.object.uid
         state.profileData.password = response.data.object.password
         state.adoptionData = response.data.adoptions
+        state.profileData.flag = response.data.object.flag
       })
       .catch(err=>console.log(err))
     },
