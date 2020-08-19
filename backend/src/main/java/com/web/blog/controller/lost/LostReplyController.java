@@ -26,14 +26,13 @@ import io.swagger.annotations.ApiResponses;
         @ApiResponse(code = 404, message = "Not Found", response = BasicResponse.class),
         @ApiResponse(code = 500, message = "Failure", response = BasicResponse.class) })
 
-@CrossOrigin(origins = { "http://i3b201.p.ssafy.io" })
 @RestController
 public class LostReplyController {
 
     @Autowired
     LostreplyDao lostreplyDao;
 
-    @PostMapping("lost/reply/add")
+    @PostMapping("/lost/reply/add")
     @ApiOperation(value = "실종/보호/목격 댓글 등록/수정")
     public Object lostReplyAdd(@RequestBody LostreplyRequest request) {
 
@@ -66,7 +65,7 @@ public class LostReplyController {
         return response;
     }
 
-    @DeleteMapping("lost/reply/delete")
+    @DeleteMapping("/lost/reply/delete")
     @ApiOperation(value = "실종/보호/목격 댓글 삭제")
     public Object lostReplyDelete(@RequestParam final int lostreplyno, @RequestParam final String uid) {
 

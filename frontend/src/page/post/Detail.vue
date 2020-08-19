@@ -1,57 +1,70 @@
 <template>
-  <div class="container" style="width:40%;">
+  <div class="container" >
     
-    <v-card class="mx-auto" width="95%" height="100%">
-      <v-toolbar flat color="blue-grey" dark>
-        <v-toolbar-title>상세게시판</v-toolbar-title>
+    <div style="width:100%;">
+    <v-card class="mx-auto" width="85%" height="100%">
+      <v-toolbar flat color="#ffde59" >
+        <v-toolbar-title class="mx-auto" style="font-size: 25px;">{{dogData.carenm}}</v-toolbar-title>
       </v-toolbar>
+      <div class="bmg">
       <v-card-text>
-        <img :src="dogData.popfile" alt="dog images" width="100%" height="400px" />
+  
+        <br>
+        <div class="d-flex justify-content-center" >
+        <img :src="dogData.popfile" alt="dog images" width="50%" height="400px" style="margin:0 auto; border-radius: 12px;"/>
 
+        </div>
+
+        <br>
         <!-- <v-text-field filled label="Title" value="My new post"></v-text-field> -->
+     
         <v-row>
-          <v-col col="12" class="font-weight-black">구조일</v-col>
-          {{ dogData.noticesdt }}
+          <v-col col="12" class="font-weight-black" style="font-size: 20px;">구조일 : {{ dogData.noticesdt }}</v-col>
+          
         </v-row>
         <v-row>
-          <v-col col="12" class="font-weight-black">구조장소</v-col>
-          {{ dogData.happenplace }}
+          <v-col col="12" class="font-weight-black" style="font-size: 20px;">구조장소 : {{ dogData.happenplace }}</v-col>
+          
         </v-row>
         <v-row>
-          <v-col col="6" class="font-weight-black">견종</v-col>
-          {{ dogData.kindcd }}
-          <v-col col="6" class="font-weight-black">성별</v-col>
-          {{ dogData.sexcd}}
+          <v-col col="6" class="font-weight-black" style="font-size: 20px;">견종 : {{ dogData.kindcd }} </v-col>
+          
+          <v-col col="6" class="font-weight-black" style="font-size: 20px;">성별 : {{ dogData.sexcd}}</v-col>
+          
         </v-row>
         <v-row>
-          <v-col col="6" class="font-weight-black">연령</v-col>
-          {{ dogData.age }}
-          <v-col col="6" class="font-weight-black">모색</v-col>
-          {{ dogData.colorcd }}
+          <v-col col="6" class="font-weight-black" style="font-size: 20px;">연령 : {{ dogData.age }}</v-col>
+          
+          <v-col col="6" class="font-weight-black" style="font-size: 20px;">모색 : {{ dogData.colorcd }}</v-col>
+         
         </v-row>
         <v-row>
-          <v-col col="6" class="font-weight-black">중성화 여부</v-col>
-          {{ dogData.neuteryn }}
-          <v-col col="6" class="font-weight-black">체중</v-col>
-          {{ dogData.weight }}
+          <v-col col="6" class="font-weight-black" style="font-size: 20px;">중성화 여부 : {{ dogData.neuteryn }}</v-col>
+          
+          <v-col col="6" class="font-weight-black" style="font-size: 20px;">체중 : {{ dogData.weight }}</v-col>
+          
         </v-row>
         <v-row>
-          <v-col col="12" class="font-weight-black">특징</v-col>
-          {{ dogData.specialmark }}
+          <v-col col="12" class="font-weight-black" style="font-size: 20px;">특징 : {{ dogData.specialmark }}</v-col>
+          
         </v-row>
+     
 
         <v-divider class="my-2"></v-divider>
+  
       </v-card-text>
 
       <v-card-actions class="d-flex justify-center">
-        <div v-if="isLoggedIn && !isManager">
+        <div v-if="isLoggedIn  && !isManager">
         <v-btn color="success" depressed v-if="!isLikeDog" @click="likeDog">관심이써여~</v-btn>
         <v-btn color="success" depressed v-if="isLikeDog" @click="deleteLike">관심업서여</v-btn>
-        <v-btn color="primary" class="ma-2" dark @click="dialog = true">입양신청</v-btn>
+        <v-btn color="primary" class="ma-2" v-if="!isAdoption" dark @click="goModal(dialog = true)">입양신청</v-btn>
+        <v-btn color="primary" class="ma-2" dark v-if="isAdoption">신청대기중</v-btn>
         </div>
         <!-- total 보내야 할 데이터 : email, 상담날짜, 상담시간, 강아지id, url: /account/adoptionList -->
         <v-dialog v-model="dialog" max-width="500px">
           <v-card>
+           
             <v-card-title>입양신청서</v-card-title>
             <v-card-text>
               <!-- 개인 정보 template -->
@@ -109,7 +122,7 @@
             </v-card-text>
             <v-card-actions>
               <!-- @click 에다가 신청서 보내는 비동기 요청 함수 달기. -->
-              <v-btn color="primary" text>신청완료</v-btn>
+              <v-btn color="primary" @click="requestComplete" text>신청완료</v-btn>
               <v-btn color="primary" text @click="dialog = false">취소</v-btn>
             </v-card-actions>
           </v-card>
@@ -139,11 +152,16 @@
           </v-list>
         </v-dialog>
       </v-card-actions>
+  
+      </div>
     </v-card>
+    </div>
+    
   </div>
 </template>
 
 <script>
+import constants from '@/lib/constants'
 import axios from 'axios'
 import { mapState, mapActions } from 'vuex'
 
@@ -166,117 +184,21 @@ export default {
           isLikeDog: false,
           isLoggedIn: false,
           isManager: false,
+          isAdoption:false,
           user: Object,
           userAge: 0,
           survey: Object,
         }
     },
     computed:{
-      ...mapState(['profileData','loginData'])
+      param(){
+        return this.$route.params.desertionno
+      },
+      ...mapState(['profileData','loginData','adoptionData'])
     },
     created(){
       this.getDetail()
 
-      let formData = new FormData();
-        formData.append('email', this.$cookies.get('auth-token').email)
-        formData.append('desertionno', this.$cookies.get('desertionno').desertionno)
-        console.log(this.$cookies.get('auth-token').email)
-        console.log(this.$cookies.get('desertionno').desertionno)
-        // axios.post('http://i3b201.p.ssafy.io/api/adoption/Application', formData)
-        //   .then(response => {
-        //     console.log(response)  
-        //     this.user = response.data.user
-        //     this.survey = response.data.survey
-        //     if(response.data.user.sex){
-        //       this.user.sex = '여자'
-        //     }else{
-        //       this.user.sex = '남자'
-        //     }
-
-        //     if(response.data.user.marriaged){
-        //       this.user.marriaged = '기혼'
-        //     }else{
-        //       this.user.marriaged = '미혼'
-        //     }
-
-        //     var data = new Date();
-        //     var year = data.getFullYear();
-        //     var count = new Date(response.data.user.birthdate);
-        //     var year2 = count.getFullYear();
-        //     var result = year - year2 + 1
-        //     this.userAge = result.toString()
-
-        //     if(response.data.survey.nation === 'korea'){
-        //       this.survey.nation = '한국'
-        //     }else{
-        //       this.survey.nation = '외국'
-        //     }
-
-        //     if(response.data.survey.place === 'home'){
-        //       this.survey.place = '가정 집 안'
-        //     }else if(response.data.survey.place === 'garden_o'){
-        //       this.survey.place = '마당(펜스 O)'
-        //     }else if(response.data.survey.place === 'garden_x'){
-        //       this.survey.place = '마당(펜스 X)'
-        //     }else{
-        //       this.survey.place = '그 외 사업장'
-        //     }
-
-        //     if(response.data.survey.beforeover){
-        //       this.survey.beforeover = '예'
-        //     }else{
-        //       this.survey.beforeover = '아니오'
-        //     }
-
-        //     if(response.data.survey.beforeadopt){
-        //       this.survey.beforeadopt = '예'
-        //     }else{
-        //       this.survey.beforeadopt = '아니오'
-        //     }
-
-        //     if(response.data.survey.familyagree){
-        //       this.survey.familyagree = '예'
-        //     }else{
-        //       this.survey.familyagree = '아니오'
-        //     }
-
-        //     if(response.data.survey.dissolution === 1){
-        //       this.survey.dissolution = '1회'
-        //     }else if(response.data.survey.dissolution === 2){
-        //       this.survey.dissolution = '2회 이상'
-        //     }else{
-        //       this.survey.dissolution = '없음'
-        //     }
-
-        //     if(response.data.survey.sickness){
-        //       this.survey.sickness = '예'
-        //     }else{
-        //       this.survey.sickness = '아니오'
-        //     }
-
-        //     if(response.data.survey.temp === 'family'){
-        //       this.survey.temp = '가족'
-        //     }else if(response.data.survey.temp === 'hotel'){
-        //       this.survey.temp = '호텔'
-        //     }else if(response.data.survey.temp === 'friend'){
-        //       this.survey.temp = '지인'
-        //     }else{
-        //       this.survey.temp = '없음'
-        //     }
-
-        //     if(response.data.survey.house === 'room'){
-        //       this.survey.house = '원룸'
-        //     }else if(response.data.survey.house === 'housing'){
-        //       this.survey.house = '주택'
-        //     }else if(response.data.survey.house === 'apt'){
-        //       this.survey.house = '아파트'
-        //     }else{
-        //       this.survey.house = '다세대/빌라'
-        //     }
-        //   })
-        //   .catch(error => {
-        //       console.log(error)
-        //   })
     },
     methods:{
       ...mapActions(['find']),
@@ -285,18 +207,24 @@ export default {
           var token = this.$cookies.get('auth-token')
           this.email = token.email
           this.isLoggedIn = true
-          if(this.$cookies.get('auth-token').mid == null){
+
+          if(this.$cookies.get('auth-token').uid !== undefined){
               this.find(token.email)
+              console.log(this.$route.params.desertionno)
               setTimeout(()=>{
-                axios.get('http://i3b201.p.ssafy.io/api/care/detailUser', {
+                axios.get(constants.SERVER_URL + '/care/detailUser', {
                   params: {
-                    desertionno: this.$cookies.get('desertionno').desertionno,
+                    desertionno: this.$route.params.desertionno,
                     uid: this.profileData.nickName
                   }
                 })
                 .then( response => {
-                    console.log(response)
                     this.dogData = response.data.object
+                    for (var i = 0; i < this.adoptionData.length; i++){
+                      if(this.adoptionData[i].desertionno === this.$route.params.desertionno){
+                        this.isAdoption = true
+                      }
+                    }
                     if(this.$route.params.uuid === undefined){
                       this.isLikeDog = response.data.interest
                     }else{
@@ -310,9 +238,9 @@ export default {
       
           }else{
               this.isManager = true
-              axios.get('http://i3b201.p.ssafy.io/api/care/detailUser', {
+              axios.get(constants.SERVER_URL + '/care/detailUser', {
                 params: {
-                  desertionno: this.$cookies.get('desertionno').desertionno,
+                  desertionno: this.$route.params.desertionno,
                 }
               })
               .then( response => {
@@ -325,9 +253,9 @@ export default {
              }
             }
         else{
-          axios.get('http://i3b201.p.ssafy.io/api/care/detailUser', {
+          axios.get(constants.SERVER_URL + '/care/detailUser', {
                 params: {
-                  desertionno: this.$cookies.get('desertionno').desertionno,
+                  desertionno: this.$route.params.desertionno,
                 }
               })
               .then( response => {
@@ -351,13 +279,19 @@ export default {
         var formData = new FormData()
         formData.append('fixdate', this.date)
         formData.append('fixtime', st)
-        formData.append('uid', this.profileData.uid)
-        formData.append('desertionno', this.$cookies.get('auth-token').desertionno)
+        formData.append('uid', this.profileData.nickName)
+        formData.append('desertionno', this.$route.params.desertionno)
+        // formData.append('mid',this.survey.carenm)
 
-        axios.post('http://i3b201.p.ssafy.io/api/adoption/Success', formData)
+        axios.post(constants.SERVER_URL + '/adoption/Success', formData)
           .then(response => {
+            console.log(response)
+            // this.$cookies.set('isadoption')
+            this.isAdoption = true
+            alert('성공')
 
           }).catch(error => {
+            console.log('실패')
 
           })
         this.dialog = false
@@ -368,7 +302,7 @@ export default {
       formData.append("desertionno", this.dogData.desertionno);
       console.log(this.$store.state.profileData.nickName);
       axios
-        .post("http://i3b201.p.ssafy.io/api/care/interestAdd", formData)
+        .post(constants.SERVER_URL + "/care/interestAdd", formData)
         .then((response) => {
           console.log(response.data);
           console.log(response.data.interest)
@@ -383,10 +317,10 @@ export default {
     console.log(this.$store.state.profileData.nickName);
     console.log(this.$cookies.get('nickName'))
     axios
-      .delete(`http://i3b201.p.ssafy.io/api/care/interestDelete`, { params:{
+      .delete(constants.SERVER_URL + `/care/interestDelete`, { params:{
         // uid: this.$cookies.get('nickName'),
         uid : this.$store.state.profileData.nickName,
-        desertionno: this.$cookies.get('desertionno').desertionno
+        desertionno: this.$route.params.desertionno
       }})
       .then((response) => {
         console.log(response);
@@ -400,12 +334,122 @@ export default {
         console.log("실패");
       });
     },
-    destroyed(){
-      this.$cookies.remove('desertionno')
+    getSurvey() {
+      let formData = new FormData();
+        formData.append('email', this.$cookies.get('auth-token').email)
+        formData.append('desertionno', this.$route.params.desertionno)
+        console.log(this.$cookies.get('auth-token').email)
+        console.log(this.$route.params.desertionno)
+        axios.post(constants.SERVER_URL + '/adoption/Application', formData)
+          .then(response => {
+            console.log(response.data)  
+            this.user = response.data.user
+            this.survey = response.data.survey
+            if(response.data.user.sex){
+              this.user.sex = '여자'
+            }else{
+              this.user.sex = '남자'
+            }
+
+            if(response.data.user.marriaged){
+              this.user.marriaged = '기혼'
+            }else{
+              this.user.marriaged = '미혼'
+            }
+
+            var data = new Date();
+            var year = data.getFullYear();
+            var count = new Date(response.data.user.birthdate);
+            var year2 = count.getFullYear();
+            var result = year - year2 + 1
+            this.userAge = result.toString()
+
+            if(response.data.survey.nation === 'korea'){
+              this.survey.nation = '한국'
+            }else{
+              this.survey.nation = '외국'
+            }
+
+            if(response.data.survey.place === 'home'){
+              this.survey.place = '가정 집 안'
+            }else if(response.data.survey.place === 'garden_o'){
+              this.survey.place = '마당(펜스 O)'
+            }else if(response.data.survey.place === 'garden_x'){
+              this.survey.place = '마당(펜스 X)'
+            }else{
+              this.survey.place = '그 외 사업장'
+            }
+
+            if(response.data.survey.beforeover){
+              this.survey.beforeover = '예'
+            }else{
+              this.survey.beforeover = '아니오'
+            }
+
+            if(response.data.survey.beforeadopt){
+              this.survey.beforeadopt = '예'
+            }else{
+              this.survey.beforeadopt = '아니오'
+            }
+
+            if(response.data.survey.familyagree){
+              this.survey.familyagree = '예'
+            }else{
+              this.survey.familyagree = '아니오'
+            }
+
+            if(response.data.survey.dissolution === 1){
+              this.survey.dissolution = '1회'
+            }else if(response.data.survey.dissolution === 2){
+              this.survey.dissolution = '2회 이상'
+            }else{
+              this.survey.dissolution = '없음'
+            }
+
+            if(response.data.survey.sickness){
+              this.survey.sickness = '예'
+            }else{
+              this.survey.sickness = '아니오'
+            }
+
+            if(response.data.survey.temp === 'family'){
+              this.survey.temp = '가족'
+            }else if(response.data.survey.temp === 'hotel'){
+              this.survey.temp = '호텔'
+            }else if(response.data.survey.temp === 'friend'){
+              this.survey.temp = '지인'
+            }else{
+              this.survey.temp = '없음'
+            }
+
+            if(response.data.survey.house === 'room'){
+              this.survey.house = '원룸'
+            }else if(response.data.survey.house === 'housing'){
+              this.survey.house = '주택'
+            }else if(response.data.survey.house === 'apt'){
+              this.survey.house = '아파트'
+            }else{
+              this.survey.house = '다세대/빌라'
+            }
+          })
+          .catch(error => {
+              console.log(error)
+          })
+    },
+    goModal() {
+      this.getSurvey()
     },
   }
 }
 </script>
 
 <style>
+.bmg{
+  background: url('../../assets/전단지9.png') no-repeat;
+    width: 100%;
+
+    background-size: cover;
+    background-position: center;
+}
+
 </style>

@@ -32,6 +32,7 @@ public class User {
     private int marriaged;  //1 = 기혼, 0 = 미혼
     private int sex;    //1 = 남자, 0 = 여자
     private String birthdate;
+    private int flag;
 
     @Column(insertable = false, updatable = false)
     private LocalDateTime createdate;

@@ -71,7 +71,6 @@
         <v-row>
           <v-textarea filled name="context" hint="내용을 입력해주세요." v-model="Adoptupdate.content"></v-textarea>
         </v-row>
-
         <v-row>
           <v-btn outlined color="blue" style="margin-left: auto;" @click="submitupdate">등록</v-btn>
         </v-row>
@@ -96,7 +95,7 @@ export default {
     adoptdetail() {
       axios
         .get(
-          "http://i3b201.p.ssafy.io/api/postscript/detail?postscriptno=" +this.$route.params.ID)
+          constants.SERVER_URL + "/postscript/detail?postscriptno=" +this.$route.params.ID)
         .then((res) => {
           this.Adoptupdate = res.data.object;
           console.log(this.Adoptupdate);
@@ -106,7 +105,9 @@ export default {
         });
     },
     submitupdate() {
-      axios.put("http://i3b201.p.ssafy.io/api/postscript/Modify", this.Adoptupdate)
+
+
+      axios.put(constants.SERVER_URL + `/postscript/Modify?postscriptno=${this.$route.params.ID}&title=${this.Adoptupdate.title}&content=${this.Adoptupdate.content}&sido=${this.Adoptupdate.sido}&gugun=${this.Adoptupdate.gugun}&kind=${this.Adoptupdate.kind}`)
       .then(()=>{
           this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTDETAIL, params:{ ID: this.$route.params.ID} })
       })
@@ -134,6 +135,16 @@ export default {
             ],
             selectSido: '',
             selectGugun: '',
+            img:'',
+            // ccontent:'',
+            // ccreatedate:'',
+            // ggugun:'',
+            // iimage:'',
+            // kkind:'',
+            // ppostscriptno:'',
+            // ssido:'',
+            // ttitle:'',
+            // uuid:'',
     }
     }
 };

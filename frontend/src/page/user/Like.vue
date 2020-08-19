@@ -3,56 +3,35 @@
     <v-container fluid class="mx-5 mt-5 pt-5">
       <h1>내 관심 강아지</h1>
       <v-row>
-        <v-col v-for="interest in interestData" :key="interest.id" class="my-5 pt-5">
-          <!-- {{ dogData }} -->
-          <v-card v-if="interest.desertionno" class="d-inline-block mx-auto" style="width:400px">
-            <i @click="deleteLike(interest)" class="fas fa-backspace float-right" style="font-size:40px; cursor:pointer"></i>
-            <v-container>
-              <v-row justify="space-between">
-                <v-col cols="auto">
-                  <v-hover v-slot:default="{ hover }">
-                    <v-img
-                      height="300"
-                      width="300"
-                      :src="dogData.popfile"
-                      @click="goDetail(interest)"
-                    >
-                      <!-- <v-expand-transition> -->
-                      <div
-                        v-if="hover"
-                        class="d-flex transition-fast-in-fast-out brown lighten-5 v-card--reveal display-3 white--text"
-                        style="height: 100%;"
-                      >dog dog dog dog</div>
-                      <!-- </v-expand-transition> -->
-                    </v-img>
-                  </v-hover>
-                  <v-card-title>강아지입니다</v-card-title>
-                </v-col>
-
-                <v-col cols="auto" class="text-center pl-0">
-                  <v-row class="flex-column ma-0 fill-height" justify="center">
-                    <!-- <v-col class="px-0">
-                      <v-btn icon>
-                        <v-icon>mdi-heart</v-icon>
-                      </v-btn>
-                    </v-col>
-
-                    <v-col class="px-0">
-                      <v-btn icon>
-                        <v-icon>mdi-bookmark</v-icon>
-                      </v-btn>
-                    </v-col>
-
-                    <v-col class="px-0">
-                      <v-btn icon>
-                        <v-icon>mdi-share-variant</v-icon>
-                      </v-btn>
-                    </v-col> -->
-                  </v-row>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-card>
+        <v-col cols="4" v-for="(interest, i) in interestData" :key="i">
+          <v-hover v-slot:default="{ hover }">
+            <v-card
+              :elevation="hover ? 12 : 2"
+              @click="goDetail(interest.desertionno)"
+            >
+              <p class="text-center ma-0">{{ interest.kindcd }}</p>
+              <v-img
+                :src="interest.popfile"
+                width="400px"
+                height="400px"
+              >
+                <div :class="{ 'show-btns': hover }">
+                  <v-card-title class="title" v-if="hover">
+                    <v-row class="fill-height flex-column" justify="space-between">
+                      
+                      <div>                            
+                          <p col="6" class="font-weight-black text-left font-italic ma-2">성별: {{ interest.sexcd}}</p>
+                          <p col="6" class="font-weight-black text-left font-italic ma-2">연령: {{ interest.age }}</p>
+                          <p col="6" class="font-weight-black text-left font-italic ma-2">모색: {{ interest.colorcd }}</p>
+                          <p col="6" class="font-weight-black text-left font-italic ma-2">체중: {{ interest.weight }}</p>
+                          <p col="12" class="font-weight-black text-left font-italic ma-2">특징: {{ interest.specialmark }}</p>
+                      </div>
+                    </v-row>
+                  </v-card-title>
+                </div>
+              </v-img>
+            </v-card>
+          </v-hover>
         </v-col>
       </v-row>
     </v-container>
@@ -80,52 +59,29 @@ export default {
     ...mapActions(['find' ,"isLoggedInChecker"]),
     getInterest() {
       axios
-        .get(`http://i3b201.p.ssafy.io/api/care/interestList`, {
+        .get(constants.SERVER_URL + `/care/interestList`, {
           params: {
             uid: this.$cookies.get('auth-token').uid,
           },
         })
         .then((response) => {
+          console.log(response)
           this.interestData = response.data.object;
-          for (var i = 0; i < this.interestData.length; i++) {
-            this.getInformation(this.interestData[i].desertionno);
-          }
         })
         .catch((err) => console.log(err));
     },
     getInformation(desertionno_no) {
-      console.log(desertionno_no)
-      axios
-        .get(`http://i3b201.p.ssafy.io/api/care/detailUser`, {
-          params: {
-            desertionno: desertionno_no,
-            uid: this.profileData.nickName,
-          },
-        })
-        .then((response) => {
-          this.dogData = response.data.object;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      
     },
-    goDetail(index) {
+    goDetail(desertionNo) {
       console.log(this.$store.state.profileData.nickName);
-      this.$cookies.set("desertionno", {
-        desertionno: index.desertionno,
-      });
-      this.$router.push({ name: constants.URL_TYPE.POST.DETAIL , params : { uuid : this.$store.state.profileData.nickName } });
+      this.$router.push({ name: constants.URL_TYPE.POST.DETAIL , params : { uuid : this.$store.state.profileData.nickName, desertionno: desertionNo } });
     },
     deleteLike(index) {
-      // let formData = new FormData();
       console.log(this.$store.state.profileData.nickName);
-      // formData.append('uid', this.$store.state.profileData.nickName)
-      // formData.append('desertionno', index.desertionno)
-      // console.log(index.desertionno)
-      // console.log(formData)
       const uidd = this.$store.state.profileData.nickName
       axios
-        .delete(`http://i3b201.p.ssafy.io/api/care/interestDelete`, { params:{
+        .delete(constants.SERVER_URL + `/care/interestDelete`, { params:{
           uid: uidd,
           desertionno: index.desertionno,
         }})
@@ -134,7 +90,6 @@ export default {
           console.log("성공");
           index.desertionno = null;
           this.getInterest()
-          // console.log(index.desertionno)
         })
         .catch((error) => {
           console.log("실패");
@@ -144,7 +99,7 @@ export default {
   data() {
     return {
       interestData: {},
-      dogData: {},
+      dogDatas: [],
       isLiked: true,
     };
   },
@@ -152,4 +107,15 @@ export default {
 </script>
 
 <style scoped>
+.v-card {
+  transition: .4s ease-in-out;
+}
+
+.v-card:hover {
+  opacity: 0.6;
+}
+
+.show-btns {
+  color: rgba(255,255,255) !important;
+}
 </style>

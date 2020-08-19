@@ -21,4 +21,5 @@ public class BasicResponse {
     public Object madetag;
     public Object match;
     public Object lostReply;
+    public int fitness;
 }

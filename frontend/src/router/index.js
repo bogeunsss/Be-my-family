@@ -63,7 +63,7 @@ export default new Router({
       name: constants.URL_TYPE.USER.UPDATE,
       component: Update,
       beforeEnter(to, from, next){
-        if($cookies.get('auth-token').uid || $cookies.get('auth-token').mid){
+        if($cookies.isKey('auth-token').uid || $cookies.isKey('auth-token').mid){
           next()
         }else{
           alert('로그인이 필요합니다.')
@@ -88,12 +88,26 @@ export default new Router({
     {
       path: '/AdoptCreate',
       name: constants.URL_TYPE.ADOPTIONPOST.ADOPTCREATE,
-      component: AdoptCreate
+      component: AdoptCreate,
+      beforeEnter(to, from, next){
+        if($cookies.isKey('auth-token')){
+          next()
+        }else{
+          alert('로그인이 필요합니다.')
+        }
+      }
     },
     {
       path: '/AdoptDetail/:ID/AdoptUpdate',
       name: constants.URL_TYPE.ADOPTIONPOST.ADOPTUPDATE,
-      component: AdoptUpdate
+      component: AdoptUpdate,
+      beforeEnter(to, from, next){
+        if($cookies.isKey('auth-token')){
+          next()
+        }else{
+          alert('로그인이 필요합니다.')
+        }
+      }
     },
     {
       path: '/AdoptDetail/:ID',
@@ -101,7 +115,7 @@ export default new Router({
       component: AdoptDetail
     },
     {
-      path: '/detail',
+      path: '/list/:desertionno',
       name: constants.URL_TYPE.POST.DETAIL,
       component: Detail
     },
@@ -122,7 +136,7 @@ export default new Router({
       name: constants.URL_TYPE.USER.SURVEY,
       component: Survey,
       beforeEnter(to, from, next){
-        if($cookies.get('auth-token').uid){
+        if($cookies.isKey('auth-token')){
           next()
         }else{
           alert('로그인이 필요합니다.')
@@ -142,10 +156,17 @@ export default new Router({
     {
       path: '/user/manager',
       name: constants.URL_TYPE.USER.MANAGER,
-      component: Manager
+      component: Manager,
+      beforeEnter(to, from, next){
+        if($cookies.get('auth-token')){
+          next()
+        }else{
+          alert('로그인이 필요합니다.')
+        }
+      }
     },
     {
-      path: '/user/adoption/:adoptionno',
+      path: '/user/adoption/:desertionno',
       name: constants.URL_TYPE.USER.ADOPTIONDETAIL,
       component: AdoptionDetail
     },

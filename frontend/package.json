@@ -3,15 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve --host 127.0.0.1 --port 3000",
+    "serve": "vue-cli-service serve --host localhost --port 3000",
     "build": "vue-cli-service build"
   },
   "dependencies": {
     "axios": "^0.19.2",
     "core-js": "^3.6.5",
+    "countup.js": "^2.0.6",
     "jsonwebtoken": "^8.5.1",
     "vue": "^2.6.11",
     "vue-cookies": "^1.7.3",
+    "vue-countup-v2": "^4.0.0",
     "vue-infinite-loading": "^2.4.5",
     "vue-jwt-decode": "^0.1.0",
     "vue-router": "^3.3.4",

@@ -37,6 +37,7 @@ export default new Vuex.Store({
       email: null,
       password: null,
       isManager:null,
+      mid: null,
     },
     profileData: {
       email: null,
@@ -50,7 +51,8 @@ export default new Vuex.Store({
       birthdate:null,
     },
     dogData: [],
-
+    isLast: false,
+    adoptionData:{},
     sido_states: [
       '서울특별시', '부산광역시', '인천광역시', '대전광역시',
       '대구광역시', '울산광역시', '광주광역시', '세종특별자치시',
@@ -161,11 +163,23 @@ export default new Vuex.Store({
       state.profileData.nickName = nickName
     },
     setSearchDogs(state, newDogData){
-      state.dogData = newDogData
+      if(!newDogData.isSearched){
+        state.dogData = []
+      }
+      console.log(newDogData)
+      state.dogData.push(newDogData.data.object)
+      if(!newDogData.data.hasNext){
+        state.isLast = true
+      }else{
+        state.isLast = false
+      }
     },
     checkLoggedIn(state, check){
       state.isLoggedIn = check
     },
+    // adoptionDataList(state, adoptionData){
+    //   state.adoptionData = adoptionData
+    // },
 
     getProfileData(state){
       return state.profileData
@@ -178,138 +192,82 @@ export default new Vuex.Store({
   },
 
   actions: {
-    signup({ commit }, signupData){
-      const info = {
-        data: signupData,
-        location: SERVER.URL_TYPE.USER.JOIN
-      }
-      console.log(info.data.nickName)
-      var reg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      var passwordReg = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
-      if(!info.data.nickName){
-        alert('닉네임을 입력하세요')
-      }else if(!info.data.email){
-          alert('이메일을 입력하세요')
-      }
-      else if(!reg.test(info.data.email)){
-          alert('이메일 형식을 확인하세요')
-      }
-      else if(!info.data.password){
-          alert('비밀번호를 입력하세요')
-      }else if(!info.data.passwordConfirm){
-          alert('비밀번호 확인을 입력하세요')
-      }else if(info.data.password !== info.data.passwordConfirm){
-          alert('비밀번호가 일치하지 않습니다')
-      }else if(false === passwordReg.test(info.data.password)) {
-          alert('비밀번호는 8자 이상이어야 하며, 숫자/대문자/소문자/특수문자를 모두 포함해야 합니다.');
-      }else if(/(\w)\1\1\1/.test(info.data.password)){
-          alert('같은 문자를 4번 이상 사용하실 수 없습니다.');
-      }else if(info.data.password.search(info.data.email) > -1){
-          alert("비밀번호에 아이디가 포함되었습니다.");
-      }else if(info.data.password.search(/\s/) != -1){
-          alert("비밀번호는 공백 없이 입력해주세요.");
-      }else{
-        axios.post(SERVER.SERVER_URL + '/account/signup', {
-          email: info.data.email,
-          name: info.data.name,
-          password: info.data.password,
-          uid: info.data.nickName,
-          phone: info.data.phone,
-          job: info.data.job,
-          marriaged: info.data.marriaged,
-          sex: info.data.sex,
-          birthdate: info.data.birthdate,
-
-        })
-        .then(res=>{
-          if(res.data.data === 'emailexist'){
-              alert('이미 있는 이메일입니다.')
-          }else if(res.data.data === 'nicknameexist'){
-              alert('이미 있는 닉네임입니다.')
-          }else if(res.data.data === 'emailsuccess'){
-              router.push({name:SERVER.URL_TYPE.POST.MAIN})
-          }else if(res.data.data === 'emailfail'){
-              alert('이메일 전송 실패')
-          }
-        })
-        .catch(err=>console.log(err))
-      }
-    },
-    login({ commit, state }, loginData){
-      console.log(loginData)
+    login({ commit, state }, paramData){
       let formData = new FormData()
-      formData.append('email', loginData.email)
-      formData.append('password', loginData.password)
-      console.log(loginData.email)
       var reg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      if (!loginData.email) {
-        console.log(loginData.email)
-        alert("이메일을 입력하세요");
-      }
-      else if (!reg.test(loginData.email)) {
-        alert("이메일 형식을 확인하세요");
-      }
-      else {
-        if(loginData.isManager=='radio-1'){
-      axios.post(SERVER.SERVER_URL +'/account/login ', formData)
-      .then(response => {
-        if(response.status == 200){
-            // commit('SET_TOKEN',response.data.key)
-            state.dialog = true
-            // var jwt = require("jsonwebtoken");
-            // var token = jwt.sign({ sub: loginData.email }, loginData.password);
-            console.log(response)
-            alert("로그인 성공");
-            state.dialog = false
-            state.isLoggedIn = true
-            // state.isManager = false
-            cookies.set('auth-token', {
-              token:response.data.object.accessToken,
-              email:response.data.email,
-              uid:response.data.uid
+      if(paramData.loginData.isManager === 'radio-1'){
+        formData.append('email', paramData.loginData.email)
+        formData.append('password', paramData.loginData.password)
+        if (!paramData.loginData.email) {
+          console.log(paramData.loginData.email)
+          alert("이메일을 입력하세요");
+        }
+        else if (!reg.test(paramData.loginData.email)) {
+          alert("이메일 형식을 확인하세요");
+        }
+        else {
+        axios.post(SERVER.SERVER_URL +'/account/login ', formData)
+          .then(response => {
+            if(response.status == 200){
+                state.dialog = true
+                console.log(response)
+                alert("로그인 성공");
+                state.dialog = false
+                state.isLoggedIn = true
+                cookies.set('auth-token', {
+                  token:response.data.object.accessToken,
+                  email:response.data.email,
+                  uid:response.data.uid
+                })
+                state.authToken = cookies.get('auth-token')
+                router.go()
+              }
             })
-            state.authToken = cookies.get('auth-token')
-            // router.push({name:constants.URL_TYPE.POST.MAIN})
-            router.go()
-          }
-        })
-        .catch((error)=>{
-          alert("로그인 실패");
-          console.log(error)
-          state.dialog = false;
-        })
-      }else{
+            .catch((error)=>{
+              alert("로그인 실패");
+              console.log(error)
+              state.dialog = false;
+            })
+        }
+      }else if(paramData.loginData.isManager === 'radio-2'){
+        console.log(paramData.loginData.mid)
+        console.log(paramData.loginData.password)
+        formData.append('mid', paramData.loginData.mid)
+        formData.append('password', paramData.loginData.password)
         axios.post(SERVER.SERVER_URL +'/manager/login ', formData)
-      .then(response => {
-        if(response.status == 200){
-            state.dialog = true
-            console.log(response)
-            alert("로그인 성공");
-            state.dialog = false
-            state.isLoggedIn = true
-            cookies.set('auth-token', {
-              token:response.data.object.accessToken,
-              email:response.data.email,
-              uid:response.data.uid,
-              mid:response.data.mid
+          .then(response => {
+            if(response.status == 200){
+                state.dialog = true
+                console.log(response)
+                alert("로그인 성공");
+                state.dialog = false
+                state.isLoggedIn = true
+                cookies.set('auth-token', {
+                  token:response.data.object.accessToken,
+                  email:response.data.email,
+                  uid:response.data.uid,
+                  mid:response.data.mid
+                })
+                state.authToken = cookies.get('auth-token')                
+                router.go()
+              }
             })
-            state.authToken = cookies.get('auth-token')
-            router.push({name:constants.URL_TYPE.POST.MAIN})
-            router.go()
-          }
-        })
-        .catch((error)=>{
-          alert("로그인 실패");
-          console.log(error)
-          state.dialog = false;
-        })
+            .catch((error)=>{
+              alert("로그인 실패");
+              console.log(error)
+              state.dialog = false;
+            })
       }
-    }
     },
-    logout({ commit, state }){
+    logout({ commit, state }, path){
       state.authToken = null
+      state.isLoggedIn = false
       cookies.remove('auth-token')
-      router.go()
+      if (path !== constants.URL_TYPE.MAIN){
+        router.push({name: constants.URL_TYPE.MAIN})
+      }else{
+        router.go()
+      }
     },
     // 데이터 조회할때 유저 null 값 나옴
     find({commit, state}, email){
@@ -339,9 +297,10 @@ export default new Vuex.Store({
         var year2 = count.getFullYear();
         var result = year - year2 + 1
         state.profileData.birthdate = result.toString()
-        
+        console.log(response.data.adoptions)
         state.profileData.nickName = response.data.object.uid
         state.profileData.password = response.data.object.password
+        state.adoptionData = response.data.adoptions
       })
       .catch(err=>console.log(err))
     },
@@ -355,12 +314,25 @@ export default new Vuex.Store({
         alert('탈퇴 실패')
       })
     },
-    userUpdate({commit}, userData){
-      console.log(userData)
-      axios.put(`http://i3b201.p.ssafy.io/api/account/update`,{
-          uid:userData.nickName,
-          email:userData.email,
-          password:userData.password
+    userUpdate({commit, state}, userData){
+      var marriaged = ''
+      if(userData.password === ''){
+        userData.password = state.profileData.password
+      }
+      if(userData.marriaged === '기혼'){
+        marriaged = 1
+      }else{
+        marriaged = 0
+      }
+      axios.put(SERVER.SERVER_URL + `/account/update`,{
+          uid: state.profileData.nickName,
+          name: state.profileData.name,
+          email: state.profileData.email,
+          password: userData.password,
+          phone: userData.phone,
+          job: userData.job,
+          marriaged: marriaged,
+          birthdate: state.profileData.birthdate
       }).then(res=>{
           alert('수정 성공')
       }).catch(err=>{
@@ -368,13 +340,27 @@ export default new Vuex.Store({
           console.log(err)
       })
     },
-    mainList({commit, state}){
+    mainList({commit, state}, paramInfo){
+      if(paramInfo.pageno === 0){
+        state.dogData = []
+      }
+      var parameterInfo = '?pageno=' + paramInfo.pageno
+      if(paramInfo.userInfo !== undefined){
+        parameterInfo = parameterInfo + '&uid=' + paramInfo.userInfo
+      }
+      console.log(parameterInfo)
       axios
-        .get("http://i3b201.p.ssafy.io/api/care/list")
+        .get(SERVER.SERVER_URL + "/care/list" + parameterInfo)
         .then((res) =>{
-            state.dogData = res.data.object
-            // state.dogData = res.data.object
-            // console.log(state.dogData)
+          console.log(res)
+            if(!res.data.hasNext){
+              state.isLast = true
+            }else{
+              state.isLast = false
+            }
+            if(state.currentPage !== paramInfo.pageno){
+              state.dogData.push(res.data.object)
+            }
         })
         .catch((err) =>{
             console.log(err)

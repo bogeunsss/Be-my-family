@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="margin-top:7rem;">
     <v-container style="width:80%">
       <div>
         <div class="d-flex">
@@ -19,35 +19,35 @@
               </v-col>
 
               <v-col class="text-center pl-0">
-                  <div class="w-100" v-if="!managerInfo.mid">
+                <div v-if="!managerInfo.mid">
+                  <div class="w-100">
                   <h3 class='my-3'>UserID : {{ profileData.email }}</h3>
                   </div>
                   <br>
-                  <div class="w-100" v-if="!managerInfo.mid">
+                  <div class="w-100">
                   <h3 class='my-3'>NickName : {{ profileData.nickName }}</h3>
                   </div>
-                  <br>
-                  <div class="w-100" v-if="!managerInfo.mid">
+                  <br>  
+                  <div class="w-100">
                   <h3 class='my-3'>Phone : {{ profileData.phone }}</h3>
                   </div>
                   <br>
-                  <div class="w-100" v-if="!managerInfo.mid">
+                  <div class="w-100">
                   <h3 class='my-3'>Job : {{ profileData.job }}</h3>
                   </div>
-                  <div class="w-100" v-if="!profileData">
-                  <h3 class='my-3'>보호소 Name : {{ managerInfo.mid }}</h3>
+                </div>
+                
+                <div v-if="managerInfo.mid">
+                  <div class="w-100">
+                  <h3 class='my-3'>보호소명 : {{ managerInfo.mid }}</h3>
                   </div>
                   <br>
-                  <div class="w-100" v-if="!profileData">
-                  <h3 class='my-3'>Manager ID : {{ managerInfo.email }}</h3>
+                  <div class="w-100">
+                  <h3 class='my-3'>보호소 이메일 : {{ managerInfo.email }}</h3>
                   </div>
                   <br>
-                  <div class="w-100" v-if="!profileData">
-                  <h3 class='my-3'>Name : {{ managerInfo.name }}</h3>
-                  </div>
-                  <br>
+                </div>
                   <!-- <button @click="test">aaa</button> -->
-
               </v-col>
             </v-row>
           </v-container>
@@ -55,20 +55,25 @@
       </div>
       <div v-if="!$cookies.get('auth-token').mid">
         <h2>유기견 신청 목록</h2>
-
-        <!-- <v-row class="mb-5">
+        <v-row class="mb-5">
           <v-col v-for="adoption in adoptionList" :key="adoption.id">
+              <v-btn @click="deleteAdoption(adoption.desertionno)">x</v-btn>
             <v-card @click="goDetail">
               <v-card-text class="d-flex">
                 <div>유기견 번호 : {{adoption.desertionno}}</div>
                 <div class="ml-auto">
                   {{adoption.fixdate}}
-                  {{adoption.fixtime}}
+                  {{adoption.fixtime}}시
+                </div>
+                <div class="ml-auto">
+                  <v-btn class='my-auto' v-if="adoption.state === 0">승인대기</v-btn>
+                  <v-btn class='my-auto' v-if="adoption.state === 1">승인완료</v-btn>
+                  <v-btn class='my-auto' v-if="adoption.state === 2">승인거절</v-btn>
                 </div>
               </v-card-text>
             </v-card>
           </v-col>
-        </v-row> -->
+        </v-row>
       </div>
     </v-container>
   </div>
@@ -79,7 +84,7 @@
 import constants from "../../lib/constants";
 import SERVER from "@/lib/constants";
 
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 import axios from "axios";
 import VueJwtDecode from "vue-jwt-decode";
 
@@ -93,18 +98,23 @@ export default {
 
     // this.isLoggedIn = this.$cookies.isKey('auth-token')
     var token = this.$cookies.get("auth-token");
-    if(this.$cookies.get('auth-token').uid){
+    if(this.$cookies.get('auth-token').uid !== undefined){
       this.find(token.email);
+      this.getAdoptionList()
+      // this.getAdoptionList()
+      console.log(this.adoptionData)
       // this.getAdoption();
     }else{
-      this.getManagerFind(token.email)
+      this.getManagerFind()
     }
   },
   computed: {
-    ...mapState(["profileData", "loginData"]),
+    ...mapState(["profileData", "loginData","adoptionData"]),
+    // ...mapMutations(["adoptionDataList"])
   },
   methods: {
     ...mapActions(["find", "userDelete", "logout"]),
+    // ...mapMutations(["adoptionDataList"]),
     userAccountDelete() {
       this.userDelete(this.profileData.nickName);
       this.logout();
@@ -113,17 +123,37 @@ export default {
       this.$router.push({name:constants.URL_TYPE.POST.DETAIL})
     },
     getManagerFind() {
-      axios.get('http://i3b201.p.ssafy.io/api/manager/find', {params : {
-        email : this.$cookies.get('auth-token').email
+      axios.get(constants.SERVER_URL + '/manager/find', {params : {
+        mid : this.$cookies.get('auth-token').mid
       }})
       .then((res) => {
-        console.log(res.data)
+        // console.log(res.data)
         this.managerInfo = res.data
-        console.log(this.managerInfo)
+        // console.log(this.managerInfo)
       })
       .catch((err)=>{
         console.log(err)
       }) 
+    },
+    deleteAdoption(desertion_no) {
+      console.log(desertion_no)
+      axios.delete(constants.SERVER_URL + `/adoption/delete?uid=${this.profileData.nickName}&desertionno=${desertion_no}`
+      ).then(res=>{console.log(res)
+        this.getAdoptionList()
+        console.log(this.adoptionList)
+        console.log(this.adoptionData)
+      })
+      .catch(err=>console.log(err))
+    },
+  getAdoptionList() {
+      axios
+        .get(constants.SERVER_URL + `/account/find`, { params: {
+          email : this.$cookies.get('auth-token').email}
+        })
+        .then((response) => {
+          this.adoptionList = response.data.adoptions;
+        })
+        .catch((err) => console.log(err));
     },
   },
   data: function () {
@@ -133,7 +163,7 @@ export default {
       nickName: "",
       token: "",
       item: [],
-      adoptionList: [],
+      adoptionList: {},
       managerInfo:[],
       // profileData:{}
     };

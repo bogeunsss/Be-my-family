@@ -1,6 +1,7 @@
 <template>
-  <div>
+  <div style="margin-top:7rem;">
     <v-container >
+      <h2 class="mb-5">실종 / 보호 / 목격</h2>
       <form>
         <v-row class="d-flex align-center mx-auto">
           <v-col class="d-flex">
@@ -27,14 +28,19 @@
         <v-col
           v-for="(card, i) in cards"
           :key="i"
-          cols="3"
+          cols="12"
+          sm="6"
+          md="4"
+          lg="3"
         >
-          <v-card @click="goDetail(card.lostno)">
+        <!-- 기존코드 -->
+          <!-- <v-card v-if="i<scrolled">
             <v-img
               :src="card.lostpic1"
               class="white--text align-end"
               gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-              height="200px"
+              height="300px"
+              @click="goDetail(card.lostno)"
             >
               <v-card-title v-text="card.lostsido"></v-card-title>
             </v-img>
@@ -44,11 +50,145 @@
               <v-chip :color="myColors[card.losttype]" text-color="white">{{ card.losttype }}</v-chip>
               <div>
                 <v-btn icon>
-                  <v-icon>mdi-share-variant</v-icon>
+                  <v-icon @click="copyUrl(card.lostno)">mdi-share-variant</v-icon>
                 </v-btn>
               </div>
             </v-card-actions>
+          </v-card> -->
+
+
+          <v-card elevation="24" max-width="444" class="mx-auto"  v-if="card.lostpic2==null">
+            <v-system-bar class="d-flex" lights-out style="height:40px;width:100%;">
+              <v-chip :color="myColors[card.losttype]" text-color="white">{{ card.losttype }}</v-chip>
+              <v-btn icon class="ml-auto">
+                <v-icon @click="copyUrl(card.lostno)">mdi-share-variant</v-icon>
+              </v-btn>
+            </v-system-bar>
+            <v-carousel
+              :continuous="true"
+              cycle="cycle"
+              :show-arrows="false"
+              hide-delimiter-background
+              delimiter-icon="mdi-minus"
+              height="300"
+            >
+              <v-carousel-item  @click="goDetail(card.lostno)"
+                v-for="item in [card.lostpic1]"
+                :src="item"
+                :key="item"
+                gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+              >
+                <v-row
+                  class="fill-height"
+                  align="center"
+                  justify="center"
+                >
+                </v-row>
+              </v-carousel-item>
+            </v-carousel>
+            <v-list>
+              <v-list-item>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    <small style="font-size:1rem;color:black;">
+                    {{card.lostsido}}
+                    </small>
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
           </v-card>
+
+          <v-card elevation="24" max-width="444" class="mx-auto"  v-if="card.lostpic3==null  && card.lostpic2!=null">
+            <v-system-bar class="d-flex" lights-out style="height:40px;width:100%;">
+              <v-chip :color="myColors[card.losttype]" text-color="white">{{ card.losttype }}</v-chip>
+              <v-btn icon class="ml-auto">
+                <v-icon @click="copyUrl(card.lostno)">mdi-share-variant</v-icon>
+              </v-btn>
+            </v-system-bar>
+            <v-carousel
+              :continuous="true"
+              cycle="cycle"
+              :show-arrows="false"
+              hide-delimiter-background
+              delimiter-icon="mdi-minus"
+              height="300"
+            >
+              <v-carousel-item  @click="goDetail(card.lostno)"
+                v-for="item in [card.lostpic1, card.lostpic2]"
+                :src="item"
+                :key="item"
+                gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+              >
+                <v-row
+                  class="fill-height"
+                  align="center"
+                  justify="center"
+                >
+                </v-row>
+              </v-carousel-item>
+            </v-carousel>
+            <v-list>
+              <v-list-item>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    <small style="font-size:1rem;color:black;">
+                    {{card.lostsido}}
+                    </small>
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+          </v-card>
+
+          <v-card elevation="24" max-width="444" class="mx-auto" v-if="card.lostpic3!=null">
+            <v-system-bar class="d-flex" lights-out style="height:40px;width:100%;">
+              <v-chip :color="myColors[card.losttype]" text-color="white">{{ card.losttype }}</v-chip>
+              <v-btn icon class="ml-auto">
+                <v-icon @click="copyUrl(card.lostno)">mdi-share-variant</v-icon>
+              </v-btn>
+            </v-system-bar>
+            <v-carousel
+              :continuous="true"
+              cycle="cycle"
+              :show-arrows="false"
+              hide-delimiter-background
+              delimiter-icon="mdi-minus"
+              height="300"
+            >
+              <v-carousel-item  @click="goDetail(card.lostno)"
+                v-for="item in [card.lostpic1, card.lostpic2, card.lostpic3]"
+                :src="item"
+                :key="item"
+                gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+              >
+                <v-row
+                  class="fill-height"
+                  align="center"
+                  justify="center"
+                >
+                </v-row>
+              </v-carousel-item>
+            </v-carousel>
+            <v-list>
+              <v-list-item>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    <small style="font-size:1rem;color:black;">
+                    {{card.lostsido}}
+                    </small>
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+          </v-card>
+
+
+
+
+
+
+
         </v-col>
       </v-row>
     </v-container>
@@ -56,12 +196,13 @@
   <v-dialog v-model="dialog" scrollable max-width="700px">
     <template v-slot:activator="{ on, attrs }">
       <v-btn
-        color="success"
+        color="#4ba5cd"
         fab
         dark
         v-bind="attrs"
         v-on="on"
         class="float-btn"
+        v-if="isLoggedIn"
       >
         <v-icon>mdi-pencil</v-icon>
       </v-btn>
@@ -186,6 +327,23 @@
     </v-date-picker>
   </v-dialog>
 
+  <v-snackbar
+    v-model="snackbar"
+    :timeout="2000"
+  >
+    복사 되었습니다.
+
+    <template v-slot:action="{ attrs }">
+      <v-btn
+        color="blue"
+        text
+        v-bind="attrs"
+        @click="snackbar = false"
+      >
+        Close
+      </v-btn>
+    </template>
+  </v-snackbar>
   </div>
 </template>
 
@@ -197,10 +355,14 @@ import { mapState } from 'vuex'
 
 export default {
   created(){
+    window.addEventListener("scroll", this.handleScroll);
     this.getList()
   },
+  beforeDestroy(){
+    window.removeEventListener("scroll", this.handleScroll);
+  },
   computed:{
-    ...mapState(['sido_states', 'gugun_states', 'profileData']),
+    ...mapState(['sido_states', 'gugun_states', 'profileData', 'isLoggedIn']),
   },
   watch:{
   },
@@ -246,11 +408,14 @@ export default {
       searchText: '',
       searchTags: [],
       tempCards: [],
+      scrolled: 12,
+      snackbar: false,
+      url: '',
     }
   },
   methods: {
     getList(){
-      axios.get('http://i3b201.p.ssafy.io/api/lost/list')
+      axios.get(constants.SERVER_URL + '/lost/list')
       .then(response => {
         // console.log(response.data.object[0].lostpic1)
         this.cards = response.data.object
@@ -300,8 +465,7 @@ export default {
       // FormData 객체를 log 찍어보려면
       // FormData.entries()를 이용하여 key : value 쌍을 뽑아야 함.
       
-      console.log(this.images)
-      axios.post('http://i3b201.p.ssafy.io/api/lost/add', formData, {
+      axios.post(constants.SERVER_URL + '/lost/add', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -312,7 +476,7 @@ export default {
       })
       
       this.dialog = false
-      this.$router.go()
+      // this.$router.go(-1)
     },
     closeTag(index){
       this.lostTags.splice(index, 1)
@@ -344,7 +508,7 @@ export default {
       }
     },
     search(){
-      axios.get('http://i3b201.p.ssafy.io/api/lost/search?tags='+this.searchTags)
+      axios.get(constants.SERVER_URL + '/lost/search?tags='+this.searchTags)
         .then(response => {
           var temp = []
           for(var x in response.data.object){
@@ -358,6 +522,20 @@ export default {
         }).catch(error => {
           console.log(error)
         })
+    },
+    handleScroll(){
+      if(window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 1){
+        this.scrolled += 8
+      }
+    },
+    copyUrl(no){
+      var temp = document.createElement('textarea')
+      document.body.appendChild(temp)
+      temp.value = window.document.location.href + '/' + no
+      temp.select()
+      document.execCommand('copy')
+      document.body.removeChild(temp)
+      this.snackbar = true
     }
   }
 }

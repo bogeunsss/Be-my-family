@@ -41,7 +41,6 @@ import io.swagger.annotations.ApiResponses;
         @ApiResponse(code = 404, message = "Not Found", response = BasicResponse.class),
         @ApiResponse(code = 500, message = "Failure", response = BasicResponse.class) })
 
-@CrossOrigin(origins = { "http://i3b201.p.ssafy.io" })
 @RestController
 public class LostController {
 
@@ -85,9 +84,16 @@ public class LostController {
 
             for (MultipartFile file : lostPics.getLostPics()) {
                 final String originalfileName = file.getOriginalFilename();
+                // 로컬
                 final String filepath = "C:/Image/" + originalfileName;
                 final File dest = new File(filepath);
 
+                //서버
+                // final String filepath = "http:\\i3b201.p.ssafy.io\\file\lost\" + originalfileName;  
+                // final File dest = new File("http:\\i3b201.p.ssafy.io\\file\lost\" + file.getOriginalFilename());
+                // if (!dest.getParentFile().exists())
+                //     dest.getParentFile().mkdirs();
+                
                 // 존재하면 서버에 저장 안함
                 if (dest.exists() == false) {
                     file.transferTo(dest);
@@ -164,7 +170,7 @@ public class LostController {
         return response;
     }
 
-    @GetMapping("lost/list")
+    @GetMapping("/lost/list")
     @ApiOperation(value = "실종/보호/목격 전체 조회")
     public Object lostList() {
 
@@ -173,7 +179,7 @@ public class LostController {
 
         try {
 
-            List<Lost> lostList = lostDao.findAll();
+            List<Lost> lostList = lostDao.findAllByOrderByLostnoDesc();
             result.status = true;
             result.data = "success";
             result.object = lostList;
@@ -189,7 +195,7 @@ public class LostController {
         return response;
     }
 
-    @GetMapping("lost/detail")
+    @GetMapping("/lost/detail")
     @ApiOperation(value = "실종/보호/목격 상세 조회")
     public Object lostDetail(@RequestParam(required = true) int lostno) {
 
@@ -230,7 +236,7 @@ public class LostController {
         return response;
     }
 
-    @DeleteMapping("lost/delete")
+    @DeleteMapping("/lost/delete")
     @ApiOperation(value = "실종/목격/보호 글 삭제")
     public Object lostDelete(@RequestParam(required = true) final int lostno, @RequestParam(required = true) final String uid) {
 
@@ -267,7 +273,6 @@ public class LostController {
                     losttagDao.deleteByLostno(lostno);
                     lostDao.deleteByLostno(lostno);
                     result.data = "success";
-
                 } else {
                     result.data = "uid diff";
                 }
@@ -288,7 +293,7 @@ public class LostController {
 
     }
 
-    @GetMapping("lost/search")
+    @GetMapping("/lost/search")
     @ApiOperation(value = "실종/보호/목격 태그 검색")
     public Object lostSearch(@RequestParam(required = false) final List<String> tags) {
 
@@ -343,7 +348,7 @@ public class LostController {
         return response;
     }
 
-    @GetMapping("lost/match")
+    @GetMapping("/lost/match")
     @ApiOperation(value = "실종/보호/목격 매칭")
     public Object lostMatch(@RequestParam final int lostno) {
 

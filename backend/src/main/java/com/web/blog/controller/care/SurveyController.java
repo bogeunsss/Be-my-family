@@ -1,20 +1,19 @@
 package com.web.blog.controller.care;
 
-import java.util.List;
 import java.util.Optional;
 
 import com.web.blog.dao.care.SurveyDao;
+import com.web.blog.dao.user.UserDao;
 import com.web.blog.model.BasicResponse;
 import com.web.blog.model.care.Survey;
+import com.web.blog.model.user.User;
+import com.web.blog.service.Fit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,13 +27,17 @@ import io.swagger.annotations.ApiResponses;
         @ApiResponse(code = 404, message = "Not Found", response = BasicResponse.class),
         @ApiResponse(code = 500, message = "Failure", response = BasicResponse.class) })
 
-@CrossOrigin(origins = { "http://i3b201.p.ssafy.io" })
 @RestController
-
 public class SurveyController {
 
     @Autowired
     SurveyDao surveyDao;
+
+    @Autowired
+    Fit fit;
+
+    @Autowired
+    UserDao userDao;
 
     @PostMapping("/care/surveyAdd")
     @ApiOperation(value = "설문 조사 등록/수정")
@@ -48,9 +51,16 @@ public class SurveyController {
             String uid = request.getUid();
             survey.setUid(uid);
             surveyDao.save(survey);
+            
+            int flag = fit.proper(survey);
+            User user = userDao.getUserByUid(uid);
+            user.setFlag(flag);
+            userDao.save(user);
+
             result.status = true;
             result.data = "success";
             response = new ResponseEntity<>(result, HttpStatus.OK);
+            
         } catch (Exception e) {
             System.out.println(e.getMessage());
             result.data = "fail";
