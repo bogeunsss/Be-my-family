@@ -1,57 +1,66 @@
 <template>
-  <div class="header d-flex" style="position:fixed;padding:15px 50px;width:100%; box-shadow:2px 2px 3px rgba(0,0,0,0.3); background-color:#f2cc59;" v-if="isHeader">
+  <div class="header d-flex" style="padding:15px 50px;width:100%; box-shadow:2px 2px 3px rgba(0,0,0,0.3); background-color:#f2cc59;" v-if="isHeader">
       <v-btn class="mr-5" style="background-color:transparent;box-shadow: none;" @click.stop="drawer = !drawer">
         <i class="lg fas fa-bars" style="color:#4ba5cd;font-size:30px"></i>
       </v-btn>
       <v-navigation-drawer v-model="drawer" absolute temporary height="400" class="ml-4" style="background-color:#f2cc59; border-radius:15px;">
         <v-list-item class="pl-0">
-          <div class="ml-5" style="font-size:20px;">
-            <p class="mb-0" v-if="isLoggedIn && !isManager">{{ profileData.nickName }}</p>
-            <p class="mb-0" v-else-if="isLoggedIn && isManager ">{{ $cookies.get('auth-token').mid }}</p>
+          <div class="ml-5 d-flex flex-row" style="font-size:20px;">
+            <v-btn fab depressed small class="mr-3" v-if="isLoggedIn && !isManager" style="background-color: #4ba5cd">
+              <v-icon color="white">mdi-human-greeting</v-icon>
+            </v-btn>
+            <p class="mb-0 mt-1 font-weight-black" v-if="isLoggedIn && !isManager">{{ profileData.nickName }}</p>
+            <v-btn fab depressed small class="mr-3" v-if="isLoggedIn && isManager" style="background-color: #4ba5cd">
+              <v-icon color="white">mdi-dog-side</v-icon>
+            </v-btn>
+            <p class="mb-0 mt-2 font-weight-black" v-if="isLoggedIn && isManager" style="font-size:13pt;">{{ $cookies.get('auth-token').mid }}</p>
           </div>
 
 
           <!-- <v-list-item-content> -->
-          <v-dialog v-if="!isLoggedIn" v-model="$store.state.dialog" persistent max-width="600">
+          <v-dialog v-if="!isLoggedIn" v-model="dialog" persistent max-width="600" style="position: relative;">
             <template v-slot:activator="{ on, attrs }" v-if="!isLoggedIn">
-              <v-btn style="transform: translateX(120px) translateY(-50px);" dark v-bind="attrs" v-on="on" class="loginBtn">로그인</v-btn>
+              <v-btn style="position: absolute; top: 6px; left: 90px" dark v-bind="attrs" v-on="on" class="loginBtn">로그인</v-btn>
             </template>
             <!-- 수정 필요! 로그인 버튼 내려감 -->
-            <v-card style="height:50vh;">
+            <v-card style="height:54vh; background-color:#FFEF85;">
               <v-card-title>
-                <span class="headline">User Login</span>
+                <span class="headline">Login</span>
               </v-card-title>
               <v-card-text>
+                  <v-radio-group v-model="radios" :mandatory="false" row>
+                    <v-radio label="user" value="radio-1"></v-radio>
+                    <v-radio label="manager" value="radio-2"></v-radio>
+                  </v-radio-group>
                   <!-- <v-row>
                     <v-col cols="12"> -->
-                      <v-text-field v-if="radios === 'radio-1'" v-model="loginData.email" label="Email*" required></v-text-field>
-                      <v-text-field v-if="radios === 'radio-2'" v-model="loginData.mid" label="Center name*" required></v-text-field>
+                  <v-text-field v-if="radios === 'radio-1'" v-model="loginData.email" label="Email*" required class="pt-0"></v-text-field>
+                  <v-text-field v-if="radios === 'radio-2'" v-model="loginData.mid" label="Center name*" required class="pt-0"></v-text-field>
                     <!-- </v-col>
                     <v-col cols="12"> -->
-                      <v-text-field
-                        v-model="loginData.password"
-                        label="Password*"
-                        type="password"
-                        required
-                      ></v-text-field>
+                  <v-text-field
+                    v-model="loginData.password"
+                    label="Password*"
+                    type="password"
+                    required
+                  ></v-text-field>
                     <!-- </v-col>
                   </v-row> -->
                     <!-- <v-container fluid> -->
-                    <v-radio-group v-model="radios" :mandatory="false">
-                      <v-radio label="user" value="radio-1"></v-radio>
-                      <v-radio label="manager" value="radio-2"></v-radio>
-                    </v-radio-group>
+                    
                     <!-- </v-container> -->
-                <p >* 아직 회원이 아니신가요?</p>
-                <v-btn text v-bind:to="{name:constants.URL_TYPE.USER.JOIN}" color="primary">회원가입</v-btn>
-                <v-btn text color="primary" @click="PWDialog = true">pw찾기</v-btn>
+                <p>* 아직 회원이 아니신가요?</p>
+                <v-btn text color="primary" class="font-weight-black" @click="joinPage">회원가입</v-btn>
+                <v-btn text color="primary" class="font-weight-black" @click="PWDialog = true">pw찾기</v-btn>
                 
               </v-card-text>
-              <div class="d-flex float-right mr-3">
-                <v-btn color="blue darken-1" text @click="setDialog">Close</v-btn>
-                <v-btn color="blue darken-1" text @click="Login(radios)">Login</v-btn>
-
-              </div>
+              <v-divider></v-divider>
+              <v-card-actions class="d-flex justify-end mt-1">
+                <div class="mr-3">
+                  <v-btn color="blue darken-1" text @click="dialog=false">Close</v-btn>
+                  <v-btn color="blue darken-1" text @click="Login(radios)">Login</v-btn>
+                </div>
+              </v-card-actions>
             </v-card>
           <v-dialog v-model="PWDialog" max-width="300px">
               <v-card>
@@ -187,7 +196,7 @@ export default {
   },
   props: ["isHeader"],
   computed: {
-    ...mapState(["dialog", "loginData", "profileData", "isLoggedIn"]),
+    ...mapState(["loginData", "profileData", "isLoggedIn"]),
     email: {
       get() {
         return loginData.email;
@@ -228,7 +237,7 @@ export default {
   },
   methods: {
     ...mapActions(["login", "logout", "find", "isLoggedInChecker"]),
-    ...mapMutations(["setDialog"]),
+    // ...mapMutations(["dialog=false"]),
     Login(radios) {
       this.$store.state.loginData.isManager = radios
       var paramData = {
@@ -304,6 +313,10 @@ export default {
       }).catch(error => {
         console.log(error)
       })
+    },
+    joinPage(){
+      this.$router.push({name:constants.URL_TYPE.USER.JOIN})
+      
     }
   },
 
@@ -317,6 +330,7 @@ export default {
       PWEmail: '',
       PWNickName: '',
       nowLoading: false,
+      dialog: false,
     };
   },
 }

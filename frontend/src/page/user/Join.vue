@@ -16,7 +16,7 @@
       <v-stepper-items>
         <v-stepper-content step="1">
           <v-card
-            class="mb-12"
+            class="mb-5"
           >
             <v-container style="width:50%">
               <div>
@@ -24,7 +24,7 @@
                   1.Email:
                   <v-text-field v-model="signupData.email" id="email" placeholder="이메일을 입력해주세요" type="text"></v-text-field>
                   2.Name:
-                  <v-text-field v-model="signupData.name" id="name" placeholder="이메일을 입력해주세요" type="text"></v-text-field>
+                  <v-text-field v-model="signupData.name" id="name" placeholder="이름을 입력해주세요" type="text"></v-text-field>
                   
                   2.NickName:
                   <v-text-field
@@ -70,11 +70,9 @@
                   7.결혼 여부를 선택해 주세요.
                   <v-container fluid>
                     <!-- <p>{{ radios || 'null' }}</p> -->
-                    <v-radio-group v-model="signupData.marriaged" :mandatory="false">
-                      <div class="d-flex inline">
-                        <v-radio label="미혼" value="0"></v-radio>
-                        <v-radio label="기혼" value="1"></v-radio>
-                      </div>
+                    <v-radio-group v-model="signupData.marriaged" :mandatory="false" row>
+                      <v-radio label="미혼" value="0"></v-radio>
+                      <v-radio label="기혼" value="1"></v-radio>
                     </v-radio-group>
                   </v-container>
 
@@ -82,11 +80,9 @@
                   8.성별을 선택해 주세요.
                   <v-container fluid>
                     <!-- <p>{{ radios || 'null' }}</p> -->
-                    <v-radio-group v-model="signupData.sex" :mandatory="false">
-                      <div class="d-flex inline">
-                        <v-radio label="남" value="0"></v-radio>
-                        <v-radio label="여" value="1"></v-radio>
-                      </div>
+                    <v-radio-group v-model="signupData.sex" :mandatory="false" row>
+                      <v-radio label="남" value="0"></v-radio>
+                      <v-radio label="여" value="1"></v-radio>
                     </v-radio-group>
                   </v-container>
 
@@ -126,11 +122,23 @@
                   </v-row>
                 </form>
                 <label>
-                  <input type="checkbox" id="term" />
+                  <input type="checkbox" id="term" v-model="term"/>
                   <span>약관에 동의합니다</span>
                 </label>
-                <span class="go-term ml-5 pl-5">약관 보기</span>
+                <v-btn class="ml-5 mb-1" text @click="goTerm = true">약관 보기</v-btn>
               </div>
+              <v-dialog v-model="goTerm" width="500px">
+                <v-card height="600px">
+                  <v-card-title class="font-weight-black">약 관</v-card-title>
+                  <v-divider></v-divider>
+                  <v-card-text class="mt-4">
+                    <p>동물을 사랑하셔야 합니다.</p>
+                  </v-card-text>
+                  <v-card-actions style="position: absolute; bottom: 5px; right: 5px">
+                    <v-btn @click="goTerm = false" text class="font-weight-black" color="primary">확 인</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
             </v-container>
           </v-card>
 
@@ -161,12 +169,12 @@
               <div>
                 <v-card-subtitle>인증번호를 입력해 주세요</v-card-subtitle>
                 <v-row class="justify-center">
-                  <input type="text" class="mx-1 input-background-color" maxlength="1" v-model="confirmNo1">
-                  <input type="text" class="mx-1 input-background-color" maxlength="1" v-model="confirmNo2">
-                  <input type="text" class="mx-1 input-background-color" maxlength="1" v-model="confirmNo3">
-                  <input type="text" class="mx-1 input-background-color" maxlength="1" v-model="confirmNo4">
-                  <input type="text" class="mx-1 input-background-color" maxlength="1" v-model="confirmNo5">
-                  <input type="text" class="mx-1 input-background-color" maxlength="1" v-model="confirmNo6">
+                  <input id="num1" type="text" class="mx-1 input-background-color" maxlength="1" v-model="confirmNo1" autofocus>
+                  <input id="num2" type="text" class="mx-1 input-background-color" maxlength="1" v-model="confirmNo2">
+                  <input id="num3" type="text" class="mx-1 input-background-color" maxlength="1" v-model="confirmNo3">
+                  <input id="num4" type="text" class="mx-1 input-background-color" maxlength="1" v-model="confirmNo4">
+                  <input id="num5" type="text" class="mx-1 input-background-color" maxlength="1" v-model="confirmNo5">
+                  <input id="num6" type="text" class="mx-1 input-background-color" maxlength="1" v-model="confirmNo6">
                 </v-row>
               </div>
               <v-divider class="mt-4"></v-divider>
@@ -195,17 +203,17 @@
         </v-stepper-content>
 
         <v-stepper-content step="3">
-          <v-card class="mb-5">
+          <v-card class="mb-5" outlined height="400px">
             <h1 style="text-align: center;">가입이 완료 되었습니다.</h1>
             <h3 class="mt-3" style="text-align: center;">{{ signupData.nickName }}님 환영합니다.</h3>
+            <v-btn
+              color="primary"
+              style="position: absolute; bottom: 10px; left: 50%; transform: translate(-50%, 0);"
+              @click="goMain"
+            >
+              메인으로
+            </v-btn>
           </v-card>
-          <v-btn
-            color="primary"
-            class="mt-4"
-            @click="goMain"
-          >
-            메인으로
-          </v-btn>
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
@@ -310,64 +318,76 @@ export default {
       this.$router.push({name: constants.URL_TYPE.MAIN})
     },
     signup(){
-      this.nowLoading = true
-      console.log(this.nowLoading)
-      const info = {
-        data: this.signupData,
-        location: constants.URL_TYPE.USER.JOIN
-      }
-      console.log(info.data.nickName)
-      var reg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      var passwordReg = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
-      if(!info.data.nickName){
-        alert('닉네임을 입력하세요')
-      }else if(!info.data.email){
-          alert('이메일을 입력하세요')
-      }
-      else if(!reg.test(info.data.email)){
-          alert('이메일 형식을 확인하세요')
-      }
-      else if(!info.data.password){
-          alert('비밀번호를 입력하세요')
-      }else if(!info.data.passwordConfirm){
-          alert('비밀번호 확인을 입력하세요')
-      }else if(info.data.password !== info.data.passwordConfirm){
-          alert('비밀번호가 일치하지 않습니다')
-      }else if(false === passwordReg.test(info.data.password)) {
-          alert('비밀번호는 8자 이상이어야 하며, 숫자/대문자/소문자/특수문자를 모두 포함해야 합니다.');
-      }else if(/(\w)\1\1\1/.test(info.data.password)){
-          alert('같은 문자를 4번 이상 사용하실 수 없습니다.');
-      }else if(info.data.password.search(info.data.email) > -1){
-          alert("비밀번호에 아이디가 포함되었습니다.");
-      }else if(info.data.password.search(/\s/) != -1){
-          alert("비밀번호는 공백 없이 입력해주세요.");
+      if(!this.term){
+        alert('약관에 동의해주세요.')
       }else{
-        axios.post(constants.SERVER_URL + '/account/signup', {
-          email: info.data.email,
-          name: info.data.name,
-          password: info.data.password,
-          uid: info.data.nickName,
-          phone: info.data.phone,
-          job: info.data.job,
-          marriaged: info.data.marriaged,
-          sex: info.data.sex,
-          birthdate: info.data.birthdate
-        })
-        .then(res=>{
-          console.log(res)
-          if(res.data.data === 'emailexist'){
-              alert('이미 있는 이메일입니다.')
-          }else if(res.data.data === 'nicknameexist'){
-              alert('이미 있는 닉네임입니다.')
-          }else if(res.data.data === 'emailfail'){
-              alert('이메일 전송 실패')
-          }else{
-            this.confirmData = res.data.data
-            this.e1 = 2
-          }
+
+        this.nowLoading = true
+        const info = {
+          data: this.signupData,
+          location: constants.URL_TYPE.USER.JOIN
+        }
+        var reg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        var passwordReg = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+        if(!info.data.nickName){
+          alert('닉네임을 입력하세요')
           this.nowLoading = false
-        })
-        .catch(err=>console.log(err))
+        }else if(!info.data.email){
+          alert('이메일을 입력하세요')
+          this.nowLoading = false
+        }else if(!reg.test(info.data.email)){
+          alert('이메일 형식을 확인하세요')
+          this.nowLoading = false
+        }else if(!info.data.password){
+          alert('비밀번호를 입력하세요')
+          this.nowLoading = false
+        }else if(!info.data.passwordConfirm){
+          alert('비밀번호 확인을 입력하세요')
+          this.nowLoading = false
+        }else if(info.data.password !== info.data.passwordConfirm){
+          alert('비밀번호가 일치하지 않습니다')
+          this.nowLoading = false
+        }else if(false === passwordReg.test(info.data.password)) {
+          alert('비밀번호는 8자 이상이어야 하며, 숫자/대문자/소문자/특수문자를 모두 포함해야 합니다.');
+          this.nowLoading = false
+        }else if(/(\w)\1\1\1/.test(info.data.password)){
+          alert('같은 문자를 4번 이상 사용하실 수 없습니다.');
+          this.nowLoading = false
+        }else if(info.data.password.search(info.data.email) > -1){
+          alert("비밀번호에 아이디가 포함되었습니다.");
+          this.nowLoading = false
+        }else if(info.data.password.search(/\s/) != -1){
+          alert("비밀번호는 공백 없이 입력해주세요.");
+          this.nowLoading = false
+        }else{
+          axios.post(constants.SERVER_URL + '/account/signup', {
+            email: info.data.email,
+            name: info.data.name,
+            password: info.data.password,
+            uid: info.data.nickName,
+            phone: info.data.phone,
+            job: info.data.job,
+            marriaged: info.data.marriaged,
+            sex: info.data.sex,
+            birthdate: info.data.birthdate
+          })
+          .then(res=>{
+            console.log(res)
+            if(res.data.data === 'emailexist'){
+                alert('이미 있는 이메일입니다.')
+            }else if(res.data.data === 'nicknameexist'){
+                alert('이미 있는 닉네임입니다.')
+            }else if(res.data.data === 'emailfail'){
+                alert('이메일 전송 실패')
+            }else{
+              if(this.e1 === 1)
+              this.confirmData = res.data.data
+              this.e1 = 2
+            }
+            this.nowLoading = false
+          })
+          .catch(err=>console.log(err))
+        }
       }
     },
     confirmJoin(){
@@ -376,7 +396,6 @@ export default {
         location: constants.URL_TYPE.USER.JOIN
       }
       var confirmNumber = this.confirmNo1 + this.confirmNo2 + this.confirmNo3 + this.confirmNo4 + this.confirmNo5 + this.confirmNo6
-      console.log(this.confirmData)
       if(confirmNumber === this.confirmData){
         axios.post(constants.SERVER_URL + '/account/emailkey', {
           email: info.data.email,
@@ -401,7 +420,33 @@ export default {
       }
     },
   },
-  watch: {},
+  watch: {
+    confirmNo1(newVal, oldVal){
+      if(newVal.length > 0){
+        document.getElementById('num2').focus()
+      }
+    },
+    confirmNo2(newVal, oldVal){
+      if(newVal.length > 0){
+        document.getElementById('num3').focus()
+      }
+    },
+    confirmNo3(newVal, oldVal){
+      if(newVal.length > 0){
+        document.getElementById('num4').focus()
+      }
+    },
+    confirmNo4(newVal, oldVal){
+      if(newVal.length > 0){
+        document.getElementById('num5').focus()
+      }
+    },
+    confirmNo5(newVal, oldVal){
+      if(newVal.length > 0){
+        document.getElementById('num6').focus()
+      }
+    },
+  },
   data: () => {
     return {
       constants,
@@ -419,6 +464,8 @@ export default {
       confirmNo5: '',
       confirmNo6: '',
       confirmData: '',
+      term: false,
+      goTerm: false,
     };
   },
 };
