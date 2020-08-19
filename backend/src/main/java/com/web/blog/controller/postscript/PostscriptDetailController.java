@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import com.web.blog.dao.postscript.CommentDao;
+import com.web.blog.dao.postscript.PostpicDao;
 import com.web.blog.dao.postscript.PostscriptDao;
 import com.web.blog.dao.postscript.PostscriptgoodDao;
 import com.web.blog.dao.postscript.PostscriptSearchDao;
@@ -13,6 +14,7 @@ import com.web.blog.dao.user.UserDao;
 import com.web.blog.model.BasicResponse;
 import com.web.blog.model.PostscriptResponse;
 import com.web.blog.model.postscript.Comment;
+import com.web.blog.model.postscript.Postpic;
 import com.web.blog.model.postscript.Postscript;
 import com.web.blog.model.postscript.Postscriptgood;
 import com.web.blog.model.postscript.PostscriptRequest;
@@ -54,6 +56,9 @@ public class PostscriptDetailController {
     @Autowired
     CommentDao commentDao;
 
+    @Autowired
+    PostpicDao postpicDao;
+
     @GetMapping("/postscript/detail")
     @ApiOperation(value = "입양후기 상세페이지")
     public Object postscriptDetail(@RequestParam(required = true) final Integer postscriptno,
@@ -88,6 +93,13 @@ public class PostscriptDetailController {
                     result.comments = comment;
                 } else {
                     result.data = "comment is empty";
+                }
+                
+                List<Postpic> postpics = postpicDao.findByPostscriptno(postscriptno);
+                if(!postpics.isEmpty()) {
+                    result.postpic = postpics;
+                } else {
+                    result.postpic = null;
                 }
 
                 response = new ResponseEntity<>(result, HttpStatus.OK);
