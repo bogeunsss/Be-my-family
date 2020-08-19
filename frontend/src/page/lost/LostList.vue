@@ -73,9 +73,9 @@
               height="300"
             >
               <v-carousel-item  @click="goDetail(card.lostno)"
-                v-for="item in [card.lostpic1]"
+                v-for="(item, j) in [card.lostpic1]"
                 :src="item"
-                :key="item"
+                :key="i+'key'+j"
                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
               >
                 <v-row
@@ -115,9 +115,9 @@
               height="300"
             >
               <v-carousel-item  @click="goDetail(card.lostno)"
-                v-for="item in [card.lostpic1, card.lostpic2]"
+                v-for="(item, j) in [card.lostpic1, card.lostpic2]"
                 :src="item"
-                :key="item"
+                :key="i+'key'+j"
                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
               >
                 <v-row
@@ -157,9 +157,9 @@
               height="300"
             >
               <v-carousel-item  @click="goDetail(card.lostno)"
-                v-for="item in [card.lostpic1, card.lostpic2, card.lostpic3]"
+                v-for="(item, j) in [card.lostpic1, card.lostpic2, card.lostpic3]"
                 :src="item"
-                :key="item"
+                :key="i+'key'+j"
                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
               >
                 <v-row
@@ -470,7 +470,9 @@ export default {
           'Content-Type': 'multipart/form-data'
         }
       }).then(response => {
-        console.log(response)
+        if(response.data.data === 'success'){
+          this.$router.go()
+        }
       }).catch(error => {
         console.log(error)
       })
