@@ -57,7 +57,7 @@
           </v-card> -->
 
 
-          <v-card elevation="24" max-width="444" class="mx-auto"  v-if="card.lostpic2==null">
+          <v-card elevation="24" max-width="444" class="mx-auto"  v-if="card.lostpic2===null">
             <v-system-bar class="d-flex" lights-out style="height:40px;width:100%;">
               <v-chip :color="myColors[card.losttype]" text-color="white">{{ card.losttype }}</v-chip>
               <v-btn icon class="ml-auto">
@@ -74,7 +74,7 @@
             >
               <v-carousel-item  @click="goDetail(card.lostno)"
                 v-for="item in [card.lostpic1]"
-                :src="item"
+                :src="require(item)"
                 :key="item"
                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
               >
@@ -99,7 +99,7 @@
             </v-list>
           </v-card>
 
-          <v-card elevation="24" max-width="444" class="mx-auto"  v-if="card.lostpic3==null  && card.lostpic2!=null">
+          <v-card elevation="24" max-width="444" class="mx-auto"  v-if="card.lostpic3===null  && card.lostpic2!==null">
             <v-system-bar class="d-flex" lights-out style="height:40px;width:100%;">
               <v-chip :color="myColors[card.losttype]" text-color="white">{{ card.losttype }}</v-chip>
               <v-btn icon class="ml-auto">
@@ -116,7 +116,7 @@
             >
               <v-carousel-item  @click="goDetail(card.lostno)"
                 v-for="item in [card.lostpic1, card.lostpic2]"
-                :src="item"
+                :src="require(item)"
                 :key="item"
                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
               >
@@ -141,7 +141,7 @@
             </v-list>
           </v-card>
 
-          <v-card elevation="24" max-width="444" class="mx-auto" v-if="card.lostpic3!=null">
+          <v-card elevation="24" max-width="444" class="mx-auto" v-if="card.lostpic3!==null">
             <v-system-bar class="d-flex" lights-out style="height:40px;width:100%;">
               <v-chip :color="myColors[card.losttype]" text-color="white">{{ card.losttype }}</v-chip>
               <v-btn icon class="ml-auto">
@@ -158,7 +158,7 @@
             >
               <v-carousel-item  @click="goDetail(card.lostno)"
                 v-for="item in [card.lostpic1, card.lostpic2, card.lostpic3]"
-                :src="item"
+                :src="require(item)"
                 :key="item"
                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
               >
