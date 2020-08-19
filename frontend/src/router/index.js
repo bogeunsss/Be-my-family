@@ -63,7 +63,7 @@ export default new Router({
       name: constants.URL_TYPE.USER.UPDATE,
       component: Update,
       beforeEnter(to, from, next){
-        if($cookies.isKey('auth-token').uid || $cookies.isKey('auth-token').mid){
+        if($cookies.get('auth-token').uid !== undefined || $cookies.get('auth-token').mid !== undefined){
           next()
         }else{
           alert('로그인이 필요합니다.')

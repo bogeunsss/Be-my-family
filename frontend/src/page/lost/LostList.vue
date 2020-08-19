@@ -73,9 +73,9 @@
               height="300"
             >
               <v-carousel-item  @click="goDetail(card.lostno)"
-                v-for="item in [card.lostpic1]"
-                :src="require(item)"
-                :key="item"
+                v-for="(item, j) in [card.lostpic1]"
+                :src="'http://i3b201.p.ssafy.io/file/'+item"
+                :key="i+'key'+j"
                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
               >
                 <v-row
@@ -115,9 +115,9 @@
               height="300"
             >
               <v-carousel-item  @click="goDetail(card.lostno)"
-                v-for="item in [card.lostpic1, card.lostpic2]"
-                :src="require(item)"
-                :key="item"
+                v-for="(item, j) in [card.lostpic1, card.lostpic2]"
+                :src="'http://i3b201.p.ssafy.io/file/'+item"
+                :key="i+'key'+j"
                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
               >
                 <v-row
@@ -157,9 +157,9 @@
               height="300"
             >
               <v-carousel-item  @click="goDetail(card.lostno)"
-                v-for="item in [card.lostpic1, card.lostpic2, card.lostpic3]"
-                :src="require(item)"
-                :key="item"
+                v-for="(item, j) in [card.lostpic1, card.lostpic2, card.lostpic3]"
+                :src="'http://i3b201.p.ssafy.io/file/'+item"
+                :key="i+'key'+j"
                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
               >
                 <v-row
@@ -193,7 +193,7 @@
       </v-row>
     </v-container>
 
-  <v-dialog v-model="dialog" scrollable max-width="700px">
+  <v-dialog v-if="!isManager" v-model="dialog" scrollable max-width="700px">
     <template v-slot:activator="{ on, attrs }">
       <v-btn
         color="#4ba5cd"
@@ -355,6 +355,11 @@ import { mapState } from 'vuex'
 
 export default {
   created(){
+    if(this.$cookies.isKey('auth-token')){
+      if(this.$cookies.get('auth-token').mid !== undefined){
+        this.isManager = true
+      }
+    }
     window.addEventListener("scroll", this.handleScroll);
     this.getList()
   },
@@ -411,7 +416,7 @@ export default {
       scrolled: 12,
       snackbar: false,
       url: '',
-      lostPics: [],
+      isManager: false,
     }
   },
   methods: {
