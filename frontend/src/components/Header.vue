@@ -1,9 +1,9 @@
 <template>
-  <div class="header d-flex" style="padding:15px 50px;width:100%; box-shadow:2px 2px 3px rgba(0,0,0,0.3); background-color:#f2cc59;" v-if="isHeader">
+  <div class="header d-flex" style="position:fixed; padding:15px 50px;width:100%; box-shadow:2px 2px 3px rgba(0,0,0,0.3); background-color:#f2cc59;" v-if="isHeader">
       <v-btn class="mr-5" style="background-color:transparent;box-shadow: none;" @click.stop="drawer = !drawer">
         <i class="lg fas fa-bars" style="color:#4ba5cd;font-size:30px"></i>
       </v-btn>
-      <v-navigation-drawer v-model="drawer" absolute temporary height="400" class="ml-4" style="background-color:#f2cc59; border-radius:15px;">
+      <v-navigation-drawer v-model="drawer" absolute temporary height="400" class="ml-4" style="background-color:#f2cc59; border-radius:10px;">
         <v-list-item class="pl-0">
           <div class="ml-5 d-flex flex-row" style="font-size:20px;">
             <v-btn fab depressed small class="mr-3" v-if="isLoggedIn && !isManager" style="background-color: #4ba5cd">

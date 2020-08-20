@@ -17,9 +17,9 @@
             <v-icon>mdi-magnify</v-icon>
           </v-btn>
           </v-col>
-          <v-col class="d-flex flex-row">
-            <v-list v-for="(searchTag, index) in searchTags" :key="index">
-              <v-chip close color="pink" text-color="white" @click:close="closeSearchTag(index)">{{ searchTag }}</v-chip>
+          <v-col class="d-flex flex-row pt-0">
+            <v-list class="pt-0" v-for="(searchTag, index) in searchTags" :key="index">
+              <v-chip close color="#4ba5cd" text-color="white" @click:close="closeSearchTag(index)">#{{ searchTag }}</v-chip>
             </v-list>
           </v-col>
         </v-row>
@@ -57,12 +57,12 @@
           </v-card> -->
 
 
-          <v-card elevation="24" max-width="444" class="mx-auto"  v-if="card.lostpic2==null">
+          <v-card elevation="2" max-width="400" class="mx-3 mb-3"  v-if="card.lostpic2==null">
             <v-system-bar class="d-flex" lights-out style="height:40px;width:100%;">
-              <v-chip :color="myColors[card.losttype]" text-color="white">{{ card.losttype }}</v-chip>
-              <v-btn icon class="ml-auto">
-                <v-icon @click="copyUrl(card.lostno)">mdi-share-variant</v-icon>
-              </v-btn>
+              <v-chip style="font-size:0.8rem;font-weight:bold;" :color="myColors[card.losttype]" text-color="white">{{ card.losttype }}</v-chip>
+              <small class="ml-auto" style="font-size:1rem; color:black;">
+                    {{card.lostsido}}
+                    </small>
             </v-system-bar>
             <v-carousel
               :continuous="true"
@@ -70,7 +70,7 @@
               :show-arrows="false"
               hide-delimiter-background
               delimiter-icon="mdi-minus"
-              height="300"
+              height="250"
             >
               <v-carousel-item  @click="goDetail(card.lostno)"
                 v-for="(item, j) in [card.lostpic1]"
@@ -78,6 +78,7 @@
                 :key="i+'key'+j"
                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
               >
+              <!-- gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)" -->
                 <v-row
                   class="fill-height"
                   align="center"
@@ -90,21 +91,31 @@
               <v-list-item>
                 <v-list-item-content>
                   <v-list-item-title>
+                    <div class="d-flex">
+                      <div>
                     <small style="font-size:1rem;color:black;">
-                    {{card.lostsido}}
+                    견종 : {{card.lostbreed}}
+                    </small><br>
+                    <small style="font-size:1rem;color:black;">
+                    날짜 : {{card.lostdate}}
                     </small>
+                      </div>
+                    <v-btn icon class="ml-auto">
+                <v-icon @click="copyUrl(card.lostno)">mdi-share-variant</v-icon>
+              </v-btn>
+                    </div>
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </v-list>
           </v-card>
 
-          <v-card elevation="24" max-width="444" class="mx-auto"  v-if="card.lostpic3==null  && card.lostpic2!=null">
+          <v-card elevation="2" max-width="400" class="mx-3 mb-3"  v-if="card.lostpic3==null  && card.lostpic2!=null">
             <v-system-bar class="d-flex" lights-out style="height:40px;width:100%;">
-              <v-chip :color="myColors[card.losttype]" text-color="white">{{ card.losttype }}</v-chip>
-              <v-btn icon class="ml-auto">
-                <v-icon @click="copyUrl(card.lostno)">mdi-share-variant</v-icon>
-              </v-btn>
+              <v-chip style="font-size:0.8rem;font-weight:bold;" :color="myColors[card.losttype]" text-color="white">{{ card.losttype }}</v-chip>
+              <small class="ml-auto" style="font-size:1rem; color:black;">
+                    {{card.lostsido}}
+                    </small>
             </v-system-bar>
             <v-carousel
               :continuous="true"
@@ -112,7 +123,7 @@
               :show-arrows="false"
               hide-delimiter-background
               delimiter-icon="mdi-minus"
-              height="300"
+              height="250"
             >
               <v-carousel-item  @click="goDetail(card.lostno)"
                 v-for="(item, j) in [card.lostpic1, card.lostpic2]"
@@ -120,6 +131,7 @@
                 :key="i+'key'+j"
                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
               >
+              <!-- gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)" -->
                 <v-row
                   class="fill-height"
                   align="center"
@@ -132,21 +144,32 @@
               <v-list-item>
                 <v-list-item-content>
                   <v-list-item-title>
+                    <div class="d-flex">
+                      <div>
                     <small style="font-size:1rem;color:black;">
-                    {{card.lostsido}}
+                    견종 : {{card.lostbreed}}
+                    </small><br>
+                    <small style="font-size:1rem;color:black;">
+                    날짜 : {{card.lostdate}}
                     </small>
+                      </div>
+                    <v-btn icon class="ml-auto">
+                <v-icon @click="copyUrl(card.lostno)">mdi-share-variant</v-icon>
+              </v-btn>
+                    </div>
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </v-list>
           </v-card>
 
-          <v-card elevation="24" max-width="444" class="mx-auto" v-if="card.lostpic3!=null">
+
+          <v-card elevation="2" max-width="400" class="mx-3 mb-3"  v-if="card.lostpic3!=null">
             <v-system-bar class="d-flex" lights-out style="height:40px;width:100%;">
-              <v-chip :color="myColors[card.losttype]" text-color="white">{{ card.losttype }}</v-chip>
-              <v-btn icon class="ml-auto">
-                <v-icon @click="copyUrl(card.lostno)">mdi-share-variant</v-icon>
-              </v-btn>
+              <v-chip style="font-size:0.8rem;font-weight:bold;" :color="myColors[card.losttype]" text-color="white">{{ card.losttype }}</v-chip>
+              <small class="ml-auto" style="font-size:1rem; color:black;">
+                    {{card.lostsido}}
+                    </small>
             </v-system-bar>
             <v-carousel
               :continuous="true"
@@ -154,7 +177,7 @@
               :show-arrows="false"
               hide-delimiter-background
               delimiter-icon="mdi-minus"
-              height="300"
+              height="250"
             >
               <v-carousel-item  @click="goDetail(card.lostno)"
                 v-for="(item, j) in [card.lostpic1, card.lostpic2, card.lostpic3]"
@@ -162,6 +185,7 @@
                 :key="i+'key'+j"
                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
               >
+              <!-- gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)" -->
                 <v-row
                   class="fill-height"
                   align="center"
@@ -174,14 +198,28 @@
               <v-list-item>
                 <v-list-item-content>
                   <v-list-item-title>
+                    <div class="d-flex">
+                      <div>
                     <small style="font-size:1rem;color:black;">
-                    {{card.lostsido}}
+                    견종 : {{card.lostbreed}}
+                    </small><br>
+                    <small style="font-size:1rem;color:black;">
+                    날짜 : {{card.lostdate}}
                     </small>
+                      </div>
+                    <v-btn icon class="ml-auto">
+                <v-icon @click="copyUrl(card.lostno)">mdi-share-variant</v-icon>
+              </v-btn>
+                    </div>
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </v-list>
           </v-card>
+
+
+
+          
 
 
 
@@ -224,7 +262,7 @@
               <v-radio :label=gd :value=gd></v-radio>
             </v-radio-group>
           </v-list-item>
-          <v-list-item-subtitle>품종</v-list-item-subtitle>
+          <v-list-item-subtitle>견종</v-list-item-subtitle>
           <v-list-item class="mt-3">
             <v-select
               v-model="lostBreed"

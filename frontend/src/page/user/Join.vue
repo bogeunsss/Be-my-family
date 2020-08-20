@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div style="margin-top:4rem;">
     <v-stepper v-model="e1">
-      <v-stepper-header>
+      <v-stepper-header style="background-color:white; position:fixed; width:100%; z-index:1">
         <v-stepper-step :complete="e1 > 1" step="1">정보 입력</v-stepper-step>
 
         <v-divider></v-divider>
@@ -16,7 +16,7 @@
       <v-stepper-items>
         <v-stepper-content step="1">
           <v-card
-            class="mb-5"
+            class="my-15" 
           >
             <v-container style="width:50%">
               <div>

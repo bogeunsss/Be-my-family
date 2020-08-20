@@ -79,7 +79,7 @@
                       ></i>
                     </template>
                     <v-card>
-                      <v-card-title>글 작성하기</v-card-title>
+                      <v-card-title>글 수정하기</v-card-title>
                       <v-divider></v-divider>
                       <v-card-text style="height: 500px;">
                         <v-list>
@@ -610,6 +610,20 @@ export default {
 </script>
 
 <style>
+.detailcol1 {
+  padding-right: 0;
+}
+.detailcol2 {
+  padding-left: 0;
+}
+@media (max-width: 760px) {
+  .detailcol1 {
+    padding-right: 12px;
+  }
+  .detailcol2 {
+    padding-left: 12px;
+  }
+}
 .float-window {
     position: fixed;
     bottom: 40vw;
