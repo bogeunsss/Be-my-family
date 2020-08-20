@@ -216,7 +216,7 @@ export default new Vuex.Store({
         else {
         axios.post(SERVER.SERVER_URL +'/account/login ', formData)
           .then(response => {
-            if(response.status == 200){
+            if(response.data == 'success'){
                 state.dialog = true
                 console.log(response)
                 swal({
@@ -235,6 +235,12 @@ export default new Vuex.Store({
                 })
                 state.authToken = cookies.get('auth-token')
                 // router.go()
+              }else{
+                swal({
+                  title:"로그인 실패",
+                  icon: "error",
+                  button:"OK"
+                });
               }
             })
             .catch((error)=>{
