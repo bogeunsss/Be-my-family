@@ -216,7 +216,7 @@ export default new Vuex.Store({
         else {
         axios.post(SERVER.SERVER_URL +'/account/login ', formData)
           .then(response => {
-            if(response.data == 'success'){
+            if(response.data.data === 'success'){
                 state.dialog = true
                 console.log(response)
                 swal({
