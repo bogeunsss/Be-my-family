@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-      <h1 class="mb-3 pb-3">Manager</h1>
+      <h1 class="mb-3 pb-3"  style="color: #4ba5cd;">Manager</h1>
       <h2>입양신청 목록</h2>
         <v-row>
           <v-col
@@ -12,12 +12,13 @@
             
           >
             <v-card style="width:350px" @click="goAdoptionDetail(adoption.desertionno)">
-              <div class="d-flex inline">
+              <div class="d-flex justify-between">
               <v-card-title class="subheading font-weight-bold">i dont know what to do</v-card-title>
-
-              <v-chip label class='d-flex flex-column' color="pink" text-color="white" large>
+              <div class="ml-auto mr-2 my-auto">
+              <span label class='d-flex flex-column' style="color:red; font-weight:bold; ">
                 승인<br>{{ approveState[adoption.state] }}
-              </v-chip>
+              </span>
+              </div>
               </div>
               <v-divider></v-divider>
 

@@ -1,7 +1,7 @@
 <template>
-    <v-container fluid id="scollDetect" >
+    <v-container fluid id="scollDetect" style="padding:0;" >
         <v-row>
-        <v-col cols="12">
+        <v-col cols="12" style="padding:0;">
         <div class="back-img">
        
 
@@ -46,6 +46,7 @@
        </div>
         </v-col>
         </v-row>
+
    
 
     <div class="bmg2">
@@ -56,37 +57,41 @@
             <v-col cols="12">
                 <v-row>
                     <v-col cols="12" v-for="(dogs, j) in dogData" :key="'dog'+j">
+
+
                         <v-row>
-                            <v-col col="6" md="3" v-for="(dog, i) in dogs" :key="i">
-                                <v-card @click="goDetail(j,i)" width="300px" height="400px" style="position: relative">
-                                <div>
+                            <v-col  col="6" md="3" v-for="(dog, i) in dogs" :key="i">
+
+                                <div class="polaroid">
+                                <v-card  @click="goDetail(j,i)" width="300px" height="400px" style="position: relative">
                                     <v-chip class="recommend-list" v-if="dog.recommend" color="red" text-color="white">추천</v-chip>
                                     <v-img
-                                        class="white--text align-end"
+                                        class="white--text align-end visi"
                                         height="200px"
                                         :src="dog.popfile"
                                     >
-                                    <v-card-title>{{ dog.carenm }}</v-card-title>
+                                    <v-card-title class="hide">{{ dog.carenm }}</v-card-title>
                                     </v-img>
 
                                     <v-card-subtitle class="pb-0">견종: {{ dog.kindcd }}</v-card-subtitle>
 
-                                    <v-card-text class="text--primary">
+                                    <v-card-text class="text--primary" style="height:7rem;">
 
-                                    <div>구조 장소: {{ dog.careaddr }}</div>
+                                    <div>구조 장소: {{  dog.happenplace }}</div>
                                     <br>
-                                    <div>특징: {{ dog.specialmark}}</div>
+                                    <div>특징: {{ elipsis(dog.specialmark) }}</div>
                                     </v-card-text>
 
                                     <v-card-actions class="d-flex justify-end" >
                                     <v-btn style="font-weight: bold;"
                                         color="orange"
-                                        text >
+                                        text>
                                         더 보기
                                     </v-btn>
                                     </v-card-actions>
-                                </div>
                                 </v-card>
+                                </div>
+
                             </v-col>
                         </v-row>
                     </v-col>
@@ -199,6 +204,15 @@ export default {
         moveTop() {
             window.scrollTo(0, 0);
         },
+        elipsis (temp) {
+            var length = 25;
+            if (temp.length > length) {
+                temp = temp.substr (0, length-2) + '...';
+                return temp
+            }else{
+                return temp
+            }
+        },
     },
     data: () => {
         return {   
@@ -232,17 +246,18 @@ export default {
     position: relative;
     top: 200px;
 }
-.bmg2{
-    background: url('../../assets/bmg111.png') no-repeat;
-    width: 100%;
-    background-repeat : no-repeat;
-    background-size : cover;
-    background-position: left top;
+
+div.polaroid{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+   
 }
 
-.polaroid{
-    box-shadow:0 4px 10px 0 rgba(0, 0, 0, 0.3), 0 6px 25px 0 rgba(0, 0, 0, 0.19);
-   
+.visi .hide{
+    visibility: hidden;
+}
+
+.visi :hover .hide{
+    visibility: visible;
 }
 
 

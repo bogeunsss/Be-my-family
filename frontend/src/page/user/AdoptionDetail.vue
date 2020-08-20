@@ -14,34 +14,32 @@
           <div class="mr-auto">
             <!-- <v-text-field filled label="Title" value="My new post"></v-text-field> -->
             <v-row>
-              <v-col col="12" class="font-weight-black">구조일</v-col>
-              {{ dogData.noticesdt }}
+              <v-col col="12"><span  class="font-weight-black">구조일 : </span>{{ dogData.noticesdt }}</v-col>   
             </v-row>
             <v-row>
-              <v-col col="12" class="font-weight-black">구조장소</v-col>
-              {{ dogData.happenplace }}
+              <v-col col="12"> <span class="font-weight-black">구조장소 : </span>{{ dogData.happenplace }}</v-col>        
             </v-row>
             <v-row>
-              <v-col col="6" class="font-weight-black">견종</v-col>
-              {{ dogData.kindcd }}
-              <v-col col="6" class="font-weight-black">성별</v-col>
-              {{ dogData.sexcd}}
+              <v-col col="6"> <span class="font-weight-black">견종 : </span> {{ dogData.kindcd }}</v-col>
+              
+              <v-col col="6"> <span class="font-weight-black">성별 : </span>{{ dogData.sexcd}}</v-col>
+              
             </v-row>
             <v-row>
-              <v-col col="6" class="font-weight-black">연령</v-col>
-              {{ dogData.age }}
-              <v-col col="6" class="font-weight-black">모색</v-col>
-              {{ dogData.colorcd }}
+              <v-col col="6"> <span class="font-weight-black">연령 : </span>{{ dogData.age }}</v-col>
+              
+              <v-col col="6"> <span class="font-weight-black">모색 : </span>{{ dogData.colorcd }}</v-col>
+              
             </v-row>
             <v-row>
-              <v-col col="6" class="font-weight-black">중성화 여부</v-col>
-              {{ dogData.neuteryn }}
-              <v-col col="6" class="font-weight-black">체중</v-col>
-              {{ dogData.weight }}
+              <v-col col="6"> <span class="font-weight-black">중성화 여부 : </span>{{ dogData.neuteryn }}</v-col>
+              
+              <v-col col="6"> <span class="font-weight-black">체중 : </span> {{ dogData.weight }}</v-col>
+             
             </v-row>
             <v-row>
-              <v-col col="12" class="font-weight-black">특징</v-col>
-              {{ dogData.specialmark }}
+              <v-col col="12"> <span class="font-weight-black">특징 : </span>{{ dogData.specialmark }}</v-col>
+              
             </v-row>
           </div>
           <v-divider class="my-2"></v-divider>
@@ -53,7 +51,7 @@
       <v-list-item two-line>
         <v-list-item-content>
           <v-list-item-title class="headline">입양희망자 상세정보</v-list-item-title>
-          <v-list-item-subtitle>보호소 No : {{adoption.mid}}</v-list-item-subtitle>
+          <v-list-item-subtitle ><span style="color: #4ba5cd;" >보호소 No : </span>{{adoption.mid}}</v-list-item-subtitle>
 
         </v-list-item-content>
       </v-list-item>
@@ -62,12 +60,10 @@
         <v-list-item>
           <v-row>
             <v-col>
-              <v-list-item-title>Name :</v-list-item-title>
-              <v-list-item-subtitle class="text-right">{{ adoption.name}}</v-list-item-subtitle>
+              <v-list-item-title><span class="font-weight-black">Name : </span>{{ adoption.name}}</v-list-item-title>
             </v-col>
             <v-col>
-              <v-list-item-title>Email :</v-list-item-title>
-              <v-list-item-subtitle class="text-right">{{ adoption.email}}</v-list-item-subtitle>
+              <v-list-item-title><span class="font-weight-black">Email :</span> {{ adoption.email}}</v-list-item-title>
             </v-col>
           </v-row>
         </v-list-item>
@@ -75,12 +71,10 @@
         <v-list-item>
           <v-row>
             <v-col>
-              <v-list-item-title>Phone :</v-list-item-title>
-              <v-list-item-subtitle class="text-right">{{ adoption.phone}}</v-list-item-subtitle>
+              <v-list-item-title><span class="font-weight-black">Phone :</span> {{ adoption.phone}}</v-list-item-title>
             </v-col>
             <v-col>
-              <v-list-item-title>Nation :</v-list-item-title>
-              <v-list-item-subtitle class="text-right">{{ adoption.nation}}</v-list-item-subtitle>
+              <v-list-item-title> <span class="font-weight-black"> Nation : </span> :{{ adoption.nation}}</v-list-item-title>
             </v-col>
           </v-row>
         </v-list-item>
@@ -88,12 +82,10 @@
         <v-list-item>
           <v-row>
             <v-col>
-              <v-list-item-title>Marriaged :</v-list-item-title>
-              <v-list-item-subtitle class="text-right">{{ adoption.marriaged}}</v-list-item-subtitle>
+              <v-list-item-title><span class="font-weight-black">Marriaged : </span>{{ adoption.marriaged}} </v-list-item-title>
             </v-col>
             <v-col>
-              <v-list-item-title>sex :</v-list-item-title>
-              <v-list-item-subtitle class="text-right">{{ adoption.sex}}</v-list-item-subtitle>
+              <v-list-item-title><span class="font-weight-black">sex : </span>{{ adoption.sex}}</v-list-item-title>
             </v-col>
           </v-row>
         </v-list-item>
@@ -101,14 +93,11 @@
         <v-list-item>
           <v-row>
             <v-col>
-              <v-list-item-title>Job :</v-list-item-title>
-              <v-list-item-subtitle class="text-right">{{ adoption.job}}</v-list-item-subtitle>
+              <v-list-item-title><span class="font-weight-black">Job : </span>{{ adoption.job}}</v-list-item-title>
             </v-col>
             <v-col>
-              <v-list-item-title>Address :</v-list-item-title>
-              <v-list-item-subtitle
-                class="text-right"
-              >{{ adoption.sido}} / {{ adoption.gugun}}</v-list-item-subtitle>
+              <v-list-item-title><span class="font-weight-black">Address : </span>{{ adoption.sido}} / {{ adoption.gugun}}</v-list-item-title>
+  
             </v-col>
           </v-row>
         </v-list-item>
@@ -116,12 +105,10 @@
         <v-list-item>
           <v-row>
             <v-col>
-              <v-list-item-title>Place :</v-list-item-title>
-              <v-list-item-subtitle class="text-right">{{ adoption.place}}</v-list-item-subtitle>
+              <v-list-item-title><span class="font-weight-black">Place : </span>{{ adoption.place}}</v-list-item-title>
             </v-col>
             <v-col>
-              <v-list-item-title>Alone :</v-list-item-title>
-              <v-list-item-subtitle class="text-right">{{ adoption.alone}}</v-list-item-subtitle>
+              <v-list-item-title><span class="font-weight-black">Alone : </span>{{ adoption.alone}}</v-list-item-title>
             </v-col>
           </v-row>
         </v-list-item>
@@ -129,43 +116,38 @@
         <v-list-item>
           <v-row>
             <v-col>
-              <v-list-item-title>Eatmoney :</v-list-item-title>
-              <v-list-item-subtitle class="text-right">{{ adoption.eatmoney}}</v-list-item-subtitle>
+              <v-list-item-title><span class="font-weight-black">Eatmoney : </span>{{ adoption.eatmoney}}</v-list-item-title>
             </v-col>
             <v-col>
-              <v-list-item-title>Dissolution :</v-list-item-title>
-              <v-list-item-subtitle class="text-right">{{ adoption.dissolution}}</v-list-item-subtitle>
+              <v-list-item-title><span class="font-weight-black">Dissolution : </span>{{ adoption.dissolution}}</v-list-item-title>
             </v-col>
           </v-row>
         </v-list-item>
 
         <v-list-item>
-          <v-list-item-title>Think :</v-list-item-title>
-          <v-list-item-subtitle class="text-right">{{ adoption.think}}</v-list-item-subtitle>
+          <v-list-item-title><span class="font-weight-black">Think : </span>{{ adoption.think}}</v-list-item-title>
         </v-list-item>
 
         <v-list-item>
-          <v-list-item-title>Experience :</v-list-item-title>
-          <v-list-item-subtitle class="text-right">{{ adoption.house}}</v-list-item-subtitle>
+          <v-list-item-title><span class="font-weight-black">Experience : </span>{{ adoption.house}}</v-list-item-title>
         </v-list-item>
 
         <v-list-item>
-          <v-list-item-title>Reason :</v-list-item-title>
-          <v-list-item-subtitle class="text-right">{{ adoption.reason}}</v-list-item-subtitle>
+          <v-list-item-title><span class="font-weight-black">Reason : </span>{{ adoption.reason}}</v-list-item-title>
         </v-list-item>
 
         <v-list-item>
-          <v-list-item-title>Reservation :</v-list-item-title>
-          <v-list-item-subtitle class="text-right">{{ adoption.fixdate}}.{{ adoption.fixtime}}</v-list-item-subtitle>
+          <v-list-item-title><span class="font-weight-black">Reservation : </span>{{ adoption.fixdate}}.{{ adoption.fixtime}}</v-list-item-title>
         </v-list-item>
       </v-list>
 
       <v-divider></v-divider>
 
       <v-card-actions>
-        <!-- <div class="d-flex float-right mr-3"> -->
-        <v-btn @click="dogApproval" class="float-right">승인완료</v-btn>
-        <v-btn @click="dogApprovalRefuse" class="float-right">승인거절</v-btn>
+        <div class="d-flex ml-auto">
+        <v-btn @click="dogApproval" class="mr-2" color="primary">승인완료</v-btn>
+        <v-btn @click="dogApprovalRefuse" color="error">승인거절</v-btn>
+        </div>
       </v-card-actions>
     </v-card>
   </div>

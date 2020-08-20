@@ -1,7 +1,7 @@
 <template>
-  <div style="margin-top:7rem;">
+  <div class="bmg-lost" style="margin-bottom: 45rem;">
+  <div style="margin-top: 38rem;">
     <v-container >
-      <h2 class="mb-5">실종 / 보호 / 목격</h2>
       <form>
         <v-row class="d-flex align-center mx-auto">
           <v-col class="d-flex">
@@ -183,15 +183,10 @@
             </v-list>
           </v-card>
 
-
-
-
-
-
-
         </v-col>
       </v-row>
     </v-container>
+  </div>
 
   <v-dialog v-model="dialog" scrollable max-width="700px">
     <template v-slot:activator="{ on, attrs }">
@@ -547,4 +542,13 @@ export default {
   bottom: 5vh;
   right: 5vw;
 }
+
+.bmg-lost{
+    background: url('../../assets/lost111.png') no-repeat;
+    width: 100%;
+    height: 35rem;
+    background-size: cover;
+    background-position: center;
+}
+
 </style>

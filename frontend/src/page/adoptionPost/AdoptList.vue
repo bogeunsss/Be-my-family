@@ -1,10 +1,12 @@
 <template>
+<div class="bmg-review" style="margin-bottom: 45rem;">
+  <div style="margin-top: 35rem;">
   <v-container>
     <v-col cols="10" style="margin:0 auto;">
-      <div class="d-flex mb-5">
+      <!-- <div class="d-flex mb-5">
         <i class="fas fa-dog" style="font-size:30px"></i>
         <h2 class="ml-3">입양후기</h2>
-      </div>
+      </div> -->
 
       <v-row align="center">
         <v-col cols="12" sm="4"></v-col>
@@ -69,6 +71,8 @@
       <v-pagination v-model="page" :length="pageCount"  :total-visible="5" circle class="mt-5"></v-pagination>
     </v-col>
   </v-container>
+  </div>
+  </div>
 </template>
 
 <script>  
@@ -181,4 +185,12 @@ export default {
 </script>
 
 <style scoped>
+.bmg-review{
+    background: url('../../assets/후기3.png') no-repeat;
+    width: 100%;
+    height: 35rem;
+    background-size: cover;
+    background-position: center;
+}
+
 </style>

@@ -19,33 +19,33 @@
         <!-- <v-text-field filled label="Title" value="My new post"></v-text-field> -->
      
         <v-row>
-          <v-col col="12" class="font-weight-black" style="font-size: 18px;">구조일 : {{ dogData.noticesdt }}</v-col>
+          <v-col col="12"><span class="font-weight-black" style="font-size: 18px;">구조일 : </span><span style="font-size: 16px;">{{ dogData.noticesdt }}</span></v-col>
           
         </v-row>
         <v-row>
-          <v-col col="12" class="font-weight-black" style="font-size: 18px;">구조장소 : {{ dogData.happenplace }}</v-col>
+          <v-col col="12"><span class="font-weight-black" style="font-size: 18px;">구조장소 : </span><span style="font-size: 16px;">{{ dogData.happenplace }}</span></v-col>
           
         </v-row>
         <v-row>
-          <v-col col="6" class="font-weight-black" style="font-size: 18px;">견종 : {{ dogData.kindcd }} </v-col>
+          <v-col col="6"> <span class="font-weight-black" style="font-size: 18px;">견종 : </span><span style="font-size: 16px;">{{ dogData.kindcd }} </span></v-col>
           
-          <v-col col="6" class="font-weight-black" style="font-size: 18px;">성별 : {{ dogData.sexcd}}</v-col>
+          <v-col col="6"><span class="font-weight-black" style="font-size: 18px;">성별 : </span><span style="font-size: 16px;">{{ dogData.sexcd}}</span></v-col>
           
         </v-row>
         <v-row>
-          <v-col col="6" class="font-weight-black" style="font-size: 18px;">연령 : {{ dogData.age }}</v-col>
+          <v-col col="6"><span class="font-weight-black" style="font-size: 18px;">연령 : </span><span style="font-size: 16px;">{{ dogData.age }}</span></v-col>
           
-          <v-col col="6" class="font-weight-black" style="font-size: 18px;">모색 : {{ dogData.colorcd }}</v-col>
+          <v-col col="6"><span class="font-weight-black" style="font-size: 18px;">모색 : </span><span style="font-size: 16px;">{{ dogData.colorcd }}</span></v-col>
          
         </v-row>
         <v-row>
-          <v-col col="6" class="font-weight-black" style="font-size: 18px;">중성화 여부 : {{ dogData.neuteryn }}</v-col>
+          <v-col col="6"> <span class="font-weight-black" style="font-size: 18px;">중성화 여부 : </span><span style="font-size: 16px;">{{ dogData.neuteryn }}</span></v-col>
           
-          <v-col col="6" class="font-weight-black" style="font-size: 18px;">체중 : {{ dogData.weight }}</v-col>
+          <v-col col="6"> <span class="font-weight-black" style="font-size: 18px;">체중 : </span><span style="font-size: 16px;">{{ dogData.weight }}</span></v-col>
           
         </v-row>
         <v-row>
-          <v-col col="12" class="font-weight-black" style="font-size: 18px;">특징 : {{ dogData.specialmark }}</v-col>
+          <v-col col="12"><span class="font-weight-black" style="font-size: 18px;">특징 : </span><span style="font-size: 16px;">{{ dogData.specialmark }}</span></v-col>
           
         </v-row>
      
@@ -60,15 +60,15 @@
             <v-icon left>fas fa-paw</v-icon> 관심있어요
           </v-btn>
           <v-btn class="ma-2" depressed v-if="isLikeDog" @click="deleteLike" tile outlined color="red" style="font-size: 15px;">
-            <v-icon left>fas fa-paw</v-icon> 관심없어요
+            <v-icon left>fas fa-user-times</v-icon> 관심없어요
           </v-btn>
           <v-btn class="ma-2" v-if="!isAdoption" dark @click="goModal(dialog = true)" tile outlined color="primary" style="font-size: 15px;">
             <v-icon left>mdi-pencil</v-icon> 입양신청
           </v-btn>
-        <!-- <v-btn color="success" depressed v-if="!isLikeDog" @click="likeDog">관심있어요</v-btn>
-        <v-btn color="success" depressed v-if="isLikeDog" @click="deleteLike">관심없어요</v-btn> -->
-        <!-- <v-btn color="primary" class="ma-2" v-if="!isAdoption" dark @click="goModal(dialog = true)">입양신청</v-btn> -->
-        <v-btn color="primary" class="ma-2" dark v-if="isAdoption">신청대기중</v-btn>
+          <v-btn class="ma-2" v-if="isAdoption" tile outlined color="success" style="font-size: 15px;">
+            <v-icon left>fas fa-hourglass-start</v-icon> 신청대기중
+          </v-btn>
+       
         </div>
         <!-- total 보내야 할 데이터 : email, 상담날짜, 상담시간, 강아지id, url: /account/adoptionList -->
         <v-dialog v-model="dialog" max-width="500px">
