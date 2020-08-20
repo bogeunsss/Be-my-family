@@ -222,6 +222,8 @@
 
 <script>
 import axios from "axios";
+import swal from 'sweetalert';
+
 
 import constants from "../../lib/constants";
 
@@ -319,7 +321,11 @@ export default {
     },
     signup(){
       if(!this.term){
-        alert('약관에 동의해주세요.')
+        swal({
+          title:'약관에 동의해주세요.',
+          icon: "warning",
+          button: "OK"
+          })
       }else{
 
         this.nowLoading = true
@@ -330,34 +336,59 @@ export default {
         var reg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         var passwordReg = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
         if(!info.data.nickName){
-          alert('닉네임을 입력하세요')
+          swal('닉네임을 입력하세요')
           this.nowLoading = false
         }else if(!info.data.email){
-          alert('이메일을 입력하세요')
+          swal('이메일을 입력하세요')
           this.nowLoading = false
         }else if(!reg.test(info.data.email)){
-          alert('이메일 형식을 확인하세요')
+          swal({
+            title:'이메일 형식을 확인하세요',
+            icon: "warning",
+            buttons: "OK"
+            })
           this.nowLoading = false
         }else if(!info.data.password){
-          alert('비밀번호를 입력하세요')
+          swal('비밀번호를 입력하세요')
           this.nowLoading = false
         }else if(!info.data.passwordConfirm){
-          alert('비밀번호 확인을 입력하세요')
+          swal('비밀번호 확인을 입력하세요')
           this.nowLoading = false
         }else if(info.data.password !== info.data.passwordConfirm){
-          alert('비밀번호가 일치하지 않습니다')
+          swal({
+            title:'비밀번호가 일치하지 않습니다',
+            icon: "warning",
+            button: "OK"
+            })
           this.nowLoading = false
         }else if(false === passwordReg.test(info.data.password)) {
-          alert('비밀번호는 8자 이상이어야 하며, 숫자/대문자/소문자/특수문자를 모두 포함해야 합니다.');
+          swal({
+            title: "비밀번호" ,
+            text: "8자 이상이어야 하며, 숫자/대문자/소문자/특수문자를 모두 포함해야 합니다.", 
+            icon: "warning",
+            button: "OK"
+          });
           this.nowLoading = false
         }else if(/(\w)\1\1\1/.test(info.data.password)){
-          alert('같은 문자를 4번 이상 사용하실 수 없습니다.');
+          swal({
+            title:'같은 문자를 4번 이상 사용하실 수 없습니다.',
+            icon: "warning",
+            button: "OK"
+            });
           this.nowLoading = false
         }else if(info.data.password.search(info.data.email) > -1){
-          alert("비밀번호에 아이디가 포함되었습니다.");
+          swal({
+            title:"비밀번호에 아이디가 포함되었습니다.",
+            icon: "info",
+            button: "OK"
+          });
           this.nowLoading = false
         }else if(info.data.password.search(/\s/) != -1){
-          alert("비밀번호는 공백 없이 입력해주세요.");
+          swal({
+            title:"비밀번호는 공백 없이 입력해주세요.",
+            icon: "warning",
+            button: "OK"
+          });
           this.nowLoading = false
         }else{
           axios.post(constants.SERVER_URL + '/account/signup', {
@@ -374,11 +405,15 @@ export default {
           .then(res=>{
             console.log(res)
             if(res.data.data === 'emailexist'){
-                alert('이미 있는 이메일입니다.')
+                swal('이미 있는 이메일입니다.')
             }else if(res.data.data === 'nicknameexist'){
-                alert('이미 있는 닉네임입니다.')
+                swal('이미 있는 닉네임입니다.')
             }else if(res.data.data === 'emailfail'){
-                alert('이메일 전송 실패')
+                swal({
+                  title: '이메일 전송 실패',
+                  icon: "warning",
+                  button: "OK"
+                  })
             }else{
               if(this.e1 === 1)
               this.confirmData = res.data.data
@@ -411,12 +446,20 @@ export default {
           if(response.data.data === 'success'){
             this.e1 = 3
           }else{
-            alert('가입 실패')
+            swal({
+              title:'가입 실패',
+              icon: "warning",
+              button: "OK"
+            })
           }
         }).catch(error => {
         })
       }else{
-        alert('인증 번호를 다시 확인해 주세요')
+        swal({
+          title:'인증 번호를 다시 확인해 주세요',
+          icon: "info",
+          button: "OK"
+          })
       }
     },
   },

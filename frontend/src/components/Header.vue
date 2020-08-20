@@ -186,6 +186,7 @@
 
 import constants from "@/lib/constants";
 import axios from "axios";
+import swal from 'sweetalert';
 
 import { mapState, mapActions, mapMutations } from "vuex";
 
@@ -305,9 +306,17 @@ export default {
       ).then(response => {
         if(response.data.data === 'success'){
           this.PWDialog = false
-          alert('이메일로 임시 비밀번호가 발송 되었습니다.')
+          swal({
+            title:'이메일로 임시 비밀번호가 발송 되었습니다.',
+            icon: "success",
+            button: "OK"
+            })
         }else{
-          alert('비밀번호 찾기에 실패하였습니다.')
+          swal({
+            title:'비밀번호 찾기에 실패하였습니다.',
+            icon: "warning",
+            button: "OK"
+            })
         }
         this.nowLoading = false
       }).catch(error => {

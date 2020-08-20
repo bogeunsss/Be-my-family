@@ -115,6 +115,11 @@ export default {
 
       axios.put(constants.SERVER_URL + `/postscript/Modify?postscriptno=${this.$route.params.ID}&title=${this.Adoptupdate.title}&content=${this.Adoptupdate.content}&sido=${this.Adoptupdate.sido}&gugun=${this.Adoptupdate.gugun}&kind=${this.Adoptupdate.kind}`)
       .then(()=>{
+          swal({
+            title: "수정완료",
+            icon: "success",
+            button: "OK"
+          })
           this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTDETAIL, params:{ ID: this.$route.params.ID} })
       })
       .catch((error)=>{

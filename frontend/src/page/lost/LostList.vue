@@ -381,6 +381,7 @@ import constants from '../../lib/constants'
 
 import axios from 'axios'
 import { mapState } from 'vuex'
+import swal from 'sweetalert';
 
 export default {
   created(){
@@ -470,7 +471,11 @@ export default {
     },
     onChangeImages(event){
       if(event.target.files.length > 3){
-        alert('파일은 3개까지 저장 가능합니다.')
+        swal({
+          title:'파일은 3개까지 저장 가능합니다.',
+          icon: "warning",
+          button: "OK"
+          })
         document.getElementById('inputFiles').value = '';
       }else{
         this.images = event.target.files

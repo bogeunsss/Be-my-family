@@ -312,6 +312,7 @@
 import constants from '@/lib/constants'
 import axios from 'axios'
 import { mapState } from 'vuex'
+import swal from 'sweetalert';
 
 export default {
     created(){
@@ -455,7 +456,11 @@ export default {
         deleteLost(){
             axios.delete(constants.SERVER_URL + `/lost/delete?lostno=${this.$route.params.articleNo}&uid=${this.writer}`)
                 .then(response => {
-                    alert('삭제되었습니다.')
+                    swal({
+                      title:'삭제되었습니다.',
+                      icon: "success",
+                      button: "OK"
+                      })
                     this.$router.push({name: constants.URL_TYPE.LOST.LOSTLIST})
                 }).catch(error => {
                     console.log(error)
@@ -475,7 +480,11 @@ export default {
         onChangeImages(event){
             
             if(event.target.files.length > 3){
-                alert('파일은 3개까지 저장 가능합니다.')
+            swal({
+              title:'파일은 3개까지 저장 가능합니다.',
+              icon: "warning",
+              button: "OK"
+              })
                 document.getElementById('inputFiles').value = '';
                 console.log(document.getElementById('inputFiles').files.length)
             }else{
@@ -543,7 +552,12 @@ export default {
         getCommentList(){
             if(this.$cookies.isKey('auth-token')){
                 if(this.$cookies.get('auth-token').mid !== undefined){
-                    alert('죄송합니다. 매니저는 댓글을 다실 수 없습니다.')
+                    swal({
+                      title:'매니저는 댓글을 다실 수 없습니다.',
+                      text: '죄송합니다',
+                      icon: "warning",
+                      button: "OK"
+                      })
                 }
             }else{
                 axios.get(constants.SERVER_URL + `/lost/detail?lostno=${this.lostno}`)
@@ -568,7 +582,11 @@ export default {
                         console.log(error)
                     })
             }else{
-                alert('로그인 후 이용 가능합니다.')
+                swal({
+                  title: '로그인 후 이용 가능합니다.',
+                  icon: "error",
+                  button: "OK" 
+                })
             }
             this.comment = ''
         },

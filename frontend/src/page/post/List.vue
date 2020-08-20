@@ -30,7 +30,7 @@
                     ></v-text-field>
                 </v-col>
                 <v-col class="mb-4 pa-0" cols="4" md="2">
-                    <v-btn large style="background: #4ba5cd; color:white; border-radius: 12px;" @click="search" type="submit">
+                    <v-btn large style="background: #4ba5cd; color:white; border-radius: 12px;" @click="search">
                         검색
                     </v-btn>
                     <div class="v-messages theme--light">
@@ -111,6 +111,7 @@
 <script>
 import constants from '../../lib/constants'
 import axios from 'axios'
+import swal from 'sweetalert';
 
 import { mapState, mapActions } from 'vuex'
 
@@ -169,7 +170,11 @@ export default {
                 .then((response) =>{
                     console.log(response)
                     if(!response.data.totalData){
-                        alert('검색 결과가 없습니다.')
+                        swal({
+                            title:'검색 결과가 없습니다.',
+                            icon: "warning",
+                            button: "OK"
+                            })
                         paramInfo.pageno = 0
                         this.searchText = ""
                         this.isSearched = false
@@ -180,7 +185,11 @@ export default {
                     }
                 })
                 .catch(() =>{
-                    alert("올바른 값을 입력하세요")
+                    swal({
+                        title:'올바른 값을 입력하세요',
+                        icon: "warning",
+                        button: "OK"
+                        })
                 })
             }
 

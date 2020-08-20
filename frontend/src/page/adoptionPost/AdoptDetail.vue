@@ -156,6 +156,7 @@
 import constants from "@/lib/constants";
 import axios from "axios";
 import { mapState, mapActions } from "vuex";
+import swal from 'sweetalert';
 
 export default {
   created() {
@@ -201,7 +202,11 @@ export default {
             `/postscript/Delete?postscriptno=${this.$route.params.ID}&uid=${this.profileData.nickName}`
         )
         .then(() => {
-          alert("삭제되었습니다.");
+          swal({
+            title: "삭제되었습니다.",
+            icon: "success",
+            button: "OK"
+          });
           this.adoptlist();
         })
         .catch((error) => {
@@ -216,12 +221,20 @@ export default {
     },
     createComment() {
       if (!this.$cookies.isKey("auth-token")) {
-        alert("로그인해주세요");
+        swal({
+          title: "로그인해주세요",
+          icon: "warning",
+          button: "OK"
+          });
       } else {
         if (this.$cookies.get("auth-token").uid !== undefined) {
           var flag = 0;
           if (this.commentData.content == "") {
-            alert("댓글을 입력해주세요.");
+            swal({
+              title: "댓글을 입력해주세요",
+              icon: "warning",
+              button: "OK"
+            });
             flag = 1;
           }
           if (flag == 0) {
@@ -231,15 +244,24 @@ export default {
               .then((res) => {
                 console.log(this.commentData);
                 this.commentData.content = "";
-                alert("댓글이 등록되었습니다.");
-                this.$router.go();
+                swal({
+                  title:"댓글이 등록되었습니다.",
+                  icon: "success",
+                  button:"OK"
+                }).then(()=>{
+                    this.$router.go()
+                });
               })
               .catch((error) => {
                 console.log(error);
               });
           }
         } else {
-          alert("죄송합니다. 매니저는 댓글을 다실 수 없습니다.");
+          swal({
+            title:"죄송합니다. 매니저는 댓글을 다실 수 없습니다.",
+            icon: "warning",
+            button: "OK"
+          })
           this.commentData.content = "";
         }
       }
@@ -253,12 +275,18 @@ export default {
           postscriptno: this.$route.params.ID,
         })
         .then(() => {
-          alert("수정완료!");
+          swal({
+            title:"수정완료!",
+            icon: "success",
+            button:"OK"
+          }).then(()=>{
+              this.$router.go()
+          });
           this.$router.push({
             name: constants.URL_TYPE.ADOPTIONPOST.ADOPTDETAIL,
             params: { ID: this.$route.params.ID },
           });
-          this.$router.go();
+      
         })
         .catch((error) => {
           console.log(error);
@@ -271,8 +299,13 @@ export default {
             `/comment/delete?commentno=${Commentno}&uid=${this.profileData.nickName}`
         )
         .then(() => {
-          alert("삭제완료");
-          this.$router.go();
+            swal({
+            title:"삭제완료!",
+            icon: "success",
+            button:"OK"
+          }).then(()=>{
+              this.$router.go()
+          });
         })
         .catch((error) => {
           console.log(error);

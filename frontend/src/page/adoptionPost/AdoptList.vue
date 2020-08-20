@@ -1,10 +1,6 @@
 <template>
-<<<<<<< HEAD
-<div style="margin-top:5rem;">
-=======
 <div class="bmg-review" style="margin-bottom: 45rem;">
   <div style="margin-top: 35rem;">
->>>>>>> careboard_CSS_tmp
   <v-container>
     <v-col cols="10" style="margin:0 auto;">
       <!-- <div class="d-flex mb-5">
@@ -103,10 +99,7 @@
     </v-col>
   </v-container>
   </div>
-<<<<<<< HEAD
-=======
   </div>
->>>>>>> careboard_CSS_tmp
 </template>
 
 <script>  
@@ -114,6 +107,8 @@ import constants from "@/lib/constants";
 import axios from "axios";
 
 import { mapState, mapActions } from "vuex";
+
+import swal from 'sweetalert';
 
 export default {
   name: "Adoptlist",
@@ -179,7 +174,11 @@ export default {
     },
     create() {
       if(!this.$cookies.isKey("auth-token")){
-            alert('로그인해주세요')
+            swal({
+              title: '로그인해주세요',
+              icon: "warning",
+              button: "OK"
+              })
         }else{
         this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTCREATE })}
     },
@@ -205,7 +204,11 @@ export default {
 
             })
             .catch(() =>{
-                alert("올바른 값을 입력하세요")
+                swal({
+                  title:"올바른 값을 입력하세요",
+                  icon: "error",
+                  button: "OK" 
+                })
             })
         }
 
@@ -230,13 +233,11 @@ export default {
 </script>
 
 <style scoped>
-<<<<<<< HEAD
 @media (max-width:760px){
   .cardmobile {
     display:none;
   }
 }
-=======
 .bmg-review{
     background: url('../../assets/후기3.png') no-repeat;
     width: 100%;
@@ -245,5 +246,4 @@ export default {
     background-position: center;
 }
 
->>>>>>> careboard_CSS_tmp
 </style>

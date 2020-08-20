@@ -451,6 +451,7 @@ import SERVER from "@/lib/constants";
 import axios from "axios";
 import { mapState, mapMutations, mapActions } from 'vuex'
 import VueJwtDecode from 'vue-jwt-decode'
+import swal from 'sweetalert';
 
 export default {
     name: "survey",
@@ -490,9 +491,17 @@ export default {
               }).catch((error) =>{
                 console.log(error)
               })
-            alert('저장되었습니다.')
+              swal({
+                title:'저장되었습니다!',
+                icon: "success",
+                button: "OK"
+              })
           }else{
-            alert('동의해주세요!')
+              swal({
+                title:'동의해주세요!',
+                icon: "warning",
+                button: "OK"
+              })
           }
         },
         getProfileData(){

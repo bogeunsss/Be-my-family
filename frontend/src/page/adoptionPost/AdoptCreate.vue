@@ -97,6 +97,9 @@ import constants from '../../lib/constants'
 import axios from 'axios'
 import { mapState,  mapActions} from 'vuex'
 
+import swal from 'sweetalert';
+
+
 export default {
     created(){
         // var token = this.$cookies.get('auth-token')
@@ -121,11 +124,11 @@ export default {
             
             var flag = 0
             if(this.adoptcreate.title == ""){
-                alert("제목을 입력해주세요")
+                swal("제목을 입력해주세요")
                 flag = 1
             }
             if(this.adoptcreate.content == ""){
-                alert("내용을 입력해주세요")
+                swal("내용을 입력해주세요")
                 flag = 1          
             }
             if(flag == 0){
@@ -138,7 +141,11 @@ export default {
                 })
                 .then((res) =>{
                     console.log(this.res)
-                    alert('작성이 완료됐습니다.')
+                    swal({
+                        title: '작성이 완료됐습니다.',
+                        icon: "success",
+                        button: "OK"
+                        })
                     this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTLIST });
                 })
                 .catch((error) => {
@@ -148,7 +155,11 @@ export default {
         },
         onChangeImages(event){
             if(event.target.files.length > 3){
-                alert('파일은 3개까지 저장 가능합니다.')
+            swal({
+              title:'파일은 3개까지 저장 가능합니다.',
+              icon: "warning",
+              button: "OK"
+              })
                 document.getElementById('inputFiles').value = '';
             }else{
                 this.images = event.target.files

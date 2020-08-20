@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+import swal from 'sweetalert';
+
+
 import cookies from 'vue-cookies'
 import axios from 'axios'
 
@@ -201,10 +204,14 @@ export default new Vuex.Store({
         formData.append('password', paramData.loginData.password)
         if (!paramData.loginData.email) {
           console.log(paramData.loginData.email)
-          alert("이메일을 입력하세요");
+          swal("이메일을 입력하세요");
         }
         else if (!reg.test(paramData.loginData.email)) {
-          alert("이메일 형식을 확인하세요");
+          swal({
+            title:"이메일 형식을 확인하세요",
+            icon: "warning",
+            button: "OK"
+          });
         }
         else {
         axios.post(SERVER.SERVER_URL +'/account/login ', formData)
@@ -212,7 +219,13 @@ export default new Vuex.Store({
             if(response.status == 200){
                 state.dialog = true
                 console.log(response)
-                alert("로그인 성공");
+                swal({
+                  title:"로그인 성공",
+                  icon: "success",
+                  button:"OK"
+                }).then(()=>{
+                    this.$router.go()
+                });
                 state.dialog = false
                 state.isLoggedIn = true
                 cookies.set('auth-token', {
@@ -221,11 +234,15 @@ export default new Vuex.Store({
                   uid:response.data.uid
                 })
                 state.authToken = cookies.get('auth-token')
-                router.go()
+                // router.go()
               }
             })
             .catch((error)=>{
-              alert("로그인 실패");
+              swal({
+                title:"로그인 실패",
+                icon: "error",
+                button:"OK"
+              });
               console.log(error)
               state.dialog = false;
             })
@@ -240,7 +257,13 @@ export default new Vuex.Store({
             if(response.status == 200){
                 state.dialog = true
                 console.log(response)
-                alert("로그인 성공");
+                swal({
+                  title:"로그인 성공",
+                  icon: "success",
+                  button:"OK"
+                }).then(()=>{
+                    this.$router.go()
+                });
                 state.dialog = false
                 state.isLoggedIn = true
                 cookies.set('auth-token', {
@@ -250,11 +273,15 @@ export default new Vuex.Store({
                   mid:response.data.mid
                 })
                 state.authToken = cookies.get('auth-token')                
-                router.go()
+                // router.go()
               }
             })
             .catch((error)=>{
-              alert("로그인 실패");
+              swal({
+                title:"로그인 실패",
+                icon: "error",
+                button:"OK"
+              });
               console.log(error)
               state.dialog = false;
             })
@@ -311,9 +338,17 @@ export default new Vuex.Store({
       console.log(userNickName)
       axios.delete(SERVER.SERVER_URL + `/account/delete?uid=${userNickName}`)
       .then(response => {
-        alert('탈퇴 성공')
+        swal({
+          title:"탈퇴 성공",
+          icon: "success",
+          button:"OK"
+        });
       }).catch(error => {
-        alert('탈퇴 실패')
+        swal({
+          title:"탈퇴 실패",
+          icon: "error",
+          button:"OK"
+        });
       })
     },
     userUpdate({commit, state}, userData){
@@ -336,9 +371,17 @@ export default new Vuex.Store({
           marriaged: marriaged,
           birthdate: state.profileData.birthdate
       }).then(res=>{
-          alert('수정 성공')
+        swal({
+          title:"수정 성공",
+          icon: "success",
+          button:"OK"
+        });
       }).catch(err=>{
-          alert('수정 실패')
+        swal({
+          title:"수정 실패",
+          icon: "error",
+          button:"OK"
+        });
           console.log(err)
       })
     },
