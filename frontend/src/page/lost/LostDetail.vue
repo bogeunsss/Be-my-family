@@ -217,7 +217,19 @@
         </v-col>
       </v-row>
     </v-container>
-
+    <v-container class="pb-0">
+      <h4>혹시 이 강아지를 찾으시나요?</h4>
+      <v-divider></v-divider>
+    </v-container>
+    <v-container class="d-flex flex-row pt-0">
+      <v-list v-for="(match, i) in matched" :key="i">
+        <v-row>
+          <v-col cols="2">
+            <img :src="'http://i3b201.p.ssafy.io/file/'+match.lostpic1" class="mx-2" style="width: 150px; height: 200px" @click="goDetail(match.lostno)">
+          </v-col>
+        </v-row>
+      </v-list>
+    </v-container>
     <v-container class="mb-10">
       <v-card>
         <div style="position: relative">
@@ -282,7 +294,7 @@
         </v-list>
       </v-card>
     </v-container>
-    <div class="float-window">
+    <!-- <div class="float-window" style="width: 100px; height: 80px">
       <v-card id="create">
         <v-speed-dial :direction="direction" :open-on-hover="hover" :transition="transition">
           <template v-slot:activator>
@@ -297,13 +309,13 @@
           </template>
           <div v-for="(m, i) in matched" :key="i">
             <v-img
-              src="http://www.animal.go.kr/files/shelter/2014/02/201403010903285_s.jpg"
+              :src="'http://i3b201.p.ssafy.io/file/'+m.lostpic1"
               @click="goDetail(m.lostno)"
             ></v-img>
           </div>
         </v-speed-dial>
       </v-card>
-    </div>
+    </div> -->
     <v-snackbar v-model="snackbar" timeout="2000">수정되었습니다.</v-snackbar>
   </div>
 </template>
@@ -376,11 +388,9 @@ export default {
             })
         axios.get(constants.SERVER_URL + `/lost/match?lostno=${this.lostno}`)
             .then(response => {
-                // console.log(response)
-                if(response.data.math){
-                    if(response.data.match.length){
-                        this.matched = response.data.match
-                    }
+                console.log(response)
+                if(response.data.match){
+                  this.matched = response.data.match
                 }
             }).catch(error => {
                 console.log(error)
@@ -465,6 +475,7 @@ export default {
             this.$router.push({name: constants.URL_TYPE.LOST.LOSTLIST})
         },
         goDetail(No){
+            window.scrollTo(0, 0);
             this.$router.push({name: constants.URL_TYPE.LOST.LOSTDETAIL, params: {articleNo: No}})
             this.$router.go()
         },
@@ -626,8 +637,8 @@ export default {
 }
 .float-window {
     position: fixed;
-    bottom: 40vw;
-    right: 5vw;
+    bottom: 0;
+    right: 0;
 }
 .write-btn {
     position: absolute;
