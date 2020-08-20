@@ -90,6 +90,7 @@
 import constants from "../../lib/constants";
 import axios from "axios";
 import { mapState, mapActions } from "vuex";
+import swal from 'sweetalert';
 
 export default {
   created() {
@@ -119,24 +120,29 @@ export default {
       fd.append('sido', this.Adoptupdate.sido)
       fd.append('gugun', this.Adoptupdate.gugun)
       fd.append('kind', this.Adoptupdate.kind)
-      for(var x=0;x<this.images.length;x++){
-        fd.append('images', this.images[x])
-      }
+      if(this.images.length === 0){
+        swal('이미지를 등록해주세요')
+      }else{
+        for(var x=0;x<this.images.length;x++){
+          fd.append('images', this.images[x])
+        }
+  
+        axios.post(constants.SERVER_URL + `/postscript/Modify`, fd, {headers: {
+            'Content-Type': 'multipart/form-data'
+        }})
+        .then(()=>{
+            swal({
+              title: "수정완료",
+              icon: "success",
+              button: "OK"
+            })
+            this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTDETAIL, params:{ ID: this.$route.params.ID} })
+        })
+        .catch((error)=>{
+            console.log(error)
+        })
 
-      axios.post(constants.SERVER_URL + `/postscript/Modify`, fd, {headers: {
-          'Content-Type': 'multipart/form-data'
-      }})
-      .then(()=>{
-          swal({
-            title: "수정완료",
-            icon: "success",
-            button: "OK"
-          })
-          this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTDETAIL, params:{ ID: this.$route.params.ID} })
-      })
-      .catch((error)=>{
-          console.log(error)
-      })
+      }
     },
     onChangeImages(event){
             if(event.target.files.length > 3){

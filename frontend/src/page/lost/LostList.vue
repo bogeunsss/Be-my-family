@@ -509,29 +509,33 @@ export default {
       formData.append('lostsex', this.lostSex)
       formData.append('lostphone', this.profileData.phone)
       formData.append('losttagtext', this.lostTags)
-      for(var x=0;x<this.images.length;x++){
-        formData.append('files', this.images[x])
+      if(this.images.length === 0){
+          swal("사진을 등록해주세요")
+      }else{
+        for(var x=0;x<this.images.length;x++){
+          formData.append('files', this.images[x])
+        }
+        // const imageForm = new FormData()
+        // imageForm.append('files', this.images)
+        
+        // FormData 객체를 log 찍어보려면
+        // FormData.entries()를 이용하여 key : value 쌍을 뽑아야 함.
+        
+        axios.post(constants.SERVER_URL + '/lost/add', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }).then(response => {
+          console.log(response)
+          this.$router.go()
+        }).catch(error => {
+          console.log(error)
+        })
+        
+        this.dialog = false
       }
       
 
-      // const imageForm = new FormData()
-      // imageForm.append('files', this.images)
-      
-      // FormData 객체를 log 찍어보려면
-      // FormData.entries()를 이용하여 key : value 쌍을 뽑아야 함.
-      
-      axios.post(constants.SERVER_URL + '/lost/add', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      }).then(response => {
-        console.log(response)
-        this.$router.go()
-      }).catch(error => {
-        console.log(error)
-      })
-      
-      this.dialog = false
       // this.$router.go(-1)
     },
     closeTag(index){

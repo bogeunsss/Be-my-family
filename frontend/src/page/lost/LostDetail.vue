@@ -7,7 +7,7 @@
           <v-card>
             <v-row>
               <v-card-subtitle class="mx-auto" style="position:relative;width: 100%">
-                <v-carousel hide-delimiters height="auto" class="white--text float-center" style="width:570px; height:420;">
+                <v-carousel hide-delimiters height="auto" class="white--text float-center" style="width:570px; height:420px;">
                     <v-carousel-item
                     v-for="(getImage,i) in getImages"
                     :key="i"
@@ -532,29 +532,23 @@ export default {
                 for(var x=0;x<this.images.length;x++){
                     formData.append('files', this.images[x])
                 }
+                console.log(this.images)
+                axios.post(constants.SERVER_URL + '/lost/add', formData, {
+                    headers: {
+                    'Content-Type': 'multipart/form-data'
+                    }
+                }).then(response => {
+                    console.log(response)
+                }).catch(error => {
+                    console.log("에러다!!!!!")
+                    console.log(error)
+                })
+                
+                this.dialog = false
+                this.$router.go()
+            }else{
+              swal('이미지를 넣어주세요')
             }
-            
-
-            // const imageForm = new FormData()
-            // imageForm.append('files', this.images)
-            
-            // FormData 객체를 log 찍어보려면
-            // FormData.entries()를 이용하여 key : value 쌍을 뽑아야 함.
-            
-            console.log(this.images)
-            axios.post(constants.SERVER_URL + '/lost/add', formData, {
-                headers: {
-                'Content-Type': 'multipart/form-data'
-                }
-            }).then(response => {
-                console.log(response)
-            }).catch(error => {
-                console.log("에러다!!!!!")
-                console.log(error)
-            })
-            
-            this.dialog = false
-            this.$router.go()
         },
         closeTag(index){
             this.madeTags.splice(index, 1)

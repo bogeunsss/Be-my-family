@@ -28,7 +28,7 @@
           
         </v-row>
         <v-row>
-          <v-col col="12"><span class="font-weight-black" style="font-size: 18px;">보호소주소 : </span><span style="font-size: 16px;">{{ dogData.careAddr }}</span></v-col>
+          <v-col col="12"><span class="font-weight-black" style="font-size: 18px;">보호소주소 : </span><span style="font-size: 16px;">{{ dogData.careaddr }}</span></v-col>
           
         </v-row>
         <v-row>
