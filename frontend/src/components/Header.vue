@@ -3,7 +3,7 @@
       <v-btn class="mr-5" style="background-color:transparent;box-shadow: none;" @click.stop="drawer = !drawer">
         <i class="lg fas fa-bars" style="color:#4ba5cd;font-size:30px"></i>
       </v-btn>
-      <v-navigation-drawer v-model="drawer" absolute temporary height="400" class="ml-4" style="background-color:#f2cc59; border-radius:10px;">
+      <v-navigation-drawer v-model="drawer" absolute temporary height="400" class="ml-4" style="border-radius:10px;">
         <v-list-item class="pl-0">
           <div class="ml-5 d-flex flex-row" style="font-size:20px;">
             <v-btn fab depressed small class="mr-3" v-if="isLoggedIn && !isManager" style="background-color: #4ba5cd">
@@ -23,7 +23,7 @@
               <v-btn style="position: absolute; top: 6px; left: 90px" dark v-bind="attrs" v-on="on" class="loginBtn">로그인</v-btn>
             </template>
             <!-- 수정 필요! 로그인 버튼 내려감 -->
-            <v-card style="height:54vh; background-color:#FFEF85;">
+            <v-card style="height:54vh;">
               <v-card-title>
                 <span class="headline">Login</span>
               </v-card-title>

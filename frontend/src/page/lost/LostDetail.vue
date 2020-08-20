@@ -560,7 +560,7 @@ export default {
             this.madeTags.splice(index, 1)
             console.log(this.lostTags)
         },
-        getCommentList(){
+        commentCreate(){
             if(this.$cookies.isKey('auth-token')){
                 if(this.$cookies.get('auth-token').mid !== undefined){
                     swal({
@@ -569,29 +569,20 @@ export default {
                       icon: "warning",
                       button: "OK"
                       })
+                }else{
+                  axios.post(constants.SERVER_URL + '/lost/reply/add', {
+                      uid: this.profileData.nickName,
+                      lostno: this.$route.params.articleNo,
+                      lostcontent: this.comment,
+                      }).then(response => {
+                        console.log(response)
+                          if(response.data.data === 'success'){
+                              this.$router.go()
+                          }
+                      }).catch(error => {
+                          console.log(error)
+                      })
                 }
-            }else{
-                axios.get(constants.SERVER_URL + `/lost/detail?lostno=${this.lostno}`)
-                    .then(response => {
-                        this.lostReplies = response.data.lostReply
-                    }).catch(error => {
-                        console.log(error)
-                    })
-            }
-        },
-        commentCreate(){
-            if(this.$cookies.isKey('auth-token')){
-                axios.post(constants.SERVER_URL + '/lost/reply/add', {
-                    uid: this.profileData.nickName,
-                    lostno: this.$route.params.articleNo,
-                    lostcontent: this.comment,
-                    }).then(response => {
-                        if(response.data.data === 'success'){
-                            this.getCommentList()
-                        }
-                    }).catch(error => {
-                        console.log(error)
-                    })
             }else{
                 swal({
                   title: '로그인 후 이용 가능합니다.',
@@ -609,7 +600,7 @@ export default {
                 lostreplyno: contentNo,
                 }).then(response => {
                     if(response.data.data === 'success'){
-                        this.getCommentList()
+                        this.$router.go()
                     }
                     this.snackbar = !this.snackbar
                 }).catch(error => {
@@ -620,7 +611,7 @@ export default {
             axios.delete(constants.SERVER_URL + `/lost/reply/delete?lostreplyno=${replyno}&uid=${this.profileData.nickName}`)
                 .then(response => {
                     if(response.data.data === 'success'){
-                        this.getCommentList()
+                        this.$router.go()
                     }
                 }).catch(error => {
                     console.log(error)

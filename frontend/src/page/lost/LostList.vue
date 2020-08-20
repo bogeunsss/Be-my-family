@@ -4,7 +4,7 @@
 </div>
   <div class="mb-7" style="">
 
-    <v-container>
+    <v-container style="margin-top:2rem;">
       <form>
         <v-row class="d-flex align-center mx-auto">
           <v-col class="d-flex">
@@ -19,6 +19,17 @@
           <v-btn fab depressed style="background: transparent" small @click="search">
             <v-icon>mdi-magnify</v-icon>
           </v-btn>
+          <v-tooltip top>
+              <template v-slot:activator="{ on, attrs }">
+                <v-icon
+                  color="primary"
+                  dark
+                  v-bind="attrs"
+                  v-on="on"
+                >mdi-alert-circle-outline</v-icon>
+              </template>
+              <span>태그 생성 시 #을 입력하세요.</span>
+            </v-tooltip>
           </v-col>
           <v-col class="d-flex flex-row pt-0">
             <v-list class="pt-0" v-for="(searchTag, index) in searchTags" :key="index">
