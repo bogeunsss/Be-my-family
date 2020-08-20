@@ -220,8 +220,8 @@ export default {
                 this.adoptData = response.data.object
                 for(var x=0;x<this.adoptData.length;x++){
                   for(var y=0;y<this.postPic.length;y++){
-                    if(this.adoptData[x].postscriptno === this.postPic[x].postscriptno){
-                      this.searchPic.push(this.postPic[x].postpath)
+                    if(this.adoptData[x].postscriptno === this.postPic[y].postscriptno){
+                      this.searchPic.push(this.postPic[y].postpath)
                     }
                   }
                 }
