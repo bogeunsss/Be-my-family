@@ -172,9 +172,9 @@ export default {
           },
         })
         .then((response) => {
-          // console.log(response)
+          console.log(response)
           this.adoptionData = response.data.adoptions.filter(
-            (item) => item.desertionno === this.$route.params.adoptionno
+            (item) => item.adoptionno === this.$route.params.adoptionno
           );
           // console.log(this.adoption);
           // this.adoption.mid = this.adoptionData[0].mid
@@ -188,17 +188,17 @@ export default {
           // this.adoption.reason = this.adoptionData[0].reason
           this.adoption = this.adoptionData[0]
           // console.log(this.mid)
-          this.getDetail();
+          this.getDetail(this.adoption.desertionno);
         })
         .catch((err) => console.log(err));
     },
 
-    getDetail() {
+    getDetail(no) {
       // console.log(this.$route.params.adoptionno)
       axios
         .get(constants.SERVER_URL + "/care/detailUser", {
           params: {
-            desertionno: this.$route.params.adoptionno,
+            desertionno: no,
             uid: this.$cookies.get('auth-token').uid
           },
         })
