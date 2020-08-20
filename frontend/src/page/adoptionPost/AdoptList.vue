@@ -72,13 +72,13 @@
 
       <v-card class="my-3" style="width:1000px;" v-for="(adopt, index) in adoptData" :key="index" @click="adoptdetail(adopt.postscriptno)">
         <v-row>
-          <!-- <v-col cols="0" md="3" style="">
+          <v-col cols="0" md="3" style="">
             <v-img
-            :src="adopt.image"
+            :src="'http://i3b201.p.ssafy.io/file/' + postPic[0]"
             style="max-height:150px;"
             class="cardmobile ml-3">
               </v-img> 
-          </v-col> -->
+          </v-col>
           <v-col cols="12" md="9" class="px-5">
             <!-- <div>
               # {{ adoptData.length - index }}
@@ -146,6 +146,7 @@ export default {
         kind: "",
         createdate: "",
       },
+      postPic:[],
       isManager: false,
     };
   },
@@ -165,8 +166,10 @@ export default {
       axios
           .get(constants.SERVER_URL + "/postscript/List?pageno="+this.page)
           .then((res) =>{
+            console.log(res)
             this.adoptData = res.data.object
             this.pageCount = res.data.totalPage
+            this.postPic = res.data.postPic
             console.log(this.pageCount)
             console.log(this.adoptData)
           })
