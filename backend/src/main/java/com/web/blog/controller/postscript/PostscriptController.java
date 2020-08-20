@@ -76,6 +76,8 @@ public class PostscriptController {
             Page<Postscript> post = postscriptpageDao
                     .findAll(PageRequest.of(pageno - 1, 15, Sort.Direction.DESC, "postscriptno"));
 
+            List<Postpic> postpics = postpicDao.findPic();
+
             List<Postscript> postList = post.getContent();
             int totalPage = post.getTotalPages();
             boolean hasNext = post.hasNext();
@@ -85,6 +87,7 @@ public class PostscriptController {
             int currentData = post.getNumberOfElements();
 
             result.object = postList;
+            result.postpic = postpics;
             result.totalPage = totalPage;
             result.hasNext = hasNext;
             result.totalData = totalData;
