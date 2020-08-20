@@ -12,7 +12,7 @@
             md="4"
             
           >
-            <v-card style="width:350px" @click="goAdoptionDetail(adoption.desertionno)">
+            <v-card style="width:350px" @click="goAdoptionDetail(adoption.adoptionno)">
               <div class="d-flex justify-between">
               <v-card-title class="subheading font-weight-bold" style="color:blue;" v-if="adoption.state == 1">승인 {{ approveState[adoption.state] }}</v-card-title>
               <v-card-title class="subheading font-weight-bold" style="color:gray;" v-if="adoption.state == 0">승인 {{ approveState[adoption.state] }}</v-card-title>
@@ -81,8 +81,8 @@ export default {
           this.adoptions = response.data.adoptions
         }).catch((err) => console.log(err))
       },
-      goAdoptionDetail(desertionNo){
-        this.$router.push({name:constants.URL_TYPE.USER.ADOPTIONDETAIL, params:{desertionno: desertionNo}})
+      goAdoptionDetail(adoptionNo){
+        this.$router.push({name:constants.URL_TYPE.USER.ADOPTIONDETAIL, params:{adoptionno: adoptionNo}})
       }
     },
     data() {

@@ -27,7 +27,7 @@
           <v-row>
             <v-col cols="12" md="4" class="px-5">
               <v-card-subtitle class="mx-auto" style="width: 100%">
-                <v-carousel hide-delimiters style="width:400px; height:500px;">
+                <v-carousel hide-delimiters style="width:500px; height:400px;">
                   <v-carousel-item
                     v-for="(image,i) in images"
                     :key="i"
