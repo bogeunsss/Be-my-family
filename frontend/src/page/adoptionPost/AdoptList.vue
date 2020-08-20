@@ -154,7 +154,10 @@ export default {
         kind: "",
         createdate: "",
       },
-      postPic:[],
+      postPic:[{
+        postscriptno: '',
+        postpath: '',
+      }],
       searchPic: [],
       isSearch: false,
       isManager: false,
