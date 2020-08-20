@@ -159,7 +159,7 @@
 
         <v-stepper-content step="2">
           <v-card
-            class="mb-12 d-flex justify-center"
+            class="mb-12 d-flex justify-center my-15"
             color="grey lighten-1"
             height="500px"
           >
@@ -203,7 +203,7 @@
         </v-stepper-content>
 
         <v-stepper-content step="3">
-          <v-card class="mb-5" outlined height="400px">
+          <v-card class="mb-5 my-15" outlined height="400px">
             <h1 style="text-align: center;">가입이 완료 되었습니다.</h1>
             <h3 class="mt-3" style="text-align: center;">{{ signupData.nickName }}님 환영합니다.</h3>
             <v-btn

@@ -264,7 +264,7 @@
               <v-col cols="1" class="d-flex">
                 <v-menu top :close-on-content-click="closeOnContentClick">
                   <template v-slot:activator="{ on, attrs }">
-                    <v-icon v-bind="attrs" v-on="on">mdi-pencil-circle-outline</v-icon>
+                    <v-icon v-if="lostReply.uid === profileData.nickName" v-bind="attrs" v-on="on">mdi-pencil-circle-outline</v-icon>
                   </template>
                   <v-card class="d-flex">
                     <input type="text" v-model="lostReply.lostreplycontent" />
