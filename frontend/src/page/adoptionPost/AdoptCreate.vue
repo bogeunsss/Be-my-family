@@ -131,6 +131,10 @@ export default {
                 swal("내용을 입력해주세요")
                 flag = 1          
             }
+            if(this.images.length === 0){
+                swal("사진을 등록해주세요")
+                flag = 1
+            }
             if(flag == 0){
                 this.adoptcreate.uid = this.profileData.nickName
                 axios

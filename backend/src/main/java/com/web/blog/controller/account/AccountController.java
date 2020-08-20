@@ -62,28 +62,36 @@ public class AccountController {
             @RequestParam(required = true) final String password) {
 
         ResponseEntity response = null;
-        Optional<User> userOpt = userDao.findUserByEmailAndPassword(email, password);
-        System.out.println("======");
-        System.out.println(userOpt);
-        System.out.println("======");
         final BasicResponse result = new BasicResponse();
-        if (userOpt.isPresent()) {
-            result.status = true;
-            result.data = "success";
+        try {
 
-            User user = new User();
-            user.setUid(userOpt.get().getUid());
-            user.setEmail(email);
-            user.setPassword(password);
+            Optional<User> userOpt = userDao.findUserByEmailAndPassword(email, password);
+            System.out.println("======");
+            System.out.println(userOpt);
+            System.out.println("======");
 
-            String jwt = tokenProvider.generateToken(user);
-            result.object = new JwtAuthenticationResult(jwt);
-            result.email = user.getEmail();
-            result.uid = user.getUid();
-            result.password = user.getPassword();
+            if (userOpt.isPresent()) {
+                result.status = true;
+                result.data = "success";
 
-            response = new ResponseEntity<>(result, HttpStatus.OK);
-        } else {
+                User user = new User();
+                user.setUid(userOpt.get().getUid());
+                user.setEmail(email);
+                user.setPassword(password);
+
+                String jwt = tokenProvider.generateToken(user);
+                result.object = new JwtAuthenticationResult(jwt);
+                result.email = user.getEmail();
+                result.uid = user.getUid();
+                result.password = user.getPassword();
+
+                response = new ResponseEntity<>(result, HttpStatus.OK);
+            } else {
+                result.status = true;
+                result.data = "fail";
+                response = new ResponseEntity<>(result, HttpStatus.OK);
+            }
+        } catch (Exception e) {
             result.data = "fail";
             response = new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
         }
