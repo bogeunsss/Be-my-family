@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="margin-top:4rem;">
     <v-container style="width:80%">
       <h1 class="mb-6">회원정보 수정</h1>
       <form>

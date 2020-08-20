@@ -2,18 +2,21 @@
   <v-app >
     <Header :isHeader="isHeader"/>
     <router-view />
+    <Footer :isFooter="isFooter"/>
   </v-app>
 </template>
 
 <script> 
 import Header from '@/components/Header'
+import Footer from '@/components/Footer'
 import constants from '@/lib/constants' 
 import { mapActions } from 'vuex'
 
 export default {
   name: 'App',
   components: { 
-    Header
+    Header,
+    Footer
   },
   created() {
       let url = this.$route.name;
@@ -44,11 +47,19 @@ export default {
           })
           this.isHeader = isHeader;
 
+          let isFooter = true;
+          array.map(path => {
+              if (url === path)
+                  isFooter = false;
+          })
+          this.isFooter = isFooter;
+
       },
   },
   data: function () {
         return {
             isHeader: true,
+            isFooter: true,
             constants
         } 
     }

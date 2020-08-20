@@ -1,5 +1,6 @@
 <template>
-  <div class="container" >
+<div style="margin-top:4rem;"> 
+  <div class="container">
     
     <div style="width:100%;">
     <v-card class="mx-auto" width="85%" height="100%">
@@ -169,6 +170,7 @@
     </v-card>
     </div>
     
+  </div>
   </div>
 </template>
 

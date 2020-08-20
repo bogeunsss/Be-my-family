@@ -2,6 +2,7 @@
   <div class="container">
       <h1 class="mb-3 pb-3"  style="color: #4ba5cd;">Manager</h1>
       <h2>입양신청 목록</h2>
+        <h3 class="mt-5" v-if="adoptions.length == 0">현재 입양 신청 목록이 없습니다.</h3>
         <v-row>
           <v-col
             v-for="adoption in adoptions"
@@ -13,10 +14,11 @@
           >
             <v-card style="width:350px" @click="goAdoptionDetail(adoption.desertionno)">
               <div class="d-flex justify-between">
-              <v-card-title class="subheading font-weight-bold">i dont know what to do</v-card-title>
+              <v-card-title class="subheading font-weight-bold" style="color:blue;" v-if="adoption.state == 1">승인 {{ approveState[adoption.state] }}</v-card-title>
+              <v-card-title class="subheading font-weight-bold" style="color:gray;" v-if="adoption.state == 0">승인 {{ approveState[adoption.state] }}</v-card-title>
+              <v-card-title class="subheading font-weight-bold" style="color:red;" v-if="adoption.state == 2">승인 {{ approveState[adoption.state] }}</v-card-title>
               <div class="ml-auto mr-2 my-auto">
               <span label class='d-flex flex-column' style="color:red; font-weight:bold; ">
-                승인<br>{{ approveState[adoption.state] }}
               </span>
               </div>
               </div>

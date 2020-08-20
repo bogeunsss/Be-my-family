@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" style="margin-top:4rem;">
     <v-container fluid class="mx-5 mt-5 pt-5">
       <h1>내 관심 강아지</h1>
       <v-row>

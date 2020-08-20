@@ -209,6 +209,7 @@ export default {
         });
     },
     postupdate() {
+      window.scrollTo(0, 0)
       this.$router.push({
         name: constants.URL_TYPE.ADOPTIONPOST.ADOPTUPDATE,
         params: { ID: this.$route.params.ID },

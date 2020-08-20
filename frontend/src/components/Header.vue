@@ -251,6 +251,7 @@ export default {
     },
     userProfile() {
       if(this.$route.name !== constants.URL_TYPE.USER.PROFILE){
+        window.scrollTo(0, 0)
         this.$router.push({ name: constants.URL_TYPE.USER.PROFILE })
       }else{
         this.$router.go()
@@ -259,11 +260,13 @@ export default {
     },
     goHome() {
       if(this.$route.name !== constants.URL_TYPE.MAIN){
+        window.scrollTo(0, 0)
         this.$router.push({ name: constants.URL_TYPE.MAIN });
       }
     },
     userLike() {
       if(this.$route.name !== constants.URL_TYPE.USER.LIKE){
+        window.scrollTo(0, 0)
         this.$router.push({ name: constants.URL_TYPE.USER.LIKE })
       }else{
         this.$router.go()
@@ -271,6 +274,7 @@ export default {
     },
     userSurvey() {
       if(this.$route.name !== constants.URL_TYPE.USER.SURVEY){
+        window.scrollTo(0, 0)
         this.$router.push({ name: constants.URL_TYPE.USER.SURVEY })
       }else{
         this.$router.go()
@@ -278,21 +282,25 @@ export default {
     },
     goList(){
       if(this.$route.name !== constants.URL_TYPE.POST.LIST){
+        window.scrollTo(0, 0)
         this.$router.push({ name: constants.URL_TYPE.POST.LIST })
       }
     },
     adoptList(){
       if(this.$route.name !== constants.URL_TYPE.ADOPTIONPOST.ADOPTLIST){
+        window.scrollTo(0, 0)
         this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTLIST })
       }
     },
     goLost(){
       if(this.$route.name !== constants.URL_TYPE.LOST.LOSTLIST){
+        window.scrollTo(0, 0)
         this.$router.push({ name: constants.URL_TYPE.LOST.LOSTLIST })
       }
     },
     goManager() {
       if(this.$route.name !== constants.URL_TYPE.USER.MANAGER){
+        window.scrollTo(0, 0)
         this.$router.push( { name: constants.URL_TYPE.USER.MANAGER })
       }
     },

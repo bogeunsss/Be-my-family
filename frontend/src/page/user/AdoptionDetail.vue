@@ -1,11 +1,6 @@
 <template>
-  <div class="container">
-    <!-- <h3>어돕션디테이이이이일</h3>
-    <div class='card border' style="border:1px solid red;">
-        <h3>hashah</h3>
-    </div>-->
-    <!-- {{adoption}}
-    {{dogData}} -->
+  <div class="container" style="margin-top:5rem;">
+    <h2>입양신청 희망자 상세정보</h2>
 
     <v-card class="mx-auto" style="width:80%;">
       <v-card-text class="d-flex">
