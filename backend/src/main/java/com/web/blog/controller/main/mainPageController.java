@@ -1,14 +1,18 @@
 package com.web.blog.controller.main;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.web.blog.dao.main.MainCareDao;
 import com.web.blog.dao.main.MainLostDao;
+import com.web.blog.dao.main.MainPostpicDao;
 import com.web.blog.dao.main.MainPostscriptDao;
 import com.web.blog.model.BasicResponse;
 import com.web.blog.model.MainpageResponse;
 import com.web.blog.model.care.Careboard;
 import com.web.blog.model.lost.Lost;
+import com.web.blog.model.postscript.Postpic;
 import com.web.blog.model.postscript.Postscript;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +42,9 @@ public class mainPageController {
     @Autowired
     MainPostscriptDao mainPostscriptDao;
 
+    @Autowired
+    MainPostpicDao mainPostpicDao;
+
     @GetMapping("/mainpage")
     @ApiOperation(value = "메인페이지")
     public Object Mainpage() {
@@ -48,12 +55,19 @@ public class mainPageController {
         List<Careboard> careboards = mainCareDao.findTop4ByOrderByNoticeedtDesc();
         List<Lost> losts = mainLostDao.findTop4ByOrderByLostnoDesc();
         List<Postscript> postscripts = mainPostscriptDao.findTop4ByOrderByPostscriptnoDesc();
+        List<Postpic> postpics = new ArrayList<>();
 
+        for (Postscript post : postscripts) {
+            Postpic postpic = mainPostpicDao.findTop1ByPostscriptno(post.getPostscriptno());
+            postpics.add(postpic);
+        }
+        
         result.data = "success";
         result.status = true;
         result.careList = careboards;
         result.lostList = losts;
         result.postscriptList = postscripts;
+        result.postpic = postpics;
         response = new ResponseEntity<>(result, HttpStatus.OK);
         return response;
     }

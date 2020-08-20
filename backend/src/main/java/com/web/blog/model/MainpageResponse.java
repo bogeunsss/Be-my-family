@@ -1,5 +1,9 @@
 package com.web.blog.model;
 
+import java.util.List;
+
+import com.web.blog.model.postscript.Postpic;
+
 import io.swagger.annotations.ApiModelProperty;
 
 public class MainpageResponse {
@@ -10,4 +14,5 @@ public class MainpageResponse {
     public Object careList;
     public Object lostList;
     public Object postscriptList;
+	public List<Postpic> postpic;
 }
