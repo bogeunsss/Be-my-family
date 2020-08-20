@@ -65,7 +65,7 @@
 
                                 <div class="polaroid">
                                 <v-card  @click="goDetail(j,i)" width="300px" height="400px" style="position: relative">
-                                    <v-chip class="recommend-list" v-if="dog.recommend" color="red" text-color="white">추천</v-chip>
+                                    <v-chip class="recommend-list" v-if="dog.recommend" color="red" text-color="white" style="position:absolute;top:4%;left:4%;">추천</v-chip>
                                     <v-img
                                         class="white--text align-end visi"
                                         height="200px"
@@ -74,7 +74,7 @@
                                     <v-card-title class="hide">{{ dog.carenm }}</v-card-title>
                                     </v-img>
 
-                                    <v-card-subtitle class="pb-0">견종: {{ dog.kindcd }}</v-card-subtitle>
+                                    <v-card-subtitle class="pb-0">견종: {{ elipsis2(dog.kindcd) }}</v-card-subtitle>
 
                                     <v-card-text class="text--primary" style="height:7rem;">
 
@@ -123,7 +123,7 @@ export default {
     watch: {
     },
     computed:{
-        ...mapState(['dogData', 'isLast'])
+        ...mapState(['dogData', 'isLast', 'profileData'])
     },
     created() {
         if(this.$cookies.isKey('auth-token')){
@@ -168,31 +168,59 @@ export default {
                 if(!this.isSearched){
                     paramInfo.pageno = 0
                 }
-                axios.get(constants.SERVER_URL + `/care/search?category=${this.category}&searchText=${this.searchText}&pageno=${paramInfo.pageno}`)
-                .then((response) =>{
-                    console.log(response)
-                    if(!response.data.totalData){
+                if(this.userInfo !== null && this.profileData.flag){
+                    axios.get(constants.SERVER_URL + `/care/search?category=${this.category}&searchText=${this.searchText}&pageno=${paramInfo.pageno}&uid=${this.userInfo}`)
+                        .then((response) =>{
+                            console.log("1")
+                            if(!response.data.totalData){
+                                swal({
+                                    title:'검색 결과가 없습니다.',
+                                    icon: "warning",
+                                    button: "OK"
+                                    })
+                                paramInfo.pageno = 0
+                                this.searchText = ""
+                                this.isSearched = false
+                                this.mainList(paramInfo)
+                            }else{
+                                this.setSearchDogs({data: response.data, isSearched: this.isSearched})
+                                this.isSearched = true
+                            }
+                        })
+                        .catch(() =>{
+                            swal({
+                                title:'올바른 값을 입력하세요',
+                                icon: "warning",
+                                button: "OK"
+                                })
+                        })
+                }else{
+                    axios.get(constants.SERVER_URL + `/care/search?category=${this.category}&searchText=${this.searchText}&pageno=${paramInfo.pageno}`)
+                    .then((response) =>{
+                        console.log("2")
+                        if(!response.data.totalData){
+                            swal({
+                                title:'검색 결과가 없습니다.',
+                                icon: "warning",
+                                button: "OK"
+                                })
+                            paramInfo.pageno = 0
+                            this.searchText = ""
+                            this.isSearched = false
+                            this.mainList(paramInfo)
+                        }else{
+                            this.setSearchDogs({data: response.data, isSearched: this.isSearched})
+                            this.isSearched = true
+                        }
+                    })
+                    .catch(() =>{
                         swal({
-                            title:'검색 결과가 없습니다.',
+                            title:'올바른 값을 입력하세요',
                             icon: "warning",
                             button: "OK"
                             })
-                        paramInfo.pageno = 0
-                        this.searchText = ""
-                        this.isSearched = false
-                        this.mainList(paramInfo)
-                    }else{
-                        this.setSearchDogs({data: response.data, isSearched: this.isSearched})
-                        this.isSearched = true
-                    }
-                })
-                .catch(() =>{
-                    swal({
-                        title:'올바른 값을 입력하세요',
-                        icon: "warning",
-                        button: "OK"
-                        })
-                })
+                    })
+                }
             }
 
         },
@@ -217,6 +245,15 @@ export default {
         },
         elipsis (temp) {
             var length = 25;
+            if (temp.length > length) {
+                temp = temp.substr (0, length-2) + '...';
+                return temp
+            }else{
+                return temp
+            }
+        },
+        elipsis2 (temp) {
+            var length = 10;
             if (temp.length > length) {
                 temp = temp.substr (0, length-2) + '...';
                 return temp
@@ -256,6 +293,9 @@ export default {
 .search{
     position: relative;
     top: 200px;
+}
+.recommend-list{
+    z-index:5
 }
 
 div.polaroid{

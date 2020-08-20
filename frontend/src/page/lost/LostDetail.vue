@@ -7,7 +7,7 @@
           <v-card>
             <v-row>
               <v-card-subtitle class="mx-auto" style="position:relative;width: 100%">
-                <v-carousel hide-delimiters height="auto" class="white--text float-center">
+                <v-carousel hide-delimiters height="auto" class="white--text float-center" style="width:570px; height:420;">
                     <v-carousel-item
                     v-for="(getImage,i) in getImages"
                     :key="i"
