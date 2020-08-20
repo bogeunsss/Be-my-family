@@ -1,11 +1,10 @@
 <template>
+<div style="margin-top:5rem;">
   <v-form>
     <v-container>
-      <v-col cols="10" style="margin:0 auto;">
-        <div class="d-flex">
-          <h2 style="margin:0 auto;">
-            <i class="fas fa-pencil-alt mr-2" style="font-size:30px"></i>입양후기 작성
-          </h2>
+        <h2 style="margin-left:80px;" class=""><i class="fas fa-pencil-alt mr-2" style="font-size:30px"></i>입양후기 작성</h2>
+        <v-col cols="10" style="margin:0 auto;">
+        <div class="d-flex float-left">
         </div>
         <v-row>
           <!-- <v-file-input
@@ -22,19 +21,21 @@
         <v-row class="mt-5">제목</v-row>
         <v-row>
           <v-text-field
-            :counter="50"
-            label="제목"
-            name="title"
-            required
-            maxlength="50"
+            :counter="30" 
+                label="제목을 적어주세요" 
+                name="title" 
+                required 
+                maxlength="30"
             v-model="Adoptupdate.title"
           ></v-text-field>
         </v-row>
 
         <v-row align="center">
-          <v-col cols="10" sm="1">시,도</v-col>
+         <v-col class="pl-0" cols="10" sm="1">
+                        시/도
+                    </v-col>
           <v-col cols="10" sm="4">
-            <v-select
+              <v-select
               v-model="Adoptupdate.sido"
               :items="sido_states"
               hint="시/도를 선택하세요"
@@ -42,7 +43,9 @@
             ></v-select>
           </v-col>
 
-          <v-col cols="10" sm="1">지역</v-col>
+          <v-col class="pl-5" v-if="Adoptupdate.sido" cols="10" sm="1">
+                        지역
+                    </v-col>
 
           <v-col cols="10" sm="4">
             <v-select
@@ -55,7 +58,9 @@
         </v-row>
 
         <v-row align="center">
-          <v-col cols="12" sm="1">품종:</v-col>
+          <v-col class="pl-0" cols="12" sm="1">
+                        품종
+                </v-col>
           <v-col cols="12" sm="4">
             <v-select
               :items="items"
@@ -67,16 +72,18 @@
           </v-col>
         </v-row>
 
-        <v-row class="mt-5">내용</v-row>
+        <!-- <v-row class="mt-5">내용</v-row> -->
         <v-row>
-          <v-textarea filled name="context" hint="내용을 입력해주세요." v-model="Adoptupdate.content"></v-textarea>
+          <v-textarea class="mt-3"  outlined label="내용을 입력해주세요" v-model="Adoptupdate.content"></v-textarea>
         </v-row>
         <v-row>
+          <input @change="onChangeImages" type="file" id="inputFiles" multiple="multiple" accept="image/*">
           <v-btn outlined color="blue" style="margin-left: auto;" @click="submitupdate">등록</v-btn>
         </v-row>
       </v-col>
     </v-container>
   </v-form>
+  </div>
 </template>
 
 <script>
@@ -105,16 +112,44 @@ export default {
         });
     },
     submitupdate() {
+      var fd = new FormData()
+      fd.append('postscriptno', this.$route.params.ID)
+      fd.append('title', this.Adoptupdate.title)
+      fd.append('content', this.Adoptupdate.content)
+      fd.append('sido', this.Adoptupdate.sido)
+      fd.append('gugun', this.Adoptupdate.gugun)
+      fd.append('kind', this.Adoptupdate.kind)
+      for(var x=0;x<this.images.length;x++){
+        fd.append('images', this.images[x])
+      }
 
-
-      axios.put(constants.SERVER_URL + `/postscript/Modify?postscriptno=${this.$route.params.ID}&title=${this.Adoptupdate.title}&content=${this.Adoptupdate.content}&sido=${this.Adoptupdate.sido}&gugun=${this.Adoptupdate.gugun}&kind=${this.Adoptupdate.kind}`)
+      axios.post(constants.SERVER_URL + `/postscript/Modify`, fd, {headers: {
+          'Content-Type': 'multipart/form-data'
+      }})
       .then(()=>{
+          swal({
+            title: "수정완료",
+            icon: "success",
+            button: "OK"
+          })
           this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTDETAIL, params:{ ID: this.$route.params.ID} })
       })
       .catch((error)=>{
           console.log(error)
       })
     },
+    onChangeImages(event){
+            if(event.target.files.length > 3){
+            swal({
+              title:'파일은 3개까지 저장 가능합니다.',
+              icon: "warning",
+              button: "OK"
+              })
+                document.getElementById('inputFiles').value = '';
+            }else{
+                this.images = event.target.files
+            }
+        },
   },
     data() {
     return {
@@ -135,7 +170,7 @@ export default {
             ],
             selectSido: '',
             selectGugun: '',
-            img:'',
+            images:'',
             // ccontent:'',
             // ccreatedate:'',
             // ggugun:'',

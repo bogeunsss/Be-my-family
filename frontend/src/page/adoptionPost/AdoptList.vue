@@ -1,10 +1,14 @@
 <template>
+<div>
+<div class="bmg-review" style="margin-top:4rem;">
+</div>
+  <div style="">
   <v-container>
     <v-col cols="10" style="margin:0 auto;">
-      <div class="d-flex mb-5">
+      <!-- <div class="d-flex mb-5">
         <i class="fas fa-dog" style="font-size:30px"></i>
         <h2 class="ml-3">입양후기</h2>
-      </div>
+      </div> -->
 
       <v-row align="center">
         <v-col cols="12" sm="4"></v-col>
@@ -42,7 +46,7 @@
         </v-btn>
       </div>
 
-      <v-simple-table 
+      <!-- <v-simple-table 
         class="mt-5" 
         page.sync="page">
 
@@ -64,11 +68,40 @@
             </tr>
           </tbody>
         </template>
-      </v-simple-table>
+      </v-simple-table> -->
+
+      <v-card class="my-3" v-for="(adopt, index) in adoptData" :key="index" @click="adoptdetail(adopt.postscriptno)">
+        <v-row>
+          <v-col cols="0" md="3" style="">
+            <v-img
+            :src="adopt.image"
+            style="max-height:150px;"
+            class="cardmobile ml-3">
+              </v-img> 
+          </v-col>
+          <v-col cols="12" md="9" class="px-5">
+            <!-- <div>
+              # {{ adoptData.length - index }}
+            </div> -->
+            <div class="d-flex pr-3">
+              <p class="mb-0"> #{{ adopt.postscriptno }} {{ adopt.title }}</p>
+              <small class="cardmobile ml-auto mb-0">{{ nowdate(adopt.createdate)}}</small>
+            </div>
+            <div class="d-flex">
+              <div class="mt-10">
+                <small>{{ elipsis(adopt.content) }}</small>
+              </div>
+              <small class="cardmobile ml-auto pr-3 mt-0">{{ adopt.uid}}</small>
+            </div>
+          </v-col>
+        </v-row>
+      </v-card>
 
       <v-pagination v-model="page" :length="pageCount"  :total-visible="5" circle class="mt-5"></v-pagination>
     </v-col>
   </v-container>
+  </div>
+  </div>
 </template>
 
 <script>  
@@ -76,6 +109,8 @@ import constants from "@/lib/constants";
 import axios from "axios";
 
 import { mapState, mapActions } from "vuex";
+
+import swal from 'sweetalert';
 
 export default {
   name: "Adoptlist",
@@ -115,6 +150,17 @@ export default {
     };
   },
   methods: {
+    
+    elipsis (temp) {
+      var lth =80;
+      var temp = "" + temp
+      if (temp.length > lth) {
+        temp = temp.substr(0, lth-2) + '...';
+        return temp
+      }else{
+        return temp
+      }
+    },
     adoptList(){
       axios
           .get(constants.SERVER_URL + "/postscript/List?pageno="+this.page)
@@ -130,11 +176,17 @@ export default {
     },
     create() {
       if(!this.$cookies.isKey("auth-token")){
-            alert('로그인해주세요')
+            swal({
+              title: '로그인해주세요',
+              icon: "warning",
+              button: "OK"
+              })
         }else{
-        this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTCREATE })}
+          window.scrollTo(0, 0)
+          this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTCREATE })}
     },
     adoptdetail(postscriptno) {
+      window.scrollTo(0, 0)
       this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTDETAIL, params:{ ID: postscriptno} })
     },
     nowdate(createdate){
@@ -156,7 +208,11 @@ export default {
 
             })
             .catch(() =>{
-                alert("올바른 값을 입력하세요")
+                swal({
+                  title:"올바른 값을 입력하세요",
+                  icon: "error",
+                  button: "OK" 
+                })
             })
         }
 
@@ -181,4 +237,17 @@ export default {
 </script>
 
 <style scoped>
+@media (max-width:760px){
+  .cardmobile {
+    display:none;
+  }
+}
+.bmg-review{
+    background: url('../../assets/후기3.png') no-repeat;
+    width: 100%;
+    height: 35rem;
+    background-size: cover;
+    background-position: center;
+}
+
 </style>

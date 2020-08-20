@@ -1,9 +1,9 @@
 <template>
-  <div class="header d-flex" style="padding:15px 50px;width:100%; box-shadow:2px 2px 3px rgba(0,0,0,0.3); background-color:#f2cc59;" v-if="isHeader">
+  <div class="header d-flex" style="position:fixed; padding:15px 50px;width:100%; box-shadow:2px 2px 3px rgba(0,0,0,0.3); background-color:#f2cc59;" v-if="isHeader">
       <v-btn class="mr-5" style="background-color:transparent;box-shadow: none;" @click.stop="drawer = !drawer">
         <i class="lg fas fa-bars" style="color:#4ba5cd;font-size:30px"></i>
       </v-btn>
-      <v-navigation-drawer v-model="drawer" absolute temporary height="400" class="ml-4" style="background-color:#f2cc59; border-radius:15px;">
+      <v-navigation-drawer v-model="drawer" absolute temporary height="400" class="ml-4" style="border-radius:10px;">
         <v-list-item class="pl-0">
           <div class="ml-5 d-flex flex-row" style="font-size:20px;">
             <v-btn fab depressed small class="mr-3" v-if="isLoggedIn && !isManager" style="background-color: #4ba5cd">
@@ -23,7 +23,7 @@
               <v-btn style="position: absolute; top: 6px; left: 90px" dark v-bind="attrs" v-on="on" class="loginBtn">로그인</v-btn>
             </template>
             <!-- 수정 필요! 로그인 버튼 내려감 -->
-            <v-card style="height:54vh; background-color:#FFEF85;">
+            <v-card style="height:54vh;">
               <v-card-title>
                 <span class="headline">Login</span>
               </v-card-title>
@@ -186,6 +186,7 @@
 
 import constants from "@/lib/constants";
 import axios from "axios";
+import swal from 'sweetalert';
 
 import { mapState, mapActions, mapMutations } from "vuex";
 
@@ -251,6 +252,7 @@ export default {
     },
     userProfile() {
       if(this.$route.name !== constants.URL_TYPE.USER.PROFILE){
+        window.scrollTo(0, 0)
         this.$router.push({ name: constants.URL_TYPE.USER.PROFILE })
       }else{
         this.$router.go()
@@ -259,11 +261,13 @@ export default {
     },
     goHome() {
       if(this.$route.name !== constants.URL_TYPE.MAIN){
+        window.scrollTo(0, 0)
         this.$router.push({ name: constants.URL_TYPE.MAIN });
       }
     },
     userLike() {
       if(this.$route.name !== constants.URL_TYPE.USER.LIKE){
+        window.scrollTo(0, 0)
         this.$router.push({ name: constants.URL_TYPE.USER.LIKE })
       }else{
         this.$router.go()
@@ -271,6 +275,7 @@ export default {
     },
     userSurvey() {
       if(this.$route.name !== constants.URL_TYPE.USER.SURVEY){
+        window.scrollTo(0, 0)
         this.$router.push({ name: constants.URL_TYPE.USER.SURVEY })
       }else{
         this.$router.go()
@@ -278,21 +283,25 @@ export default {
     },
     goList(){
       if(this.$route.name !== constants.URL_TYPE.POST.LIST){
+        window.scrollTo(0, 0)
         this.$router.push({ name: constants.URL_TYPE.POST.LIST })
       }
     },
     adoptList(){
       if(this.$route.name !== constants.URL_TYPE.ADOPTIONPOST.ADOPTLIST){
+        window.scrollTo(0, 0)
         this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTLIST })
       }
     },
     goLost(){
       if(this.$route.name !== constants.URL_TYPE.LOST.LOSTLIST){
+        window.scrollTo(0, 0)
         this.$router.push({ name: constants.URL_TYPE.LOST.LOSTLIST })
       }
     },
     goManager() {
       if(this.$route.name !== constants.URL_TYPE.USER.MANAGER){
+        window.scrollTo(0, 0)
         this.$router.push( { name: constants.URL_TYPE.USER.MANAGER })
       }
     },
@@ -305,9 +314,17 @@ export default {
       ).then(response => {
         if(response.data.data === 'success'){
           this.PWDialog = false
-          alert('이메일로 임시 비밀번호가 발송 되었습니다.')
+          swal({
+            title:'이메일로 임시 비밀번호가 발송 되었습니다.',
+            icon: "success",
+            button: "OK"
+            })
         }else{
-          alert('비밀번호 찾기에 실패하였습니다.')
+          swal({
+            title:'비밀번호 찾기에 실패하였습니다.',
+            icon: "warning",
+            button: "OK"
+            })
         }
         this.nowLoading = false
       }).catch(error => {

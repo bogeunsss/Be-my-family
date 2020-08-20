@@ -1,9 +1,10 @@
 <template>
+<div style="margin-top:5rem;">
   <v-form> 
       <v-container >
+        <h2 style="margin-left:80px;" class=""><i class="fas fa-pencil-alt mr-2" style="font-size:30px"></i>입양후기 작성</h2>
         <v-col cols="10" style="margin:0 auto;">
-        <div class="d-flex">
-        <h2 style="margin:0 auto;"><i class="fas fa-pencil-alt mr-2" style="font-size:30px"></i>입양후기 작성</h2>
+        <div class="d-flex float-left">
         </div>
         <v-row>
         <!-- <v-file-input
@@ -20,18 +21,18 @@
           <v-row class="mt-5"> 제목 </v-row> 
             <v-row> 
             <v-text-field 
-                :counter="50" 
-                label="제목" 
+                :counter="30" 
+                label="제목을 적어주세요" 
                 name="title" 
                 required 
-                maxlength="50"
+                maxlength="30"
                 v-model="adoptcreate.title"
             ></v-text-field> 
             </v-row> 
        
                 <v-row align="center">
-                    <v-col cols="10" sm="1">
-                        시,도
+                    <v-col class="pl-0" cols="10" sm="1">
+                        시/도
                     </v-col>
                     <v-col cols="10" sm="4">
                         <v-select
@@ -41,12 +42,11 @@
                         persistent-hint
                         ></v-select>
                     </v-col>
-
-                    <v-col cols="10" sm="1">
+                    <v-col class="pl-5" v-if="adoptcreate.sido" cols="10" sm="1">
                         지역
                     </v-col>
 
-                    <v-col cols="10" sm="4">
+                    <v-col v-if="adoptcreate.sido" cols="10" sm="4">
                         <v-select
                         v-model="adoptcreate.gugun"
                         :items="gugun_states[adoptcreate.sido]"
@@ -58,8 +58,8 @@
    
 
             <v-row align="center">
-               <v-col cols="12" sm="1">
-                        품종:
+               <v-col class="pl-0" cols="12" sm="1">
+                        품종
                 </v-col>
                 <v-col cols="12" sm="4">
                 <v-select
@@ -72,12 +72,12 @@
                 </v-col>
             </v-row>
 
-              <v-row class="mt-5"> 내용 </v-row> 
+              <!-- <v-row class="mt-5"> 내용 </v-row>  -->
                 <v-row> 
-                <v-textarea 
-                    filled name="context" 
-                    hint="내용을 입력해주세요." 
+                <v-textarea
+                    outlined label="내용을 입력해주세요" 
                     v-model="adoptcreate.content"
+                    class="mt-3"
                 ></v-textarea> 
                 </v-row> 
          
@@ -87,7 +87,8 @@
             </v-row> 
             </v-col>
         </v-container> 
-    </v-form> 
+    </v-form>
+    </div> 
 </template>
 
 
@@ -95,6 +96,9 @@
 import constants from '../../lib/constants'
 import axios from 'axios'
 import { mapState,  mapActions} from 'vuex'
+
+import swal from 'sweetalert';
+
 
 export default {
     created(){
@@ -120,11 +124,11 @@ export default {
             
             var flag = 0
             if(this.adoptcreate.title == ""){
-                alert("제목을 입력해주세요")
+                swal("제목을 입력해주세요")
                 flag = 1
             }
             if(this.adoptcreate.content == ""){
-                alert("내용을 입력해주세요")
+                swal("내용을 입력해주세요")
                 flag = 1          
             }
             if(flag == 0){
@@ -136,8 +140,12 @@ export default {
                     }
                 })
                 .then((res) =>{
-                    console.log(this.res)
-                    alert('작성이 완료됐습니다.')
+                    console.log(res)
+                    swal({
+                        title: '작성이 완료됐습니다.',
+                        icon: "success",
+                        button: "OK"
+                        })
                     this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTLIST });
                 })
                 .catch((error) => {
@@ -147,7 +155,11 @@ export default {
         },
         onChangeImages(event){
             if(event.target.files.length > 3){
-                alert('파일은 3개까지 저장 가능합니다.')
+            swal({
+              title:'파일은 3개까지 저장 가능합니다.',
+              icon: "warning",
+              button: "OK"
+              })
                 document.getElementById('inputFiles').value = '';
             }else{
                 this.images = event.target.files

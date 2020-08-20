@@ -79,7 +79,7 @@
                       ></i>
                     </template>
                     <v-card>
-                      <v-card-title>글 작성하기</v-card-title>
+                      <v-card-title>글 수정하기</v-card-title>
                       <v-divider></v-divider>
                       <v-card-text style="height: 500px;">
                         <v-list>
@@ -217,7 +217,19 @@
         </v-col>
       </v-row>
     </v-container>
-
+    <v-container class="pb-0">
+      <h4>혹시 이 강아지를 찾으시나요?</h4>
+      <v-divider></v-divider>
+    </v-container>
+    <v-container class="d-flex flex-row pt-0">
+      <v-list v-for="(match, i) in matched" :key="i">
+        <v-row>
+          <v-col cols="2">
+            <img :src="'http://i3b201.p.ssafy.io/file/'+match.lostpic1" class="mx-2" style="width: 150px; height: 200px" @click="goDetail(match.lostno)">
+          </v-col>
+        </v-row>
+      </v-list>
+    </v-container>
     <v-container class="mb-10">
       <v-card>
         <div style="position: relative">
@@ -282,7 +294,7 @@
         </v-list>
       </v-card>
     </v-container>
-    <div class="float-window">
+    <!-- <div class="float-window" style="width: 100px; height: 80px">
       <v-card id="create">
         <v-speed-dial :direction="direction" :open-on-hover="hover" :transition="transition">
           <template v-slot:activator>
@@ -297,13 +309,13 @@
           </template>
           <div v-for="(m, i) in matched" :key="i">
             <v-img
-              src="http://www.animal.go.kr/files/shelter/2014/02/201403010903285_s.jpg"
+              :src="'http://i3b201.p.ssafy.io/file/'+m.lostpic1"
               @click="goDetail(m.lostno)"
             ></v-img>
           </div>
         </v-speed-dial>
       </v-card>
-    </div>
+    </div> -->
     <v-snackbar v-model="snackbar" timeout="2000">수정되었습니다.</v-snackbar>
   </div>
 </template>
@@ -312,6 +324,7 @@
 import constants from '@/lib/constants'
 import axios from 'axios'
 import { mapState } from 'vuex'
+import swal from 'sweetalert';
 
 export default {
     created(){
@@ -376,11 +389,9 @@ export default {
             })
         axios.get(constants.SERVER_URL + `/lost/match?lostno=${this.lostno}`)
             .then(response => {
-                // console.log(response)
-                if(response.data.math){
-                    if(response.data.match.length){
-                        this.matched = response.data.match
-                    }
+                console.log(response)
+                if(response.data.match){
+                  this.matched = response.data.match
                 }
             }).catch(error => {
                 console.log(error)
@@ -455,7 +466,11 @@ export default {
         deleteLost(){
             axios.delete(constants.SERVER_URL + `/lost/delete?lostno=${this.$route.params.articleNo}&uid=${this.writer}`)
                 .then(response => {
-                    alert('삭제되었습니다.')
+                    swal({
+                      title:'삭제되었습니다.',
+                      icon: "success",
+                      button: "OK"
+                      })
                     this.$router.push({name: constants.URL_TYPE.LOST.LOSTLIST})
                 }).catch(error => {
                     console.log(error)
@@ -465,6 +480,7 @@ export default {
             this.$router.push({name: constants.URL_TYPE.LOST.LOSTLIST})
         },
         goDetail(No){
+            window.scrollTo(0, 0);
             this.$router.push({name: constants.URL_TYPE.LOST.LOSTDETAIL, params: {articleNo: No}})
             this.$router.go()
         },
@@ -475,7 +491,11 @@ export default {
         onChangeImages(event){
             
             if(event.target.files.length > 3){
-                alert('파일은 3개까지 저장 가능합니다.')
+            swal({
+              title:'파일은 3개까지 저장 가능합니다.',
+              icon: "warning",
+              button: "OK"
+              })
                 document.getElementById('inputFiles').value = '';
                 console.log(document.getElementById('inputFiles').files.length)
             }else{
@@ -540,35 +560,35 @@ export default {
             this.madeTags.splice(index, 1)
             console.log(this.lostTags)
         },
-        getCommentList(){
-            if(this.$cookies.isKey('auth-token')){
-                if(this.$cookies.get('auth-token').mid !== undefined){
-                    alert('죄송합니다. 매니저는 댓글을 다실 수 없습니다.')
-                }
-            }else{
-                axios.get(constants.SERVER_URL + `/lost/detail?lostno=${this.lostno}`)
-                    .then(response => {
-                        this.lostReplies = response.data.lostReply
-                    }).catch(error => {
-                        console.log(error)
-                    })
-            }
-        },
         commentCreate(){
             if(this.$cookies.isKey('auth-token')){
-                axios.post(constants.SERVER_URL + '/lost/reply/add', {
-                    uid: this.profileData.nickName,
-                    lostno: this.$route.params.articleNo,
-                    lostcontent: this.comment,
-                    }).then(response => {
-                        if(response.data.data === 'success'){
-                            this.getCommentList()
-                        }
-                    }).catch(error => {
-                        console.log(error)
-                    })
+                if(this.$cookies.get('auth-token').mid !== undefined){
+                    swal({
+                      title:'매니저는 댓글을 다실 수 없습니다.',
+                      text: '죄송합니다',
+                      icon: "warning",
+                      button: "OK"
+                      })
+                }else{
+                  axios.post(constants.SERVER_URL + '/lost/reply/add', {
+                      uid: this.profileData.nickName,
+                      lostno: this.$route.params.articleNo,
+                      lostcontent: this.comment,
+                      }).then(response => {
+                        console.log(response)
+                          if(response.data.data === 'success'){
+                              this.$router.go()
+                          }
+                      }).catch(error => {
+                          console.log(error)
+                      })
+                }
             }else{
-                alert('로그인 후 이용 가능합니다.')
+                swal({
+                  title: '로그인 후 이용 가능합니다.',
+                  icon: "error",
+                  button: "OK" 
+                })
             }
             this.comment = ''
         },
@@ -580,7 +600,7 @@ export default {
                 lostreplyno: contentNo,
                 }).then(response => {
                     if(response.data.data === 'success'){
-                        this.getCommentList()
+                        this.$router.go()
                     }
                     this.snackbar = !this.snackbar
                 }).catch(error => {
@@ -591,7 +611,7 @@ export default {
             axios.delete(constants.SERVER_URL + `/lost/reply/delete?lostreplyno=${replyno}&uid=${this.profileData.nickName}`)
                 .then(response => {
                     if(response.data.data === 'success'){
-                        this.getCommentList()
+                        this.$router.go()
                     }
                 }).catch(error => {
                     console.log(error)
@@ -610,10 +630,24 @@ export default {
 </script>
 
 <style>
+.detailcol1 {
+  padding-right: 0;
+}
+.detailcol2 {
+  padding-left: 0;
+}
+@media (max-width: 760px) {
+  .detailcol1 {
+    padding-right: 12px;
+  }
+  .detailcol2 {
+    padding-left: 12px;
+  }
+}
 .float-window {
     position: fixed;
-    bottom: 40vw;
-    right: 5vw;
+    bottom: 0;
+    right: 0;
 }
 .write-btn {
     position: absolute;

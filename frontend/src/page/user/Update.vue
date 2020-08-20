@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="margin-top:4rem;">
     <v-container style="width:80%">
       <h1 class="mb-6">회원정보 수정</h1>
       <form>
@@ -37,9 +37,10 @@
           <v-radio label="기혼" value="기혼"></v-radio>
           <v-radio label="미혼" value="미혼"></v-radio>
         </v-radio-group>
-
-        <v-btn v-if="isUser" class="btn" @click="userDataUpdate">수정완료</v-btn>
-        <v-btn v-if="!isUser" class="btn" @click="managerDateUpdate">수정완료</v-btn>
+        <div class="d-flex justify-end">
+        <v-btn v-if="isUser"  @click="userDataUpdate" color="warning">수정완료</v-btn>
+        <v-btn v-if="!isUser"  @click="managerDateUpdate" color="warning">수정완료</v-btn>
+        </div>
       </form>
     </v-container>
   </div>
@@ -49,6 +50,7 @@
 import { mapState, mapActions } from "vuex";
 import constants from "../../lib/constants";
 import axios from "axios";
+import swal from 'sweetalert';
 
 export default {
   components: {},
@@ -73,11 +75,24 @@ export default {
       if(this.password === this.passwordConfirm){
         if(this.password !== ''){
           if(!passwordReg.test(this.password)) {
-            alert('비밀번호는 8자 이상이어야 하며, 숫자/대문자/소문자/특수문자를 모두 포함해야 합니다.');
+            swal({
+            title: "비밀번호" ,
+            text: "8자 이상이어야 하며, 숫자/대문자/소문자/특수문자를 모두 포함해야 합니다.", 
+            icon: "warning",
+            button: "OK"
+          });
           }else if(/(\w)\1\1\1/.test(this.password)){
-            alert('같은 문자를 4번 이상 사용하실 수 없습니다.');
+             swal({
+            title:'같은 문자를 4번 이상 사용하실 수 없습니다.',
+            icon: "warning",
+            button: "OK"
+            });
           }else if(this.password.search(this.profileData.email) > -1){
-            alert("비밀번호에 아이디가 포함되었습니다.");
+             swal({
+            title:"비밀번호에 아이디가 포함되었습니다.",
+            icon: "info",
+            button: "OK"
+          });
           }else{
             this.profileData.password = this.password;
             this.userUpdate(this.profileData);
@@ -86,7 +101,11 @@ export default {
           this.userUpdate(this.profileData);
         }
       }else{
-        alert('비밀번호가 일치하지 않습니다.')
+        swal({
+            title:"비밀번호가 잃치하지 않습니다.",
+            icon: "error",
+            button: "OK"
+          });
       }
         
     },
@@ -110,11 +129,24 @@ export default {
       if(this.password === this.passwordConfirm){
         if(this.password !== ''){
           if(!passwordReg.test(this.password)) {
-            alert('비밀번호는 8자 이상이어야 하며, 숫자/대문자/소문자/특수문자를 모두 포함해야 합니다.');
+          swal({
+            title: "비밀번호" ,
+            text: "8자 이상이어야 하며, 숫자/대문자/소문자/특수문자를 모두 포함해야 합니다.", 
+            icon: "warning",
+            button: "OK"
+          });
           }else if(/(\w)\1\1\1/.test(this.password)){
-            alert('같은 문자를 4번 이상 사용하실 수 없습니다.');
+          swal({
+            title:'같은 문자를 4번 이상 사용하실 수 없습니다.',
+            icon: "warning",
+            button: "OK"
+            });
           }else if(this.password.search(this.managerInfo.email) > -1){
-            alert("비밀번호에 아이디가 포함되었습니다.");
+          swal({
+            title:"비밀번호에 아이디가 포함되었습니다.",
+            icon: "info",
+            button: "OK"
+          });
           }else{
             this.managerInfo.password = this.password;
             axios.put(constants.SERVER_URL + '/manager/modify', {
@@ -123,7 +155,11 @@ export default {
               password : this.managerInfo.password,
               phone: this.managerInfo.phone
             }).then((res)=>{
-              alert('수정 성공!')
+            swal({
+            title:"수정성공",
+            icon: "success",
+            button: "OK"
+          });
             this.$router.push({name:constants.URL_TYPE.MAIN})
             }).catch((err)=>{
               console.log(err)
@@ -136,14 +172,22 @@ export default {
             password : this.managerInfo.password,
             phone: this.managerInfo.phone
           }).then((res)=>{
-            alert('수정 성공!')
+          swal({
+            title:"수정성공",
+            icon: "success",
+            button: "OK"
+          });
           this.$router.push({name:constants.URL_TYPE.MAIN})
           }).catch((err)=>{
             console.log(err)
           })
         }
       }else{
-        alert('비밀번호가 일치하지 않습니다.')
+      swal({
+            title:"비밀번호가 일치하지 않습니다.",
+            icon: "error",
+            button: "OK"
+          });
       }
     }
 

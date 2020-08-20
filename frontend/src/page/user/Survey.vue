@@ -1,7 +1,7 @@
 <template>
-  <div class="mt-5 ml-5 pt-5">
+  <div class="mt-5 ml-5 pt-5" >
     <v-container>
-      <div class="d-flex mb-5">
+      <div class="d-flex mb-5" style="margin-top:4rem;">
       <h1 class="ml-3"><v-icon x-large>mdi-book-open-variant</v-icon> 설문을 작성해주세요.</h1>
       </div> 
       <form>
@@ -451,6 +451,7 @@ import SERVER from "@/lib/constants";
 import axios from "axios";
 import { mapState, mapMutations, mapActions } from 'vuex'
 import VueJwtDecode from 'vue-jwt-decode'
+import swal from 'sweetalert';
 
 export default {
     name: "survey",
@@ -490,9 +491,17 @@ export default {
               }).catch((error) =>{
                 console.log(error)
               })
-            alert('저장되었습니다.')
+              swal({
+                title:'저장되었습니다!',
+                icon: "success",
+                button: "OK"
+              })
           }else{
-            alert('동의해주세요!')
+              swal({
+                title:'동의해주세요!',
+                icon: "warning",
+                button: "OK"
+              })
           }
         },
         getProfileData(){
