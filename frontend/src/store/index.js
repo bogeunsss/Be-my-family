@@ -262,7 +262,7 @@ export default new Vuex.Store({
                   icon: "success",
                   button:"OK"
                 }).then(()=>{
-                    this.$router.go()
+                    router.go()
                 });
                 state.dialog = false
                 state.isLoggedIn = true

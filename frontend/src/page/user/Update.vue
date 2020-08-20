@@ -102,11 +102,12 @@ export default {
         }
       }else{
         swal({
-            title:"비밀번호가 잃치하지 않습니다.",
+            title:"비밀번호가 일치하지 않습니다.",
             icon: "error",
             button: "OK"
           });
       }
+
         
     },
 
@@ -126,6 +127,7 @@ export default {
     },
 
     managerDateUpdate() {
+      var passwordReg = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
       if(this.password === this.passwordConfirm){
         if(this.password !== ''){
           if(!passwordReg.test(this.password)) {
@@ -159,8 +161,10 @@ export default {
             title:"수정성공",
             icon: "success",
             button: "OK"
-          });
+          }).then(()=>{
+
             this.$router.push({name:constants.URL_TYPE.MAIN})
+          })
             }).catch((err)=>{
               console.log(err)
             })
@@ -176,8 +180,10 @@ export default {
             title:"수정성공",
             icon: "success",
             button: "OK"
-          });
-          this.$router.push({name:constants.URL_TYPE.MAIN})
+          }).then(()=>{
+
+            this.$router.push({name:constants.URL_TYPE.MAIN})
+          })
           }).catch((err)=>{
             console.log(err)
           })

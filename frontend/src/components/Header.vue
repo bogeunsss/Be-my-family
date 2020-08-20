@@ -23,7 +23,7 @@
               <v-btn style="position: absolute; top: 6px; left: 90px" dark v-bind="attrs" v-on="on" class="loginBtn">로그인</v-btn>
             </template>
             <!-- 수정 필요! 로그인 버튼 내려감 -->
-            <v-card style="height:54vh;">
+            <v-card style="height:50vh;">
               <v-card-title>
                 <span class="headline">Login</span>
               </v-card-title>

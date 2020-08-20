@@ -70,15 +70,15 @@
         </template>
       </v-simple-table> -->
 
-      <v-card class="my-3" v-for="(adopt, index) in adoptData" :key="index" @click="adoptdetail(adopt.postscriptno)">
+      <v-card class="my-3" style="width:1000px;" v-for="(adopt, index) in adoptData" :key="index" @click="adoptdetail(adopt.postscriptno)">
         <v-row>
-          <v-col cols="0" md="3" style="">
+          <!-- <v-col cols="0" md="3" style="">
             <v-img
             :src="adopt.image"
             style="max-height:150px;"
             class="cardmobile ml-3">
               </v-img> 
-          </v-col>
+          </v-col> -->
           <v-col cols="12" md="9" class="px-5">
             <!-- <div>
               # {{ adoptData.length - index }}
