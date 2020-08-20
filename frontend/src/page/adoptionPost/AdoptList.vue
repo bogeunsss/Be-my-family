@@ -74,7 +74,7 @@
         <v-row>
           <v-col cols="0" md="3" style="">
             <v-img
-            :src="'http://i3b201.p.ssafy.io/file/' + postPic[index].postpath"
+            :src="'http://i3b201.p.ssafy.io/file/' + postPic[index+1].postpath"
             style="max-height:150px;"
             class="cardmobile ml-3">
               </v-img> 
