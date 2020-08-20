@@ -166,7 +166,7 @@ export default new Router({
       }
     },
     {
-      path: '/user/adoption/:desertionno',
+      path: '/user/adoption/:adoptionno',
       name: constants.URL_TYPE.USER.ADOPTIONDETAIL,
       component: AdoptionDetail
     },

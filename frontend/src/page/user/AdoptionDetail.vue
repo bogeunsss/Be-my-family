@@ -160,7 +160,7 @@ export default {
   },
   computed:{
     param(){
-      return this.$route.params.desertionno
+      return this.$route.params.adoptionno
     },
   },
   methods: {
@@ -174,7 +174,7 @@ export default {
         .then((response) => {
           // console.log(response)
           this.adoptionData = response.data.adoptions.filter(
-            (item) => item.desertionno == this.$route.params.desertionno
+            (item) => item.desertionno === this.$route.params.adoptionno
           );
           // console.log(this.adoption);
           // this.adoption.mid = this.adoptionData[0].mid
@@ -194,11 +194,11 @@ export default {
     },
 
     getDetail() {
-      // console.log(this.$route.params.desertionno)
+      // console.log(this.$route.params.adoptionno)
       axios
         .get(constants.SERVER_URL + "/care/detailUser", {
           params: {
-            desertionno: this.$route.params.desertionno,
+            desertionno: this.$route.params.adoptionno,
             uid: this.$cookies.get('auth-token').uid
           },
         })
@@ -220,25 +220,6 @@ export default {
         ).then((res)=> {
         console.log(res)
         alert('승인완료 되었습니다.')
-        }).catch((err)=>{
-          console.log9err
-        })
-    },
-    dogApprovalRefuse() {
-      axios.patch(constants.SERVER_URL + '/manager/adoptionList/reject',
-        {
-          adoptionno : this.adoption[0].adoptionno,
-          uid : this.adoption[0].uid,
-          desertionno :this.adoption[0].desertionno,
-          fixdate : this.adoption[0].fixdate,
-          fixtime : this.adoption[0].fixtime,
-          name : this.adoption[0].name,
-          mid : this.adoption[0].mid,
-          email : this.adoption[0].email,
-          phone : this.adoption[0].phone
-        }).then((res)=> {
-        console.log(res)
-        alert('승인거절 되었습니다.')
         }).catch((err)=>{
           console.log9err
         })

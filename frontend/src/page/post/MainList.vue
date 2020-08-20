@@ -47,7 +47,7 @@
         <v-col col="12" md="6" style="padding:0rem 0rem 0rem 1.5rem;">
           <v-row>
             <v-col v-for="item in careList" :key="item.id" col="6" md="6">
-              <v-card style="width:100%; height:340px;">
+              <v-card style="width:100%; height:310px;">
                 <v-img
                   class="white--text align-end"
                   height="10rem"
@@ -78,7 +78,7 @@
         <v-col col="12" md="6" style="padding:0rem 1.5rem 0rem 0rem;" >
           <v-row>
             <v-col v-for="item in lostList" :key="item.id" col="6" md="6">
-              <v-card style="width:100%; height:340px;" class="pr-0">
+              <v-card style="width:100%; height:310px;" class="pr-0">
                 <v-img
                   class="white--text align-end"
                   height="9rem"
@@ -119,7 +119,7 @@
         <v-col col="12" md="6" style="padding:0rem 0rem 0rem 1.5rem;">
           <v-row>
             <v-col v-for="(item, i) in postscriptList" :key="item.id" col="6" md="6">
-              <v-card style="width:100%; height:340px;">
+              <v-card style="width:100%; height:310px;">
                 <v-img
                   class="white--text align-end"
                   height="10rem"
