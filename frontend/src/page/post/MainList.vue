@@ -47,7 +47,7 @@
         <v-col col="12" md="6" style="padding:0rem 0rem 0rem 1.5rem;">
           <v-row>
             <v-col v-for="item in careList" :key="item.id" col="6" md="6">
-              <v-card style="border-radius:10px; height:340px;">
+              <v-card style="width:100%; height:340px;">
                 <v-img
                   class="white--text align-end"
                   height="10rem"
@@ -175,21 +175,21 @@ export default {
     scrollDown(){
       var location = document.querySelector(".mainlist").offsetTop;
       window.scrollTo({
-        top: location-90,
+        top: location-75,
         behavior: 'smooth'
       })
     },
     scrollDown2(){
       var location2 = document.querySelector(".mainlist2").offsetTop;
       window.scrollTo({
-        top: location2-72,
+        top: location2-75,
         behavior: 'smooth'
       })
     },
      scrollDown3(){
       var location3 = document.querySelector(".mainlist3").offsetTop;
       window.scrollTo({
-        top: location3-70,
+        top: location3-75,
         behavior: 'smooth'
       })
      },

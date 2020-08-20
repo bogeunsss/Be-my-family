@@ -74,10 +74,18 @@
         <v-row>
           <v-col cols="0" md="3" style="">
             <v-img
-            :src="'http://i3b201.p.ssafy.io/file/' + postPic[index].postpath"
-            style="max-height:150px;"
-            class="cardmobile ml-3">
-              </v-img> 
+              :src="'http://i3b201.p.ssafy.io/file/' + postPic[index].postpath"
+              style="max-height:150px;"
+              class="cardmobile ml-3"
+              v-if="!isSearch"
+              >
+            </v-img>
+            <v-img
+              :src="'http://i3b201.p.ssafy.io/file/' + searchPic[index]"
+              style="max-height:150px;"
+              class="cardmobile ml-3"
+              v-if="isSearch"
+            ></v-img>
           </v-col>
           <v-col cols="12" md="9" class="px-5">
             <!-- <div>
@@ -147,6 +155,8 @@ export default {
         createdate: "",
       },
       postPic:[],
+      searchPic: [],
+      isSearch: false,
       isManager: false,
     };
   },
@@ -201,11 +211,19 @@ export default {
         console.log(this.searchText)
         console.log(this.page)
         if(this.searchText === ""){
+                this.isSearch = false
                 this.adoptList()
         }else{
+            this.searchPic = []
             axios.get(constants.SERVER_URL + `/postscript/Search?category=${this.category}&searchText=${this.searchText}&pageno=${this.page}`)
             .then((response) =>{
                 this.adoptData = response.data.object
+                for(var x=0;x<this.adoptData.length;x++){
+                  for(var y=0;y<this.postPic.length;y++){
+                    this.searchPic.push(this.postPic[x].postpath)
+                  }
+                }
+                this.isSearch = true
                 this.searchText = ""
                 console.log(response)
 
