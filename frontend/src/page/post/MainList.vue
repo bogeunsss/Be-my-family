@@ -4,12 +4,12 @@
       <div id="main_txt">
         <v-container>
         <v-row>
-          <v-col cols="6" class="tables text-left" style="padding-top:40vh;">
+          <v-col cols="12" sm="4" class="text-left" style="padding-top:45vh;">
             <h2>유기견들의 가족이 되어주세요.</h2>
             <h2>Be My Family</h2>
             <h2>Be Your Family</h2>
           </v-col>
-          <v-col cols="12" sm="4" class="ml-auto text-center" style=" padding-top:30vh;">
+          <v-col cols="12" sm="4" class="tables ml-auto text-center" style=" padding-top:40vh;">
             <h2 class="">Wating for your choice</h2>
             <div>
               <img src="../../assets/images/그림1.png" style="width:50%" alt="">
@@ -77,7 +77,7 @@
         <v-col col="12" md="6" style="padding:0rem 4rem;" >
           <v-row>
             <v-col v-for="item in lostList" :key="item.id" col="6" md="6">
-              <v-card style="width:100%; min-height:300px;" class="pr-0">
+              <v-card style="width:100%; min-height:305px;" class="pr-0">
                 <v-img
                   class="white--text align-end"
                   height="9rem"
@@ -124,13 +124,12 @@
                   :src="item.image"
                 >
                 </v-img>
-                <v-card-subtitle class="pb-0">제목 : {{ item.title }}</v-card-subtitle>
+                <v-card-subtitle class="pb-0">제목 : {{ elipsis2(item.title) }}</v-card-subtitle>
                 <v-card-text class="text--primary">
                   <div>닉네임 : {{ item.uid}}</div>
-                  <br />
                   <span class="comment">종류 : {{ item.kind }}</span>
                   <br>
-                  <span class="comment">후기 : {{ item.content }}</span>
+                  <span class="comment">후기 : {{ elipsis3(item.content) }}</span>
                 </v-card-text>
               </v-card>
             </v-col>
@@ -231,7 +230,25 @@ export default {
       this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTLIST });
     },
     elipsis (temp) {
-      var length = 50;
+      var length = 40;
+      if (temp.length > length) {
+        temp = temp.substr(0, length-2) + '...';
+        return temp
+      }else{
+        return temp
+      }
+    },
+    elipsis2 (temp) {
+      var length = 14;
+      if (temp.length > length) {
+        temp = temp.substr(0, length-2) + '...';
+        return temp
+      }else{
+        return temp
+      }
+    },
+    elipsis3 (temp) {
+      var length = 27;
       if (temp.length > length) {
         temp = temp.substr(0, length-2) + '...';
         return temp
@@ -265,9 +282,10 @@ export default {
   left:0;
   z-index:1;
   background-size:cover;
-  background-image:url('../../assets/images/friends-3042751_1920.jpg');
+  background-image:url('../../assets/images/main.jpg');
   width:100%;
   height: 100vh;
+  background-position: center;
   /* line-height: 100vh; */
 }
 #main_txt{
@@ -292,6 +310,12 @@ export default {
 @media ( max-width:760px){
   .tables{
     display:none;
+  }
+}
+@media(max-width:480px){
+  #main_img{
+    background-image:url('../../assets/images/sunset-3207045_640.jpg');
+    background-position: center;
   }
 }
 </style>

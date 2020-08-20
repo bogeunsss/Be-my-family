@@ -1,4 +1,5 @@
 <template>
+<div style="margin-top:5rem;">
   <v-container>
     <v-col cols="10" style="margin:0 auto;">
       <div class="d-flex mb-5">
@@ -42,7 +43,7 @@
         </v-btn>
       </div>
 
-      <v-simple-table 
+      <!-- <v-simple-table 
         class="mt-5" 
         page.sync="page">
 
@@ -64,11 +65,39 @@
             </tr>
           </tbody>
         </template>
-      </v-simple-table>
+      </v-simple-table> -->
+
+      <v-card class="my-3" v-for="(adopt, index) in adoptData" :key="index" @click="adoptdetail(adopt.postscriptno)">
+        <v-row>
+          <v-col cols="0" md="3" style="">
+            <v-img
+            :src="adopt.image"
+            style="max-height:150px;"
+            class="cardmobile ml-3">
+              </v-img> 
+          </v-col>
+          <v-col cols="12" md="9" class="px-5">
+            <!-- <div>
+              # {{ adoptData.length - index }}
+            </div> -->
+            <div class="d-flex pr-3">
+              <p class="mb-0"> #{{ adopt.postscriptno }} {{ adopt.title }}</p>
+              <small class="cardmobile ml-auto mb-0">{{ nowdate(adopt.createdate)}}</small>
+            </div>
+            <div class="d-flex">
+              <div class="mt-10">
+                <small>{{ elipsis(adopt.content) }}</small>
+              </div>
+              <small class="cardmobile ml-auto pr-3 mt-0">{{ adopt.uid}}</small>
+            </div>
+          </v-col>
+        </v-row>
+      </v-card>
 
       <v-pagination v-model="page" :length="pageCount"  :total-visible="5" circle class="mt-5"></v-pagination>
     </v-col>
   </v-container>
+  </div>
 </template>
 
 <script>  
@@ -115,6 +144,17 @@ export default {
     };
   },
   methods: {
+    
+    elipsis (temp) {
+      var lth =80;
+      var temp = "" + temp
+      if (temp.length > lth) {
+        temp = temp.substr(0, lth-2) + '...';
+        return temp
+      }else{
+        return temp
+      }
+    },
     adoptList(){
       axios
           .get(constants.SERVER_URL + "/postscript/List?pageno="+this.page)
@@ -181,4 +221,9 @@ export default {
 </script>
 
 <style scoped>
+@media (max-width:760px){
+  .cardmobile {
+    display:none;
+  }
+}
 </style>
