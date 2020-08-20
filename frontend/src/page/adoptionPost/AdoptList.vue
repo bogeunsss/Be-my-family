@@ -113,6 +113,7 @@
 </template>
 
 <script>  
+import pic from '@/assets/images/dog.png'
 import constants from "@/lib/constants";
 import axios from "axios";
 
@@ -156,7 +157,7 @@ export default {
       },
       postPic:[{
         postscriptno: '',
-        postpath: '',
+        postpath: pic,
       }],
       searchPic: [],
       isSearch: false,
