@@ -157,7 +157,7 @@ export default {
       },
       postPic:[{
         postscriptno: '',
-        postpath: pic,
+        postpath: '아기말티즈.jpg',
       }],
       searchPic: [],
       isSearch: false,
@@ -225,7 +225,9 @@ export default {
                 for(var x=0;x<this.adoptData.length;x++){
                   for(var y=0;y<this.postPic.length;y++){
                     if(this.adoptData[x].postscriptno === this.postPic[y].postscriptno){
-                      this.searchPic.push(this.postPic[y].postpath)
+                      if(this.postPic[y]){
+                        this.searchPic.push(this.postPic[y].postpath)
+                      }
                     }
                   }
                 }
