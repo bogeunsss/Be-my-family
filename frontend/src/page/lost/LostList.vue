@@ -1,7 +1,10 @@
 <template>
-  <div class="bmg-lost" style="margin-bottom: 45rem;">
-  <div style="margin-top: 38rem;">
-    <v-container >
+<div> 
+  <div class="bmg-lost" style="; margin-top:4rem;">
+</div>
+  <div class="mb-7" style="">
+
+    <v-container>
       <form>
         <v-row class="d-flex align-center mx-auto">
           <v-col class="d-flex">
@@ -461,6 +464,7 @@ export default {
       })
     },
     goDetail(index){
+      window.scrollTo(0, 0)
       this.$router.push({name: constants.URL_TYPE.LOST.LOSTDETAIL, params: { articleNo: index }})
     },
     closeDialog(){
@@ -511,7 +515,7 @@ export default {
         }
       }).then(response => {
         console.log(response)
-        this.$reouter.go()
+        this.$router.go()
       }).catch(error => {
         console.log(error)
       })
@@ -585,8 +589,9 @@ export default {
 <style>
 .float-btn {
   position: fixed;
-  bottom: 5vh;
+  bottom: 11vh;
   right: 5vw;
+  z-index:10;
 }
 
 .bmg-lost{

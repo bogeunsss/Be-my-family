@@ -1,4 +1,5 @@
 <template>
+<div style="margin-top:4rem;"> 
     <v-container fluid id="scollDetect" style="padding:0;" >
         <v-row>
         <v-col cols="12" style="padding:0;">
@@ -105,7 +106,7 @@
     </v-container>
     </div>
     </v-container>
-
+</div>
 </template>
  
 <script>
@@ -147,6 +148,7 @@ export default {
         goDetail(j,index){
             // this.$router.push({name:constants.URL_TYPE.POST.DETAIL, params: {desertionno:this.dogData.desertionno}})
             // this.$cookies.set('desertionno', {desertionno:this.dogData[j][index].desertionno})
+            window.scrollTo(0, 0)
             this.$router.push({name:constants.URL_TYPE.POST.DETAIL, params:{desertionno: this.dogData[j][index].desertionno}})
         },
         search(){

@@ -1,6 +1,8 @@
 <template>
-<div class="bmg-review" style="margin-bottom: 45rem;">
-  <div style="margin-top: 35rem;">
+<div>
+<div class="bmg-review" style="margin-top:4rem;">
+</div>
+  <div style="">
   <v-container>
     <v-col cols="10" style="margin:0 auto;">
       <!-- <div class="d-flex mb-5">
@@ -180,9 +182,11 @@ export default {
               button: "OK"
               })
         }else{
-        this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTCREATE })}
+          window.scrollTo(0, 0)
+          this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTCREATE })}
     },
     adoptdetail(postscriptno) {
+      window.scrollTo(0, 0)
       this.$router.push({ name: constants.URL_TYPE.ADOPTIONPOST.ADOPTDETAIL, params:{ ID: postscriptno} })
     },
     nowdate(createdate){

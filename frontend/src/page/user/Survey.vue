@@ -1,7 +1,7 @@
 <template>
-  <div class="mt-5 ml-5 pt-5">
+  <div class="mt-5 ml-5 pt-5" >
     <v-container>
-      <div class="d-flex mb-5">
+      <div class="d-flex mb-5" style="margin-top:4rem;">
       <h1 class="ml-3"><v-icon x-large>mdi-book-open-variant</v-icon> 설문을 작성해주세요.</h1>
       </div> 
       <form>

@@ -46,6 +46,9 @@
                   <h3 class='my-3'  style="color: #2caead;"><span style="color: black;">보호소 이메일 : </span>{{ managerInfo.email }}</h3>
                   </div>
                   <br>
+                  <div class="w-100">
+                  <h3 class='my-3'  style="color: #2caead;"><span style="color: black;">보호소 번호 : </span>{{ managerInfo.phone }}</h3>
+                  </div>
                 </div>
                   <!-- <button @click="test">aaa</button> -->
               </v-col>
@@ -89,7 +92,7 @@
       </div>
     </div>
 
-  <v-btn  v-if="!managerInfo.mid" @click="userAccountDelete" style="float:right; margin-top:3rem;" color="error">회원탈퇴</v-btn>
+  <v-btn  v-if="!managerInfo.mid" @click="userAccountDelete" style="float:right; margin-top:3rem; margin-bottom:5rem;" color="error">회원탈퇴</v-btn>
     </v-container>
   </div>
 </template>
