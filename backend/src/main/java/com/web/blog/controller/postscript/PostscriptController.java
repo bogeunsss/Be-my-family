@@ -164,7 +164,7 @@ public class PostscriptController {
             result.data = "success";
             response = new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
-
+            e.printStackTrace();
             result.status = false;
             result.data = "fail";
 
@@ -260,7 +260,7 @@ public class PostscriptController {
         return response;
     }
 
-    @PutMapping("/postscript/Modify")
+    @PostMapping("/postscript/Modify")
     @ApiOperation(value = "입양후기 게시글 수정")
     public Object postscriptModify(@RequestPart(required = false) final List<MultipartFile> images,
             PostscriptRequest request) {

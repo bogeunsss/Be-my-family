@@ -82,7 +82,7 @@
                 <v-img
                   class="white--text align-end"
                   height="9rem"
-                  :src="'http://i3b201.p.ssafy.io/file/'+item.img"
+                  :src="'http://i3b201.p.ssafy.io/file/'+item.lostpic1"
                 >
                 </v-img>
                 <v-card-subtitle class="pb-0">{{ item.losttype }}</v-card-subtitle>
@@ -118,12 +118,12 @@
         </v-col>
         <v-col col="12" md="6" style="padding:0rem 0rem 0rem 1.5rem;">
           <v-row>
-            <v-col v-for="item in postscriptList" :key="item.id" col="6" md="6">
+            <v-col v-for="(item, i) in postscriptList" :key="item.id" col="6" md="6">
               <v-card style="min-height:340px;">
                 <v-img
                   class="white--text align-end"
                   height="10rem"
-                  :src="'http://i3b201.p.ssafy.io/file/' + item.img"
+                  :src="'http://i3b201.p.ssafy.io/file/' + postpics[i]"
                 >
                 </v-img>
                 <v-card-subtitle class="pb-0">제목 : {{ elipsis2(item.title) }}</v-card-subtitle>
@@ -229,11 +229,13 @@ export default {
     getAllList() {
       axios.get(constants.SERVER_URL + '/mainpage')
       .then((res)=>{
+        console.log('여기 ===>')
         console.log(res)
         this.careList = res.data.careList
         console.log(this.careList)
         this.lostList = res.data.lostList
         this.postscriptList = res.data.postscriptList
+        this.postpics = res.data.postpic
       }
       )
     },
@@ -286,7 +288,8 @@ export default {
         options: {
           useEasing: true,
           useGrouping: true,
-        }
+      },
+      postpics: [],
     };
   },
 };

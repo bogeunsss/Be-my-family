@@ -140,7 +140,7 @@ export default {
                     }
                 })
                 .then((res) =>{
-                    console.log(this.res)
+                    console.log(res)
                     swal({
                         title: '작성이 완료됐습니다.',
                         icon: "success",

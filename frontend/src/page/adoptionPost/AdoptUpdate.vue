@@ -77,6 +77,7 @@
           <v-textarea class="mt-3"  outlined label="내용을 입력해주세요" v-model="Adoptupdate.content"></v-textarea>
         </v-row>
         <v-row>
+          <input @change="onChangeImages" type="file" id="inputFiles" multiple="multiple" accept="image/*">
           <v-btn outlined color="blue" style="margin-left: auto;" @click="submitupdate">등록</v-btn>
         </v-row>
       </v-col>
@@ -111,9 +112,20 @@ export default {
         });
     },
     submitupdate() {
+      var fd = new FormData()
+      fd.append('postscriptno', this.$route.params.ID)
+      fd.append('title', this.Adoptupdate.title)
+      fd.append('content', this.Adoptupdate.content)
+      fd.append('sido', this.Adoptupdate.sido)
+      fd.append('gugun', this.Adoptupdate.gugun)
+      fd.append('kind', this.Adoptupdate.kind)
+      for(var x=0;x<this.images.length;x++){
+        fd.append('images', this.images[x])
+      }
 
-
-      axios.put(constants.SERVER_URL + `/postscript/Modify?postscriptno=${this.$route.params.ID}&title=${this.Adoptupdate.title}&content=${this.Adoptupdate.content}&sido=${this.Adoptupdate.sido}&gugun=${this.Adoptupdate.gugun}&kind=${this.Adoptupdate.kind}`)
+      axios.post(constants.SERVER_URL + `/postscript/Modify`, fd, {headers: {
+          'Content-Type': 'multipart/form-data'
+      }})
       .then(()=>{
           swal({
             title: "수정완료",
@@ -126,6 +138,18 @@ export default {
           console.log(error)
       })
     },
+    onChangeImages(event){
+            if(event.target.files.length > 3){
+            swal({
+              title:'파일은 3개까지 저장 가능합니다.',
+              icon: "warning",
+              button: "OK"
+              })
+                document.getElementById('inputFiles').value = '';
+            }else{
+                this.images = event.target.files
+            }
+        },
   },
     data() {
     return {
@@ -146,7 +170,7 @@ export default {
             ],
             selectSido: '',
             selectGugun: '',
-            img:'',
+            images:'',
             // ccontent:'',
             // ccreatedate:'',
             // ggugun:'',
