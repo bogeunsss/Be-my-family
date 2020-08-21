@@ -1,4 +1,4 @@
-![로고](C:\Users\multicampus\Desktop\pjt1\s03p13b201\로고.png)
+![logo](C:\Users\multicampus\Desktop\pjt1\s03p13b201\README.assets\logo.png)
 
 ___
 
@@ -6,7 +6,7 @@ ___
 
 
 
-## :dog:팀 소개
+## :dog: 팀 소개
 
 ### 1) 팀명 < Dogker >
 
@@ -18,7 +18,7 @@ ___
 | **김민주**            | Back-end              | :princess: 빚월(비주얼)    |
 | **김준기**            | Front-end             | :moneybag: 붤커(브로커)    |
 | **김진실**            | Front-end             | :crown: 대장               |
-| **최보근**            | Front-end             | :computer:코더             |
+| **최보근**            | Front-end             | :computer: 코더            |
 
 
 
