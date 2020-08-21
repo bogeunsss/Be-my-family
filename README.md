@@ -1,4 +1,4 @@
-![logo](C:\Users\multicampus\Desktop\pjt1\s03p13b201\README.assets\logo.png)
+![logo](.\README.assets\logo.png)
 
 ___
 
@@ -23,6 +23,8 @@ ___
 
 
 ## :dog: 프로젝트 소개
+
+![howto](.\README.assets\howto.png)
 
 ### 1) 프로젝트 명 < Be My Family >
 
