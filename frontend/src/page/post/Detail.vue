@@ -67,7 +67,7 @@
           <v-btn class="ma-2" depressed v-if="isLikeDog" @click="deleteLike" tile outlined color="red" style="font-size: 15px;">
             <v-icon left>fas fa-user-times</v-icon> 관심없어요
           </v-btn>
-          <v-btn class="ma-2" v-if="!isAdoption && profileData.flag" dark @click="goModal(dialog = true)" tile outlined color="primary" style="font-size: 15px;">
+          <v-btn class="ma-2" v-if="!isAdoption && profileData.flag==1" dark @click="goModal(dialog = true)" tile outlined color="primary" style="font-size: 15px;">
             <v-icon left>mdi-pencil</v-icon> 입양신청
           </v-btn>
           <v-btn class="ma-2" v-if="isAdoption" tile outlined color="success" style="font-size: 15px;">
