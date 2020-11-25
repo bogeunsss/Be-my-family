@@ -31,7 +31,7 @@
                   <v-carousel-item
                     v-for="(image,i) in images"
                     :key="i"
-                    :src="'http://i3b201.p.ssafy.io/file/'+image.postpath"
+                    :src="'http://localhost:8080/image/'+image.postpath"
                   ></v-carousel-item>
                 </v-carousel>
               </v-card-subtitle>

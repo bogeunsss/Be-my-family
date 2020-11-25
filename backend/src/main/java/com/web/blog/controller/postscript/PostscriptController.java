@@ -19,6 +19,7 @@ import com.web.blog.model.postscript.Postpic;
 import com.web.blog.model.postscript.Postscript;
 import com.web.blog.model.postscript.PostscriptRequest;
 import com.web.blog.model.user.User;
+import com.web.blog.service.ImageStorageService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -64,6 +65,9 @@ public class PostscriptController {
 
     @Autowired
     PostscriptPageDao postscriptpageDao;
+
+    @Autowired
+    ImageStorageService imageStorageService;
 
     @GetMapping("/postscript/List")
     @ApiOperation(value = "입양후기 게시글 리스트")
@@ -143,19 +147,22 @@ public class PostscriptController {
 
             List<Postpic> postpicList = new ArrayList<>();
             for (MultipartFile file : images) {
-                final String originalfileName = file.getOriginalFilename();
+                // final String originalfileName = file.getOriginalFilename();
                 //로컬
                 // final String filepath = "C:/Image/" + originalfileName;
                 // final File dest = new File(filepath);
                 
                 //서버
-                final String filepath = originalfileName;  
-                final File dest = new File("/webServer/s03p13b201/frontend/src/file/" + file.getOriginalFilename());
-                if (!dest.getParentFile().exists())
-                    dest.getParentFile().mkdirs();
+                // final String filepath = originalfileName;  
+                // final File dest = new File("/webServer/s03p13b201/frontend/src/file/" + file.getOriginalFilename());
+                // // if (!dest.getParentFile().exists())
+                // //     dest.getParentFile().mkdirs();
                 
-                
-                file.transferTo(dest);
+                // 
+
+                final String filepath = imageStorageService.storeFile(file);
+                // file.transferTo(dest);
+
                 Postpic postpic = new Postpic();
                 postpic.setPostscriptno(postscript.getPostscriptno());
                 postpic.setPostpath(filepath);
@@ -294,15 +301,17 @@ public class PostscriptController {
             if(!postpicList.isEmpty()){
                 for (MultipartFile file : images) {
                     //로컬
-                    final String originalfileName = file.getOriginalFilename();
+                    // final String originalfileName = file.getOriginalFilename();
                     // final String filepath = "C:/Image/" + originalfileName;
                     //서버
-                    final String filepath = originalfileName;  
-                    final File dest = new File("/webServer/s03p13b201/frontend/src/file/" + file.getOriginalFilename());
-                    if (!dest.getParentFile().exists())
-                        dest.getParentFile().mkdirs();
+                    // final String filepath = originalfileName;  
+                    // // final File dest = new File("/webServer/s03p13b201/frontend/src/file/" + file.getOriginalFilename());
+                    // if (!dest.getParentFile().exists())
+                    //     dest.getParentFile().mkdirs();
                     // final File dest = new File(filepath);
-                    file.transferTo(dest);
+                    // file.transferTo(dest);
+
+                    final String filepath = imageStorageService.storeFile(file);
                     Postpic postpic = new Postpic();
                     postpic.setPostscriptno(postscript.getPostscriptno());
                     postpic.setPostpath(filepath);

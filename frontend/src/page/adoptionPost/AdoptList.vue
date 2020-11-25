@@ -74,14 +74,14 @@
         <v-row>
           <v-col cols="0" md="3" style="">
             <v-img
-              :src="'http://i3b201.p.ssafy.io/file/' + postPic[index].postpath"
+              :src="'http://localhost:8080/image/' + postPic[index].postpath"
               style="max-height:150px;"
               class="cardmobile ml-3"
               v-if="!isSearch"
               >
             </v-img>
             <v-img
-              :src="'http://i3b201.p.ssafy.io/file/' + searchPic[index]"
+              :src="'http://localhost:8080/image/' + searchPic[index]"
               style="max-height:150px;"
               class="cardmobile ml-3"
               v-if="isSearch"
@@ -157,7 +157,7 @@ export default {
       },
       postPic:[{
         postscriptno: '',
-        postpath: '아기말티즈.jpg',
+        postpath: '',
       }],
       searchPic: [],
       isSearch: false,

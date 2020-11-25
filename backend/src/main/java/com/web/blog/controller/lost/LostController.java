@@ -17,6 +17,7 @@ import com.web.blog.model.lost.LostRequest;
 import com.web.blog.model.lost.Lostreply;
 import com.web.blog.model.lost.LostreplyRequest;
 import com.web.blog.model.lost.Losttag;
+import com.web.blog.service.ImageStorageService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -53,6 +54,9 @@ public class LostController {
     @Autowired
     LostreplyDao lostreplyDao;
 
+    @Autowired
+    ImageStorageService imageStorageService;
+
     @PostMapping("/lost/add")
     @ApiOperation(value = "실종/보호/목격 글 등록/수정")
     public Object lostAdd(@RequestPart final List<MultipartFile> files, LostRequest request) {
@@ -83,21 +87,22 @@ public class LostController {
             System.out.println("lostpics =======>" + lostPics.getLostPics());
 
             for (MultipartFile file : lostPics.getLostPics()) {
-                final String originalfileName = file.getOriginalFilename();
+                // final String originalfileName = file.getOriginalFilename();
                 // 로컬
                 // final String filepath = "C:/Image/" + originalfileName;
                 // final File dest = new File(filepath);
 
                 //서버
-                final String filepath = originalfileName;  
-                final File dest = new File("/webServer/s03p13b201/frontend/src/file/" + file.getOriginalFilename());
-                if (!dest.getParentFile().exists())
-                    dest.getParentFile().mkdirs();
+                // final String filepath = originalfileName;  
+                // final File dest = new File("/webServer/s03p13b201/frontend/src/file/" + file.getOriginalFilename());
+                // if (!dest.getParentFile().exists())
+                //     dest.getParentFile().mkdirs();
                 
                 // 존재하면 서버에 저장 안함
-                if (dest.exists() == false) {
-                    file.transferTo(dest);
-                }
+                // if (dest.exists() == false) {
+                //     file.transferTo(dest);
+                // }
+                final String filepath = imageStorageService.storeFile(file);
 
                 System.out.println("filepath =======>" + filepath);
 

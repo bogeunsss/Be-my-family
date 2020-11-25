@@ -88,7 +88,7 @@
             >
               <v-carousel-item  @click="goDetail(card.lostno)"
                 v-for="(item, j) in [card.lostpic1]"
-                :src="'http://i3b201.p.ssafy.io/file/'+item"
+                :src="'http://localhost:8080/image/'+item"
                 :key="i+'key'+j"
                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
               >
@@ -141,7 +141,7 @@
             >
               <v-carousel-item  @click="goDetail(card.lostno)"
                 v-for="(item, j) in [card.lostpic1, card.lostpic2]"
-                :src="'http://i3b201.p.ssafy.io/file/'+item"
+                :src="'http://localhost:8080/image/'+item"
                 :key="i+'key'+j"
                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
               >
@@ -195,7 +195,7 @@
             >
               <v-carousel-item  @click="goDetail(card.lostno)"
                 v-for="(item, j) in [card.lostpic1, card.lostpic2, card.lostpic3]"
-                :src="'http://i3b201.p.ssafy.io/file/'+item"
+                :src="'http://localhost:8080/image/'+item"
                 :key="i+'key'+j"
                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
               >

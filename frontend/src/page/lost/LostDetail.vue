@@ -11,7 +11,7 @@
                     <v-carousel-item
                     v-for="(getImage,i) in getImages"
                     :key="i"
-                    :src="'http://i3b201.p.ssafy.io/file/'+getImage"
+                    :src="'http://localhost:8080/image/'+getImage"
                     ></v-carousel-item>
                 </v-carousel>
               <v-chip v-if="lostType=='실종'" class="ma-2 font-weight-bold" color="red" text-color="white" style="position:absolute;top:4%;left:4%;">{{ lostType }}</v-chip>
@@ -225,7 +225,7 @@
       <v-list v-for="(match, i) in matched" :key="i">
         <v-row>
           <v-col cols="2">
-            <img :src="'http://i3b201.p.ssafy.io/file/'+match.lostpic1" class="mx-2" style="width: 150px; height: 200px" @click="goDetail(match.lostno)">
+            <img :src="'http://localhost:8080/image/'+match.lostpic1" class="mx-2" style="width: 150px; height: 200px" @click="goDetail(match.lostno)">
           </v-col>
         </v-row>
       </v-list>
@@ -309,7 +309,7 @@
           </template>
           <div v-for="(m, i) in matched" :key="i">
             <v-img
-              :src="'http://i3b201.p.ssafy.io/file/'+m.lostpic1"
+              :src="'http://localhost:8080/image/'+m.lostpic1"
               @click="goDetail(m.lostno)"
             ></v-img>
           </div>

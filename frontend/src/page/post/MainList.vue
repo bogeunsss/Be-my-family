@@ -82,7 +82,7 @@
                 <v-img
                   class="white--text align-end"
                   height="9rem"
-                  :src="'http://i3b201.p.ssafy.io/file/'+item.lostpic1"
+                  :src="'http://localhost:8080/image/'+item.lostpic1"
                 >
                 </v-img>
                 <v-card-subtitle class="pb-0">{{ item.losttype }}</v-card-subtitle>
@@ -123,7 +123,7 @@
                 <v-img
                   class="white--text align-end"
                   height="10rem"
-                  :src="'http://i3b201.p.ssafy.io/file/' + postpics[i].postpath"
+                  :src="'http://localhost:8080/image/' + postpics[i].postpath"
                 >
                 </v-img>
                 <v-card-subtitle class="pb-0">제목 : {{ elipsis2(item.title) }}</v-card-subtitle>
@@ -227,6 +227,7 @@ export default {
         instance.update(that.endVal);
       },
     getAllList() {
+      console.log("aldkfjal;k")
       axios.get(constants.SERVER_URL + '/mainpage')
       .then((res)=>{
         console.log('여기 ===>')
